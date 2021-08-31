@@ -23,12 +23,46 @@ class SidebarVC: NSViewController  {
         super.viewDidLoad()
         outlineView.delegate = self
         outlineView.dataSource = self
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
     }
     
     private func updateUI() {
         outlineView.reloadData()
     }
-    
+	
+	@objc func selectedItemDidChange(notification: NSNotification) {
+		var row = outlineView.row(forItem: notification.object)
+		if row >= 0 {
+			outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+		}
+		else {
+			// The notification object is something not disclosed in the outlineView
+			if notification.object is Chapter {
+				// Expand book > chapters
+				outlineView.expandItem(book)
+				if let item = outlineView.child(0, ofItem: book) {
+					outlineView.expandItem(item)
+				}
+			}
+			else if let sub = notification.object as? SubChapter {
+				// Expand book > chapters > chapter containing book
+				outlineView.expandItem(book)
+				if let item = outlineView.child(0, ofItem: book) {
+					outlineView.expandItem(item)
+				}
+				if let containingChapter = book?.chapterContaining(subchapter: sub) {
+					outlineView.expandItem(containingChapter)
+				}
+			}
+			// Try again
+			row = outlineView.row(forItem: notification.object)
+			if row >= 0 {
+				outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+			}
+		}
+	}
+
     enum NodeIcon: String {
         case book = "book"
         case chapter = "doc"

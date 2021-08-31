@@ -25,7 +25,7 @@ class DetailTabVC: NSTabViewController {
     }
     
     @objc func selectedItemDidChange(notification: NSNotification) {
-        
+		
         if notification.object is Book {
             let tvi = self.tabViewItems[TabIndex.book.rawValue]
             if let bdvc = tvi.viewController as? BookDetailVC {

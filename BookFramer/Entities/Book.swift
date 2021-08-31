@@ -211,6 +211,20 @@ class Book: Equatable, ObservableObject {
 	}
 
 	/**
+	Search for which Chapter contains a given SubChapter
+	
+	- Parameter subchapter: the subchapter to search for. Must be equal.
+	*/
+	func chapterContaining(subchapter: SubChapter) -> Chapter? {
+		for c in chapters {
+			if c.subchapters.contains(subchapter) {
+				return c
+			}
+		}
+		return nil
+	}
+	
+	/**
 	Renders the `Book` into logical `BookBlocks`, ready to write to markdown.
 	
 	- Throws: SBSError.cannotEncodeHeader
@@ -232,7 +246,7 @@ class Book: Equatable, ObservableObject {
 		
 		var blocks = [BookBlock]()
 		
-		let titleBlock = BookBlock(type: .title, content: "\(title ?? ""):\(subtitle ?? "")")
+		let titleBlock = BookBlock(type: .title, content: "\(title ):\(subtitle )")
 		blocks.append(titleBlock)
 
 		do {

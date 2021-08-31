@@ -10,7 +10,8 @@ import XCTest
 
 class BookTest: XCTestCase {
     
-	public static let PRIDE_AND_PREJUDICE = "/Users/sjb/Projects/Mac/BookFramer/Pride_And_Prejudice/book.bfd"
+	public static let PRIDE_AND_PREJUDICE = "/Users/sbiickert/Code/BookFramer/Pride_And_Prejudice/book.bfd"
+	//"/Users/sjb/Projects/Mac/BookFramer/Pride_And_Prejudice/book.bfd"
 	public static let SIMPLE_BOOK = """
 		# Pride and Prejudice:
 

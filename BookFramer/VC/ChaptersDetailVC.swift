@@ -28,17 +28,37 @@ class ChaptersDetailVC: NSViewController {
         // Do view setup here.
 		tableView.delegate = self
 		tableView.dataSource = self
+		tableView.doubleAction = #selector(tableViewWasDoubleClicked)
     }
     
 	private func updateUI() {
 		tableView.reloadData()
 	}
+	
+	@objc func tableViewWasDoubleClicked() {
+		//print("Double click on row \(tableView.clickedRow) and column \(tableView.clickedColumn)")
+		guard tableView.clickedRow >= 0 else {
+			return // click on header
+		}
+		if let rowObject = objectFor(row: tableView.clickedRow) {
+			if rowObject.1 != nil {
+				// Double click on scene
+				NotificationCenter.default.post(name: .selectedItemDidChange, object: rowObject.1)
+			}
+			else {
+				// Double click on chapter
+				NotificationCenter.default.post(name: .selectedItemDidChange, object: rowObject.0)
+			}
+		}
+	}
+	
 }
 
 extension ChaptersDetailVC: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 24.0
 	}
+	
 	
 	
 }

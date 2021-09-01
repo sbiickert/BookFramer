@@ -34,6 +34,10 @@ class DetailTabVC: NSTabViewController {
             self.tabView.selectTabViewItem(tvi)
         }
         else if notification.object is Chapter {
+			let tvi = self.tabViewItems[TabIndex.chapter.rawValue]
+			if let cdvc = tvi.viewController as? ChapterDetailVC {
+				cdvc.chapter = notification.object as? Chapter
+			}
             self.tabView.selectTabViewItem(at: TabIndex.chapter.rawValue)
         }
         else if notification.object is SubChapter {

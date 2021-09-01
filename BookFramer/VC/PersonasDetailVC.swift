@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class PersonasDetailVC: NSViewController {
+class PersonasDetailVC: BFViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -33,6 +33,7 @@
 		37EB462B26D53C20004DAE73 /* SubChapterDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */; };
 		37EB462E26D54E33004DAE73 /* ChaptersDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */; };
 		37EB463026D54E49004DAE73 /* PersonasDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */; };
+		B8756FEC26E00A55009807BA /* BFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8756FEB26E00A55009807BA /* BFViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubChapterDetailVC.swift; sourceTree = "<group>"; };
 		37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersDetailVC.swift; sourceTree = "<group>"; };
 		37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonasDetailVC.swift; sourceTree = "<group>"; };
+		B8756FEB26E00A55009807BA /* BFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +201,7 @@
 				3767832C26D3E33500674C4A /* DocVC.swift */,
 				3767836C26D3F74B00674C4A /* SidebarVC.swift */,
 				3767836E26D3F77A00674C4A /* DetailTabVC.swift */,
+				B8756FEB26E00A55009807BA /* BFViewController.swift */,
 				37EB462226D53BE4004DAE73 /* BookDetailVC.swift */,
 				37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */,
 				37EB462426D53BF9004DAE73 /* ChapterDetailVC.swift */,
@@ -349,6 +352,7 @@
 				3767832B26D3E33500674C4A /* AppDelegate.swift in Sources */,
 				3767836626D3E3D700674C4A /* Chapter.swift in Sources */,
 				3767836D26D3F74B00674C4A /* SidebarVC.swift in Sources */,
+				B8756FEC26E00A55009807BA /* BFViewController.swift in Sources */,
 				3767836526D3E3D700674C4A /* Persona.swift in Sources */,
 				371486B126D45C51002ACF32 /* Extensions.swift in Sources */,
 				3767837326D41A0700674C4A /* DocumentWindowController.swift in Sources */,

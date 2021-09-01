@@ -378,6 +378,23 @@ class Book: Equatable, ObservableObject {
 	}
 	
 	/**
+	Replaces the chapter from the book at `index`
+	Renumbers the chapters after the action.
+	Takes no action if `index` is invalid.
+	
+	- Parameter index: the index of the chapter replace
+	- Parameter chapter: the new Chapter
+	*/
+	public func replaceChapter(at index: Int, with chapter: Chapter) {
+		guard (0..<chapters.count).contains(index) else {
+			print("index was out of range.")
+			return
+		}
+		chapters[index] = chapter
+		renumberChapters()
+	}
+	
+	/**
 	Checks the file modification date against readAtTime.
 	
 	- Throws: `SBSError.fileNotFound`

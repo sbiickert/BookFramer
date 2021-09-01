@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class BookDetailVC: NSViewController {
+class BookDetailVC: BFViewController {
 	
 	var book: Book? {
 		didSet {
@@ -207,7 +207,7 @@ extension BookDetailVC: NSTextFieldDelegate {
 	//            else if textField == keywordField {
 	//               setKeywords(textField.stringValue)
 	//            }
-	//            NotificationCenter.default.post(name: .bookDidChange, object: nil)
+	//            document?.notificationCenter.post(name: .bookDidChange, object: nil)
 	//        }
 	//    }
 }

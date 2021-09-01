@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class SidebarVC: NSViewController  {
+class SidebarVC: BFViewController  {
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
@@ -15,7 +15,7 @@ class SidebarVC: NSViewController  {
         didSet {
             updateUI()
             let name: NSNotification.Name = .selectedItemDidChange
-            NotificationCenter.default.post(name: name, object: book)
+			document?.notificationCenter.post(name: name, object: book)
         }
     }
 
@@ -23,9 +23,11 @@ class SidebarVC: NSViewController  {
         super.viewDidLoad()
         outlineView.delegate = self
         outlineView.dataSource = self
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
     }
+	
+	override func viewWillAppear() {
+		document?.notificationCenter.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
+	}
     
     private func updateUI() {
         outlineView.reloadData()
@@ -167,7 +169,7 @@ extension SidebarVC: NSOutlineViewDelegate{
     func outlineViewSelectionDidChange(_ notification: Notification) {
         let item = outlineView.item(atRow: outlineView.selectedRow)
         let name: NSNotification.Name = .selectedItemDidChange
-        NotificationCenter.default.post(name: name, object: item)
+		document?.notificationCenter.post(name: name, object: item)
     }
     
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {

@@ -7,7 +7,13 @@
 
 import Cocoa
 
-class ChapterDetailVC: NSViewController {
+class ChapterDetailVC: BFViewController {
+
+	var book: Book? {
+		didSet {
+			updateUI()
+		}
+	}
 
 	var chapter: Chapter? {
 		didSet {
@@ -30,12 +36,12 @@ class ChapterDetailVC: NSViewController {
 	@IBOutlet weak var colWords: NSTableColumn!
 	
 	override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
+		super.viewDidLoad()
+		// Do view setup here.
 		tableView.delegate = self
 		tableView.dataSource = self
 		tableView.doubleAction = #selector(tableViewWasDoubleClicked)
-    }
+	}
 	
 	private func updateUI() {
 		titleField.stringValue = chapter?.title ?? ""
@@ -47,13 +53,47 @@ class ChapterDetailVC: NSViewController {
 		tableView.reloadData()
 	}
 	
+	/**
+	Target of action when `titleField` changes. Calls `setTitle`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func titleChanged(_ sender: NSTextField) {
+		setTitle(sender.stringValue)
+	}
+	/**
+	Undoable way to set the title of the chapter.
+	- Parameter newValue: the value to change the title to
+	*/
+	private func setTitle(_ newValue: String) {
+		guard book != nil && chapter != nil && chapter!.title != newValue else {
+			return
+		}
+		let oldValue = chapter!.title
+		undoManager?.registerUndo(withTarget: self) { $0.setTitle(oldValue) }
+		chapter!.title = newValue
+		titleField.stringValue = newValue
+		// Chapter is a value type. Need to replace it in the book
+		book!.replaceChapter(at: chapter!.number - 1, with: chapter!)
+	}
+
+	/**
+	Target of action when `subtitleField` changes. Calls `setSubtitle`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func subtitleChanged(_ sender: NSTextField) {
+		setSubtitle(sender.stringValue)
+	}
+	private func setSubtitle(_ newValue: String) {
+	}
+
+	
 	@objc func tableViewWasDoubleClicked() {
 		//print("Double click on row \(tableView.clickedRow) and column \(tableView.clickedColumn)")
 		guard tableView.clickedRow >= 0 else {
 			return // click on header
 		}
 		if let rowObject = tableView(tableView, objectValueFor: nil, row: tableView.clickedRow) {
-			NotificationCenter.default.post(name: .selectedItemDidChange, object: rowObject)
+			document?.notificationCenter.post(name: .selectedItemDidChange, object: rowObject)
 		}
 	}
 

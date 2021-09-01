@@ -8,7 +8,6 @@
 import Cocoa
 
 class DocVC: NSSplitViewController {
-
     var book: Book? {
         return representedObject as? Book
     }

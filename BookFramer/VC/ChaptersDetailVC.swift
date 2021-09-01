@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class ChaptersDetailVC: NSViewController {
+class ChaptersDetailVC: BFViewController {
 	
 	var book: Book? {
 		didSet {
@@ -43,11 +43,11 @@ class ChaptersDetailVC: NSViewController {
 		if let rowObject = objectFor(row: tableView.clickedRow) {
 			if rowObject.1 != nil {
 				// Double click on scene
-				NotificationCenter.default.post(name: .selectedItemDidChange, object: rowObject.1)
+				document?.notificationCenter.post(name: .selectedItemDidChange, object: rowObject.1)
 			}
 			else {
 				// Double click on chapter
-				NotificationCenter.default.post(name: .selectedItemDidChange, object: rowObject.0)
+				document?.notificationCenter.post(name: .selectedItemDidChange, object: rowObject.0)
 			}
 		}
 	}

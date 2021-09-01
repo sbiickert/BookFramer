@@ -17,12 +17,18 @@ class DetailTabVC: NSTabViewController {
     }
 	
 	var book: Book?
-    
+	
+	public var document: Document? {
+		return self.view.window?.windowController?.document as? Document
+	}
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
     }
+	
+	override func viewWillAppear() {
+		document?.notificationCenter.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
+	}
     
     @objc func selectedItemDidChange(notification: NSNotification) {
 		
@@ -36,11 +42,17 @@ class DetailTabVC: NSTabViewController {
         else if notification.object is Chapter {
 			let tvi = self.tabViewItems[TabIndex.chapter.rawValue]
 			if let cdvc = tvi.viewController as? ChapterDetailVC {
+				cdvc.book = self.book
 				cdvc.chapter = notification.object as? Chapter
 			}
             self.tabView.selectTabViewItem(at: TabIndex.chapter.rawValue)
         }
         else if notification.object is SubChapter {
+			let tvi = self.tabViewItems[TabIndex.subchapter.rawValue]
+			if let scdvc = tvi.viewController as? SubChapterDetailVC {
+				scdvc.book = book
+				scdvc.subchapter = notification.object as? SubChapter
+			}
             self.tabView.selectTabViewItem(at: TabIndex.subchapter.rawValue)
         }
         else if notification.object is [Chapter] {

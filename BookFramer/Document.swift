@@ -9,6 +9,8 @@ import Cocoa
 
 class Document: NSDocument {
     weak var contentViewController: DocVC?
+	let notificationCenter = NotificationCenter()
+	
     var book: Book {
         didSet {
             // TODO: set window title. This is wrong.

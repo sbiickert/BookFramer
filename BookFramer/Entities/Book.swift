@@ -378,19 +378,19 @@ class Book: Equatable, ObservableObject {
 	}
 	
 	/**
-	Replaces the chapter from the book at `index`
+	Replaces the chapter from the book identified by the same id
 	Renumbers the chapters after the action.
-	Takes no action if `index` is invalid.
+	Takes no action if no chapter in the book has the same id.
 	
-	- Parameter index: the index of the chapter replace
-	- Parameter chapter: the new Chapter
+	- Parameter chapter: the revised Chapter
 	*/
-	public func replaceChapter(at index: Int, with chapter: Chapter) {
-		guard (0..<chapters.count).contains(index) else {
-			print("index was out of range.")
-			return
+	public func replace(chapter: Chapter) {
+		for (index, ch) in chapters.enumerated() {
+			if ch.id == chapter.id {
+				chapters[index] = chapter
+				break
+			}
 		}
-		chapters[index] = chapter
 		renumberChapters()
 	}
 	

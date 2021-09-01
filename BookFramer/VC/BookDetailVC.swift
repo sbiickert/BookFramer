@@ -72,6 +72,7 @@ class BookDetailVC: BFViewController {
 		undoManager?.registerUndo(withTarget: self) { $0.setTitle(oldValue) }
 		book!.title = newValue
 		titleField.stringValue = newValue
+		document?.notificationCenter.post(name: .bookEdited, object: book)
 	}
 	
 	/**
@@ -93,6 +94,7 @@ class BookDetailVC: BFViewController {
 		undoManager?.registerUndo(withTarget: self) { $0.setSubtitle(oldValue) }
 		book!.subtitle = newValue
 		subtitleField.stringValue = newValue
+		document?.notificationCenter.post(name: .bookEdited, object: book)
 	}
 	
 	/**

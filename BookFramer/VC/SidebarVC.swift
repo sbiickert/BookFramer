@@ -27,6 +27,7 @@ class SidebarVC: BFViewController  {
 	
 	override func viewWillAppear() {
 		document?.notificationCenter.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
+		document?.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 	}
     
     private func updateUI() {
@@ -64,7 +65,12 @@ class SidebarVC: BFViewController  {
 			}
 		}
 	}
-
+	
+	@objc func bookEdited(notification: NSNotification) {
+		outlineView.reloadData()
+		selectedItemDidChange(notification: notification)
+	}
+	
     enum NodeIcon: String {
         case book = "book"
         case chapter = "doc"

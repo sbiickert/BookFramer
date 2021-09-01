@@ -57,4 +57,12 @@ class ChapterTest: XCTestCase {
 		XCTAssert(simpleBook.chapters[0].search(for: "such[\\w\\s]+man"))
 		XCTAssert(simpleBook.chapters[0].search(for: "crazy[\\w\\s]+man") == false)
 	}
+	
+	func testIdentity() throws {
+		let ch0 = Chapter()
+		var ch1 = ch0
+		ch1.title = "Some other value"
+		XCTAssert(ch0.id == ch1.id)
+		XCTAssert(ch0 != ch1)
+	}
 }

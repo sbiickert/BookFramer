@@ -12,7 +12,11 @@ struct SubChapter: Equatable, Hashable {
 		return lhs.headerInfo == rhs.headerInfo &&
 			lhs.paragraphs == rhs.paragraphs
 	}
+//	static func == (lhs: SubChapter, rhs: SubChapter) -> Bool {
+//		return lhs.id == rhs.id
+//	}
 	
+	let id = UUID().uuidString
 	var headerInfo = SubChapterHeader()
 	var startLineNumber = 0
 	var paragraphs = [String]()

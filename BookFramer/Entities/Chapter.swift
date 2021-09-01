@@ -13,7 +13,11 @@ struct Chapter: Equatable, Hashable {
 			lhs.subtitle == rhs.subtitle &&
 			lhs.subchapters == rhs.subchapters
 	}
+//	static func == (lhs: Chapter, rhs: Chapter) -> Bool {
+//		return lhs.id == rhs.id
+//	}
 	
+	let id = UUID().uuidString
 	var title = "Title"
 	var subtitle = "Subtitle"
 	var number = 0

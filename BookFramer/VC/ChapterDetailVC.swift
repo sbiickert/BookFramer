@@ -73,7 +73,8 @@ class ChapterDetailVC: BFViewController {
 		chapter!.title = newValue
 		titleField.stringValue = newValue
 		// Chapter is a value type. Need to replace it in the book
-		book!.replaceChapter(at: chapter!.number - 1, with: chapter!)
+		book!.replace(chapter: chapter!)
+		document?.notificationCenter.post(name: .bookEdited, object: chapter!)
 	}
 
 	/**
@@ -84,6 +85,16 @@ class ChapterDetailVC: BFViewController {
 		setSubtitle(sender.stringValue)
 	}
 	private func setSubtitle(_ newValue: String) {
+		guard book != nil && chapter != nil && chapter!.subtitle != newValue else {
+			return
+		}
+		let oldValue = chapter!.subtitle
+		undoManager?.registerUndo(withTarget: self) { $0.setSubtitle(oldValue) }
+		chapter!.subtitle = newValue
+		subtitleField.stringValue = newValue
+		// Chapter is a value type. Need to replace it in the book
+		book!.replace(chapter: chapter!)
+		document?.notificationCenter.post(name: .bookEdited, object: chapter!)
 	}
 
 	

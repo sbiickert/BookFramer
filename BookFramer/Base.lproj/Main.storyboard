@@ -735,13 +735,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gee-5M-9Kx">
-                                <rect key="frame" x="0.0" y="0.0" width="380" height="400"/>
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="394"/>
                                 <clipView key="contentView" drawsBackground="NO" id="49z-Ee-EIj">
-                                    <rect key="frame" x="1" y="1" width="378" height="398"/>
+                                    <rect key="frame" x="1" y="1" width="378" height="392"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="FlM-aN-k73" id="oAC-HO-CSm">
-                                            <rect key="frame" x="0.0" y="0.0" width="378" height="398"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="378" height="392"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="0.0"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1414,22 +1414,28 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9B2-q1-FVf">
-                                <rect key="frame" x="108" y="293" width="322" height="21"/>
+                                <rect key="frame" x="108" y="293" width="321" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="gKf-nZ-r96">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <action selector="descriptionChanged:" target="jfc-Op-HG1" id="czy-3s-DHg"/>
+                                </connections>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbf-da-Z76">
-                                <rect key="frame" x="108" y="262" width="322" height="21"/>
+                                <rect key="frame" x="108" y="262" width="320" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="dNa-Tw-WNy">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <action selector="locationChanged:" target="jfc-Op-HG1" id="lez-CB-gg4"/>
+                                </connections>
                             </textField>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xhI-l4-buB">
                                 <rect key="frame" x="105" y="197" width="329" height="25"/>
@@ -1445,6 +1451,9 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
+                                <connections>
+                                    <action selector="povChanged:" target="jfc-Op-HG1" id="sQe-nb-0h6"/>
+                                </connections>
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HqQ-2p-5uf">
                                 <rect key="frame" x="105" y="227" width="211" height="25"/>
@@ -1460,6 +1469,9 @@
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
+                                <connections>
+                                    <action selector="statusChanged:" target="jfc-Op-HG1" id="eNw-u2-c7L"/>
+                                </connections>
                             </popUpButton>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="384-7j-2Og">
                                 <rect key="frame" x="18" y="42" width="73" height="14"/>
@@ -1507,6 +1519,11 @@ Nejla Abbas</string>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UPF-8U-XfJ">
+                                <rect key="frame" x="320" y="228" width="20" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="VTj-e4-6MA"/>
+                            </imageView>
                         </subviews>
                     </view>
                     <connections>
@@ -1516,6 +1533,7 @@ Nejla Abbas</string>
                         <outlet property="paragraphsLabel" destination="BnU-68-zE9" id="8tI-7R-JwT"/>
                         <outlet property="povPopupMenu" destination="xhI-l4-buB" id="kdV-UC-RSB"/>
                         <outlet property="startsAtLineLabel" destination="n3s-wr-WxF" id="FGP-qT-Kww"/>
+                        <outlet property="statusImage" destination="UPF-8U-XfJ" id="Gy0-vY-Y1M"/>
                         <outlet property="statusPopupMenu" destination="HqQ-2p-5uf" id="LBO-1L-M3u"/>
                         <outlet property="wordsLabel" destination="384-7j-2Og" id="OrX-5f-B8h"/>
                     </connections>

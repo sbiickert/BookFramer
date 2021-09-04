@@ -41,6 +41,7 @@ class ChapterDetailVC: BFViewController {
 		tableView.delegate = self
 		tableView.dataSource = self
 		tableView.doubleAction = #selector(tableViewWasDoubleClicked)
+        tableView.registerForDraggedTypes([.tableViewIndex])
 	}
 	
 	private func updateUI() {
@@ -114,6 +115,62 @@ extension ChapterDetailVC: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 24.0
 	}
+    
+    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+        return SubChapterPasteboardWriter(id: chapter?.subchapters[row].id ?? "", at: row)
+    }
+    
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+        guard dropOperation == .above else {
+            //print("\(dropOperation)")
+            return []
+        }
+        
+        if let source = info.draggingSource as? NSTableView,
+           source === tableView {
+            tableView.draggingDestinationFeedbackStyle = .regular
+        }
+        
+        return .move
+    }
+    
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+        guard let items = info.draggingPasteboard.pasteboardItems else { return false }
+        
+        let indexes: [Int] = items.compactMap{
+            if let number = $0.propertyList(forType: .tableViewIndex) as? NSNumber {
+                return number.intValue
+            }
+            return nil
+        }
+        if !indexes.isEmpty {
+            for index in indexes.reversed() {
+                print("dragged row \(index) to \(row)")
+                if row > index {
+                    // Shifting down, need to account for the fact that the source row is disappearing
+                    chapter!.reorderSubChapter(fromIndex: index, toIndex: row-1)
+                }
+                else {
+                    chapter!.reorderSubChapter(fromIndex: index, toIndex: row)
+                }
+            }
+            
+            tableView.beginUpdates()
+            var oldIndexOffset = 0
+            var newIndexOffset = 0
+            for oldIndex in indexes {
+                if oldIndex < row {
+                    tableView.moveRow(at: oldIndex + oldIndexOffset, to: row - 1)
+                    oldIndexOffset -= 1
+                } else {
+                    tableView.moveRow(at: oldIndex, to: row + newIndexOffset)
+                    newIndexOffset += 1
+                }
+            }
+            tableView.endUpdates()
+       }
+        return true
+    }
 }
 
 extension ChapterDetailVC: NSTableViewDataSource {

@@ -75,7 +75,7 @@ class SubChapterDetailVC: BFViewController {
 	
 	private func updatePovMenu() {
 		if let p = book?.findPersona(named: subchapter?.headerInfo.pov ?? ""),
-		   let menuItem = statusPopupMenu.item(withTitle: p.name) {
+		   let menuItem = povPopupMenu.item(withTitle: p.name) {
 			povPopupMenu.select(menuItem)
 		}
 	}
@@ -92,36 +92,93 @@ class SubChapterDetailVC: BFViewController {
 		}
 		return resultList.joined(separator: "\n")
 	}
+    
+    private func writeChangedSubChapterToBook() {
+        guard book != nil && subchapter != nil else {
+            return
+        }
+        // Chapter / SubChapter are value types. Need to replace it in Book
+        if var ch = book!.chapterContaining(subchapter: subchapter!) {
+            ch.replace(subchapter: subchapter!)
+            book!.replace(chapter: ch)
+        }
+    }
 	
+	/**
+	Target of action when `descriptionField` changes. Calls `setDescription`
+	- Parameter sender: the NSTextField
+	*/
 	@IBAction func descriptionChanged(_ sender: NSTextField) {
 		setDescription(sender.stringValue)
 	}
-	private func setDescription(_ value: String) {
-		
+	/**
+	Undoable way to set the description of the subchapter.
+	- Parameter newValue: the value to change the description to
+	*/
+	private func setDescription(_ newValue: String) {
+		guard book != nil && subchapter != nil && subchapter!.headerInfo.description != newValue else {
+			return
+		}
+		let oldValue = subchapter!.headerInfo.description
+		undoManager?.registerUndo(withTarget: self) { $0.setDescription(oldValue) }
+		subchapter!.headerInfo.description = newValue
+		descriptionField.stringValue = newValue
+        writeChangedSubChapterToBook()
+		document?.notificationCenter.post(name: .bookEdited, object: subchapter!)
 	}
 	
+	/**
+	Target of action when `locationField` changes. Calls `setLocation`
+	- Parameter sender: the NSTextField
+	*/
 	@IBAction func locationChanged(_ sender: NSTextField) {
 		setLocation(sender.stringValue)
 	}
-	private func setLocation(_ value: String) {
-		
+	/**
+	Undoable way to set the location of the subchapter.
+	- Parameter newValue: the value to change the location to
+	*/
+	private func setLocation(_ newValue: String) {
+		guard book != nil && subchapter != nil && subchapter!.headerInfo.location != newValue else {
+			return
+		}
+		let oldValue = subchapter!.headerInfo.location
+		undoManager?.registerUndo(withTarget: self) { $0.setLocation(oldValue) }
+		subchapter!.headerInfo.location = newValue
+		locationField.stringValue = newValue
+		writeChangedSubChapterToBook()
 	}
 	
 	@IBAction func statusChanged(_ sender: NSPopUpButton) {
 		if let menuItem = sender.selectedItem {
 			setStatus(EditStatus.init(rawValue: menuItem.title)!)
 		}
-		updateStatusMenu()
 	}
-	private func setStatus(_ value: EditStatus) {
-		//subchapter?.headerInfo.status =
+	private func setStatus(_ newValue: EditStatus) {
+        guard book != nil && subchapter != nil && subchapter!.headerInfo.status != newValue else {
+            return
+        }
+        let oldValue = subchapter!.headerInfo.status
+        undoManager?.registerUndo(withTarget: self) { $0.setStatus(oldValue) }
+        subchapter!.headerInfo.status = newValue
+        writeChangedSubChapterToBook()
+		updateStatusMenu()
+        // Update icon in outline view
+        document?.notificationCenter.post(name: .bookEdited, object: subchapter!)
 	}
 	
 	@IBAction func povChanged(_ sender: NSPopUpButton) {
 		setPOV(sender.selectedItem?.title ?? "")
 	}
-	private func setPOV(_ value: String) {
-		
+	private func setPOV(_ newValue: String) {
+        guard book != nil && subchapter != nil && subchapter!.headerInfo.pov != newValue else {
+            return
+        }
+        let oldValue = subchapter!.headerInfo.pov
+        undoManager?.registerUndo(withTarget: self) { $0.setPOV(oldValue) }
+        subchapter!.headerInfo.pov = newValue
+        writeChangedSubChapterToBook()
+        updatePovMenu()
 	}
 	
 }

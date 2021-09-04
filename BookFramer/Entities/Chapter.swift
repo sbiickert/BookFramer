@@ -74,6 +74,21 @@ struct Chapter: Equatable, Hashable {
 		arr.insert(sc, at: toIndex)
 		subchapters = arr
 	}
+	
+	/**
+	Replaces the subchapter from the chapter identified by the same id
+	Takes no action if no subchapter in the book has the same id.
+	
+	- Parameter subchapter: the revised SubChapter
+	*/
+	public mutating func replace(subchapter: SubChapter) {
+		for (index, sub) in subchapters.enumerated() {
+			if sub.id == subchapter.id {
+				subchapters[index] = subchapter
+				break
+			}
+		}
+	}
 
 	/**
 	Searches for a case-insensitive regex pattern in all subchapters

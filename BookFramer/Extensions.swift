@@ -41,3 +41,7 @@ extension CaseIterable where Self: Equatable {
         return Self.allCases.firstIndex { self == $0 }
     }
 }
+
+extension NSPasteboard.PasteboardType {
+    static let tableViewIndex = NSPasteboard.PasteboardType("ca.biickert.tableViewIndex")
+}

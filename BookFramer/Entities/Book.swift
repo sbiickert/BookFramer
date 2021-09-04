@@ -217,7 +217,7 @@ class Book: Equatable, ObservableObject {
 	*/
 	func chapterContaining(subchapter: SubChapter) -> Chapter? {
 		for c in chapters {
-			if c.subchapters.contains(subchapter) {
+			if c.subchapters.contains(where: { $0.id == subchapter.id }) {
 				return c
 			}
 		}

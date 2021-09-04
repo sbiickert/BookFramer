@@ -59,7 +59,9 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 		return 24.0
 	}
 	
-	
+//    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+//        <#code#>
+//    }
 	
 }
 

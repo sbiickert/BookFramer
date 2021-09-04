@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		371486B126D45C51002ACF32 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371486B026D45C51002ACF32 /* Extensions.swift */; };
 		3738A74A26D7EF10004095C1 /* CheckboxTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3738A74926D7EF10004095C1 /* CheckboxTableCellView.swift */; };
+		3743950E26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */; };
 		3767832B26D3E33500674C4A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767832A26D3E33500674C4A /* AppDelegate.swift */; };
 		3767832D26D3E33500674C4A /* DocVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767832C26D3E33500674C4A /* DocVC.swift */; };
 		3767832F26D3E33500674C4A /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767832E26D3E33500674C4A /* Document.swift */; };
@@ -56,6 +57,7 @@
 /* Begin PBXFileReference section */
 		371486B026D45C51002ACF32 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3738A74926D7EF10004095C1 /* CheckboxTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxTableCellView.swift; sourceTree = "<group>"; };
+		3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "class SubChapterPasteboardWriter.swift"; path = "BookFramer/class SubChapterPasteboardWriter.swift"; sourceTree = "<group>"; };
 		3767832726D3E33500674C4A /* BookFramer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookFramer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3767832A26D3E33500674C4A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3767832C26D3E33500674C4A /* DocVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocVC.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 		3767831E26D3E33500674C4A = {
 			isa = PBXGroup;
 			children = (
+				3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */,
 				3767832926D3E33500674C4A /* BookFramer */,
 				3767833E26D3E33600674C4A /* BookFramerTests */,
 				3767834926D3E33600674C4A /* BookFramerUITests */,
@@ -348,6 +351,7 @@
 				3767832D26D3E33500674C4A /* DocVC.swift in Sources */,
 				37EB463026D54E49004DAE73 /* PersonasDetailVC.swift in Sources */,
 				37EB462326D53BE4004DAE73 /* BookDetailVC.swift in Sources */,
+				3743950E26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift in Sources */,
 				3738A74A26D7EF10004095C1 /* CheckboxTableCellView.swift in Sources */,
 				3767832B26D3E33500674C4A /* AppDelegate.swift in Sources */,
 				3767836626D3E3D700674C4A /* Chapter.swift in Sources */,

@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class SubChapterPasteboardWriter: NSObject, NSPasteboardWriting {
+class TableReorderPasteboardWriter: NSObject, NSPasteboardWriting {
     var id: String
     var index: Int
     

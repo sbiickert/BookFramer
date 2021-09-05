@@ -135,6 +135,8 @@ extension SidebarVC: NSOutlineViewDataSource {
         var icon = NSImage(systemSymbolName: NodeIcon.book.rawValue, accessibilityDescription: "book")
         let font = textView?.font
         
+        imageView?.contentTintColor = nil
+
         if let b = item as? Book {
             imageView?.image = icon
             textView?.stringValue = b.title

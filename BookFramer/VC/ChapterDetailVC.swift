@@ -117,7 +117,7 @@ extension ChapterDetailVC: NSTableViewDelegate {
 	}
     
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-        return SubChapterPasteboardWriter(id: chapter?.subchapters[row].id ?? "", at: row)
+        return TableReorderPasteboardWriter(id: chapter?.subchapters[row].id ?? "", at: row)
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
@@ -146,6 +146,12 @@ extension ChapterDetailVC: NSTableViewDelegate {
         if !indexes.isEmpty {
             for index in indexes.reversed() {
                 print("dragged row \(index) to \(row)")
+                // problem: how to make this undoable?
+                // solution:
+                // take a copy of the subchapters as-is, then do the reordering
+                // take a copy of the subchapters reordered, apply the old back to the chapter
+                // then call setSubChapters
+                let oldSubs = chapter!.subchapters
                 if row > index {
                     // Shifting down, need to account for the fact that the source row is disappearing
                     chapter!.reorderSubChapter(fromIndex: index, toIndex: row-1)
@@ -153,6 +159,9 @@ extension ChapterDetailVC: NSTableViewDelegate {
                 else {
                     chapter!.reorderSubChapter(fromIndex: index, toIndex: row)
                 }
+                let newSubs = chapter!.subchapters
+                chapter!.subchapters = oldSubs
+                setSubChapters(newSubs)
             }
             
             tableView.beginUpdates()
@@ -170,6 +179,21 @@ extension ChapterDetailVC: NSTableViewDelegate {
             tableView.endUpdates()
        }
         return true
+    }
+    
+    private func setSubChapters(_ newValue: [SubChapter], reloadTableData: Bool = true) {
+        guard book != nil && chapter != nil && chapter!.subchapters != newValue else {
+            return
+        }
+        let oldValue = chapter!.subchapters
+        undoManager?.registerUndo(withTarget: self) { $0.setSubChapters(oldValue) }
+        chapter!.subchapters = newValue
+        if reloadTableData {
+            tableView.reloadData()
+        }
+        // Chapter is a value type. Need to replace it in the book
+        book!.replace(chapter: chapter!)
+        document?.notificationCenter.post(name: .bookEdited, object: chapter!)
     }
 }
 

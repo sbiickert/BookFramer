@@ -34,6 +34,7 @@
 		37EB462B26D53C20004DAE73 /* SubChapterDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */; };
 		37EB462E26D54E33004DAE73 /* ChaptersDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */; };
 		37EB463026D54E49004DAE73 /* PersonasDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */; };
+		37F7FDC526E50676006268ED /* IDable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F7FDC426E50676006268ED /* IDable.swift */; };
 		B8756FEC26E00A55009807BA /* BFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8756FEB26E00A55009807BA /* BFViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,7 @@
 		37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubChapterDetailVC.swift; sourceTree = "<group>"; };
 		37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaptersDetailVC.swift; sourceTree = "<group>"; };
 		37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonasDetailVC.swift; sourceTree = "<group>"; };
+		37F7FDC426E50676006268ED /* IDable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDable.swift; sourceTree = "<group>"; };
 		B8756FEB26E00A55009807BA /* BFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 				3767836126D3E3D700674C4A /* Chapter.swift */,
 				3767836026D3E3D600674C4A /* Persona.swift */,
 				3767836226D3E3D700674C4A /* SubChapter.swift */,
+				37F7FDC426E50676006268ED /* IDable.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				371486B126D45C51002ACF32 /* Extensions.swift in Sources */,
 				3767837326D41A0700674C4A /* DocumentWindowController.swift in Sources */,
 				3767832F26D3E33500674C4A /* Document.swift in Sources */,
+				37F7FDC526E50676006268ED /* IDable.swift in Sources */,
 				3767836A26D3E3EF00674C4A /* Enums.swift in Sources */,
 				3767836726D3E3D700674C4A /* SubChapter.swift in Sources */,
 				37EB462626D53BF9004DAE73 /* ChapterDetailVC.swift in Sources */,

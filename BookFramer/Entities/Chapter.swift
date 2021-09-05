@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Chapter: Equatable, Hashable {
+struct Chapter: Equatable, Hashable, IDable {
 	static func == (lhs: Chapter, rhs: Chapter) -> Bool {
 		return lhs.title == rhs.title &&
 			lhs.subtitle == rhs.subtitle &&

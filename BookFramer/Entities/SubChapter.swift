@@ -7,7 +7,7 @@
 
 import AppKit
 
-struct SubChapter: Equatable, Hashable {
+struct SubChapter: Equatable, Hashable, IDable {
 	static func == (lhs: SubChapter, rhs: SubChapter) -> Bool {
 		return lhs.headerInfo == rhs.headerInfo &&
 			lhs.paragraphs == rhs.paragraphs

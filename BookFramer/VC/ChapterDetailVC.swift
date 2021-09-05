@@ -130,6 +130,9 @@ extension ChapterDetailVC: NSTableViewDelegate {
            source === tableView {
             tableView.draggingDestinationFeedbackStyle = .regular
         }
+        else {
+            return []
+        }
         
         return .move
     }

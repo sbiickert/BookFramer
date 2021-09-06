@@ -74,6 +74,22 @@ struct Chapter: Equatable, Hashable, IDable {
 		arr.insert(sc, at: toIndex)
 		subchapters = arr
 	}
+    
+    /**
+     Returns the index of subchapter in the chapter, based on id. If  id does not exist,
+     returns nil.
+     
+     - Parameter toFind: the subchapter to find
+     - Returns: index of the subchapter in the chapter, nil if not found
+     */
+    public func indexOf(subchapter toFind: SubChapter) -> Int? {
+        for i in 0..<subchapters.count {
+            if subchapters[i].id == toFind.id {
+                return i
+            }
+        }
+        return nil
+    }
 	
 	/**
 	Replaces the subchapter from the chapter identified by the same id

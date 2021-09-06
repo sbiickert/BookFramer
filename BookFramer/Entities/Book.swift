@@ -360,6 +360,22 @@ class Book: Equatable, ObservableObject {
 		chapters = arr
 		renumberChapters()
 	}
+    
+    /**
+     Returns the index of chapter in the book, based on id. If  id does not exist,
+     returns nil.
+     
+     - Parameter toFind: the chapter to find
+     - Returns: index of the chapter in the book, nil if not found
+     */
+    public func indexOf(chapter toFind: Chapter) -> Int? {
+        for i in 0..<chapters.count {
+            if chapters[i].id == toFind.id {
+                return i
+            }
+        }
+        return nil
+    }
 	
 	/**
 	Removes the chapter from the book at `index`

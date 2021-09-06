@@ -10,7 +10,7 @@ import XCTest
 
 class BookTest: XCTestCase {
     
-	public static let PRIDE_AND_PREJUDICE = "/Users/sbiickert/Code/BookFramer/Pride_And_Prejudice/book.bfd"
+	public static let PRIDE_AND_PREJUDICE = "/Users/sjb/Code/BookFramer/Pride_And_Prejudice/book.bfd"
 	//"/Users/sjb/Projects/Mac/BookFramer/Pride_And_Prejudice/book.bfd"
 	public static let SIMPLE_BOOK = """
 		# Pride and Prejudice:
@@ -166,9 +166,15 @@ class BookTest: XCTestCase {
 		book.reorderChapter(fromIndex: 1, toIndex: 0)
 		XCTAssert(book.chapters[0].title == "Chapter Two")
 		XCTAssert(book.chapters[1].title == "Chapter One")
-		book.reorderChapter(fromIndex: 0, toIndex: 1)
-		XCTAssert(book.chapters[0].title == "Chapter One")
-		XCTAssert(book.chapters[1].title == "Chapter Two")
+        book.reorderChapter(fromIndex: 0, toIndex: 1)
+        XCTAssert(book.chapters[0].title == "Chapter One")
+        XCTAssert(book.chapters[1].title == "Chapter Two")
+        book.reorderChapter(fromIndex: 59, toIndex: 60)
+        XCTAssert(book.chapters[59].title == "Chapter Sixty One")
+        XCTAssert(book.chapters[60].title == "Chapter Sixty")
+        book.reorderChapter(fromIndex: 60, toIndex: 59)
+        XCTAssert(book.chapters[59].title == "Chapter Sixty")
+        XCTAssert(book.chapters[60].title == "Chapter Sixty One")
 		book.reorderChapter(fromIndex: 0, toIndex: 100)
 		XCTAssert(book.chapters[0].title == "Chapter One")
 		XCTAssert(book.chapters.count == 61)

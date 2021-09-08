@@ -41,21 +41,22 @@ class ChaptersDetailVC: BFViewController {
 		guard tableView.clickedRow >= 0 else {
 			return // click on header
 		}
-		if let rowObject = objectFor(row: tableView.clickedRow) {
-			if let sub = rowObject as? SubChapter {
-				// Double click on scene
-				document?.notificationCenter.post(name: .selectedItemDidChange, object: sub)
-			}
-			else if let ch = rowObject as? Chapter {
-				// Double click on chapter
-				document?.notificationCenter.post(name: .selectedItemDidChange, object: ch)
-			}
+		if let item = objectFor(row: tableView.clickedRow) {
+			document?.notificationCenter.post(name: .changeContext, object: item)
 		}
 	}
 	
 }
 
 extension ChaptersDetailVC: NSTableViewDelegate {
+	func tableViewSelectionDidChange(_ notification: Notification) {
+		guard tableView.selectedRow >= 0 else {
+			return // no selected row
+		}
+		let item = objectFor(row: tableView.selectedRow)
+		document?.notificationCenter.post(name: .contextDidChange, object: item)
+	}
+	
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 24.0
 	}
@@ -204,7 +205,7 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 		if reloadTableData {
 			tableView.reloadData()
 		}
-		//document?.notificationCenter.post(name: .bookEdited, object: book)
+		document?.notificationCenter.post(name: .bookEdited, object: book!.chapters)
 	}
 }
 

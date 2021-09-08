@@ -105,13 +105,19 @@ class ChapterDetailVC: BFViewController {
             return // click on header
         }
         if let rowObject = tableView(tableView, objectValueFor: nil, row: tableView.clickedRow) {
-            document?.notificationCenter.post(name: .selectedItemDidChange, object: rowObject)
+            document?.notificationCenter.post(name: .changeContext, object: rowObject)
         }
     }
     
 }
 
 extension ChapterDetailVC: NSTableViewDelegate {
+	func tableViewSelectionDidChange(_ notification: Notification) {
+		if let sub = self.tableView(tableView, objectValueFor: nil, row: tableView.selectedRow) as? SubChapter {
+			document?.notificationCenter.post(name: .contextDidChange, object: sub)
+		}
+	}
+	
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 24.0
     }

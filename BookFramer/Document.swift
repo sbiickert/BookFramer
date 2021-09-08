@@ -14,6 +14,7 @@ class Document: NSDocument {
     var book: Book {
         didSet {
             // TODO: set window title. This is wrong.
+			Swift.print("Set document book to \(book)")
         }
     }
 

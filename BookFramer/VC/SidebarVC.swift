@@ -14,8 +14,7 @@ class SidebarVC: BFViewController  {
     var book: Book? {
         didSet {
             updateUI()
-            let name: NSNotification.Name = .selectedItemDidChange
-			document?.notificationCenter.post(name: name, object: book)
+			document?.notificationCenter.post(name: .changeContext, object: book)
         }
     }
 
@@ -26,7 +25,7 @@ class SidebarVC: BFViewController  {
     }
 	
 	override func viewWillAppear() {
-		document?.notificationCenter.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
+		document?.notificationCenter.addObserver(self, selector: #selector(contextDidChange(notification:)), name: .contextDidChange, object: nil)
 		document?.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 	}
     
@@ -34,10 +33,14 @@ class SidebarVC: BFViewController  {
         outlineView.reloadData()
     }
 	
-	@objc func selectedItemDidChange(notification: NSNotification) {
+	private var _shouldChangeContext = true
+	@objc func contextDidChange(notification: NSNotification) {
 		var row = outlineView.row(forItem: notification.object)
 		if row >= 0 {
+			_shouldChangeContext = false
 			outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+			_shouldChangeContext = true
+			outlineView.scrollRowToVisible(row)
 		}
 		else {
 			// The notification object is something not disclosed in the outlineView
@@ -61,14 +64,17 @@ class SidebarVC: BFViewController  {
 			// Try again
 			row = outlineView.row(forItem: notification.object)
 			if row >= 0 {
+				_shouldChangeContext = false
 				outlineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+				_shouldChangeContext = true
+				outlineView.scrollRowToVisible(row)
 			}
 		}
 	}
 	
 	@objc func bookEdited(notification: NSNotification) {
 		outlineView.reloadData()
-		selectedItemDidChange(notification: notification)
+		contextDidChange(notification: notification)
 	}
 	
     enum NodeIcon: String {
@@ -175,9 +181,10 @@ extension SidebarVC: NSOutlineViewDataSource {
 
 extension SidebarVC: NSOutlineViewDelegate{
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        let item = outlineView.item(atRow: outlineView.selectedRow)
-        let name: NSNotification.Name = .selectedItemDidChange
-		document?.notificationCenter.post(name: name, object: item)
+		if _shouldChangeContext {
+			let item = outlineView.item(atRow: outlineView.selectedRow)
+			document?.notificationCenter.post(name: .changeContext, object: item)
+		}
     }
     
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {

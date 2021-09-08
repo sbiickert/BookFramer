@@ -16,7 +16,12 @@ class DetailTabVC: NSTabViewController {
         case personas = 4
     }
 	
-	var book: Book?
+	var book: Book? {
+		didSet {
+			let note = NSNotification(name: .changeContext, object: book)
+			self.changeContext(notification: note)
+		}
+	}
 	
 	public var document: Document? {
 		return self.view.window?.windowController?.document as? Document
@@ -27,10 +32,10 @@ class DetailTabVC: NSTabViewController {
     }
 	
 	override func viewWillAppear() {
-		document?.notificationCenter.addObserver(self, selector: #selector(selectedItemDidChange(notification:)), name: .selectedItemDidChange, object: nil)
+		document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
 	}
     
-    @objc func selectedItemDidChange(notification: NSNotification) {
+    @objc func changeContext(notification: NSNotification) {
 		
         if notification.object is Book {
             let tvi = self.tabViewItems[TabIndex.book.rawValue]

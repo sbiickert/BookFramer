@@ -37,6 +37,8 @@ class Book: Equatable, ObservableObject {
 		let sc = SubChapter(text: text)
 		c.subchapters.append(sc)
 		add(chapter: c)
+		let p = Persona(name: "Snoopy", description: "A beagle", aliases: ["Joe Cool"])
+		headerInfo.personas[Persona.MAJOR] = [p]
 	}
 	
 	/**

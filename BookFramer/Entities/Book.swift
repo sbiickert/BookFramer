@@ -191,6 +191,14 @@ class Book: Equatable, ObservableObject {
         }
         return result
     }
+	
+	/**
+	Check if a given persona is considered major
+	- Parameter persona: the persona to evaluate.
+	*/
+	func isMajor(persona: Persona) -> Bool {
+		return majorPersonas.contains(persona)
+	}
 
 	/**
 	Searches major and minor personas for name or alias matching `name`

@@ -68,6 +68,10 @@ class DetailTabVC: NSTabViewController {
             self.tabView.selectTabViewItem(at: TabIndex.chapters.rawValue)
         }
         else if notification.object is [Persona] {
+			let tvi = self.tabViewItems[TabIndex.personas.rawValue]
+			if let personasVC = tvi.viewController as? PersonasDetailVC {
+				personasVC.book = self.book
+			}
             self.tabView.selectTabViewItem(at: TabIndex.personas.rawValue)
         }
 

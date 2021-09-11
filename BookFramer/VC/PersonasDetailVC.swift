@@ -48,6 +48,96 @@ class PersonasDetailVC: BFViewController {
 		tableView.reloadData()
 	}
 
+	@IBAction func importanceChanged(_ sender: NSButton) {
+		updatePersona(at: tableView.row(for: sender))
+	}
+	@IBAction func nameChanged(_ sender: NSTextField) {
+		updatePersona(at: tableView.selectedRow)
+	}
+	@IBAction func aliasesChanged(_ sender: NSTextField) {
+		updatePersona(at: tableView.selectedRow)
+	}
+	@IBAction func descriptionChanged(_ sender: NSTextField) {
+		updatePersona(at: tableView.selectedRow)
+	}
+	
+	private func updatePersona(at row: Int) {
+		guard book != nil && personas != nil && row > -1 else {
+			return
+		}
+		var majorPersonas = personas!.filter { book!.isMajor(persona: $0) }
+		var minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false }
+		
+		
+		if let idxColType = tableView.tableColumns.firstIndex(of: colType),
+		   let checkbox = (tableView.view(atColumn: idxColType, row: row, makeIfNecessary: false) as? CheckboxTableCellView)?.checkbox,
+		   let idxColName = tableView.tableColumns.firstIndex(of: colName),
+		   let nameField = (tableView.view(atColumn: idxColName, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField,
+		   let idxColAlias = tableView.tableColumns.firstIndex(of: colAliases),
+		   let aliasField = (tableView.view(atColumn: idxColAlias, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField,
+		   let idxColDesc = tableView.tableColumns.firstIndex(of: colDescription),
+		   let descField = (tableView.view(atColumn: idxColDesc, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField {
+			
+			let isMajor = checkbox.state == .on
+			
+			if row == personas!.count {
+				// This is a new persona
+				var p = Persona(name: nameField.stringValue, description: descField.stringValue, aliases: [])
+				p.joinedAliases = aliasField.stringValue
+				if isMajor {
+					majorPersonas.append(p)
+				}
+				else {
+					minorPersonas.append(p)
+				}
+			}
+			else {
+				var p = personas![row]
+				p.name = nameField.stringValue
+				p.joinedAliases = aliasField.stringValue
+				p.description = descField.stringValue
+				let wasMajor = book!.isMajor(persona: p)
+				
+				if wasMajor {
+					if let idx = majorPersonas.firstIndex(where: {$0.id == p.id}) {
+						majorPersonas.remove(at: idx)
+						if isMajor {
+							majorPersonas.insert(p, at: idx)
+						}
+						else {
+							minorPersonas.append(p)
+						}
+					}
+				}
+				else {
+					if let idx = minorPersonas.firstIndex(where: {$0.id == p.id}) {
+						minorPersonas.remove(at: idx)
+						if isMajor {
+							majorPersonas.append(p)
+						}
+						else {
+							minorPersonas.insert(p, at: idx)
+						}
+					}
+				}
+			}
+			setPersonas(major: majorPersonas, minor: minorPersonas)
+		}
+	}
+	
+	private func setPersonas(major: [Persona], minor: [Persona]) {
+		guard book != nil && personas != nil else {
+			return
+		}
+		let oldMajor = book!.majorPersonas
+		let oldMinor = book!.minorPersonas
+		undoManager?.beginUndoGrouping()
+		undoManager?.registerUndo(withTarget: self) { $0.setPersonas(major: oldMajor, minor: oldMinor)}
+		book!.majorPersonas = major
+		book!.minorPersonas = minor
+		undoManager?.endUndoGrouping()
+		self.book = book!
+	}
 }
 
 extension PersonasDetailVC: NSTableViewDelegate {
@@ -58,12 +148,18 @@ extension PersonasDetailVC: NSTableViewDelegate {
 
 extension PersonasDetailVC: NSTableViewDataSource {
 	func numberOfRows(in tableView: NSTableView) -> Int {
-		return book?.allPersonas.count ?? 0
+		// Returns one extra row for adding a new persona
+		return (self.personas?.count ?? 0) + 1
 	}
 	
 	func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-		guard row >= 0 && row < (self.personas?.count ?? 0) else {
+		guard row >= 0 && self.personas != nil && row <= (self.personas!.count) else {
 			return nil
+		}
+		if row == self.personas!.count  {
+			// This is the extra row for adding a new persona
+			// Maybe could return nil instead?
+			return Persona(name: "", description: "", aliases: [])
 		}
 		return self.personas![row]
 	}
@@ -73,11 +169,10 @@ extension PersonasDetailVC: NSTableViewDataSource {
 		
 		if let persona = self.tableView(tableView, objectValueFor: nil, row: row) as? Persona {
 			if tableColumn == colType {
-				cellView = tableView.makeView(withIdentifier: .personaImportance, owner: self) as? NSTableCellView
+				let cbView = tableView.makeView(withIdentifier: .personaImportance, owner: self) as? CheckboxTableCellView
 				let isMajor = book!.isMajor(persona: persona)
-				let image = isMajor ? Persona.MAJOR_IMAGE : Persona.MINOR_IMAGE
-				cellView?.imageView?.contentTintColor = isMajor ? .black : .gray
-				cellView?.imageView?.image = image
+				cbView?.checkbox?.state = isMajor ? .on : .off
+				cellView = cbView
 			}
 			if tableColumn == colName {
 				cellView = tableView.makeView(withIdentifier: .personaName, owner: self) as? NSTableCellView

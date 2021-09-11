@@ -735,13 +735,13 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gee-5M-9Kx">
-                                <rect key="frame" x="0.0" y="0.0" width="380" height="384"/>
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="373"/>
                                 <clipView key="contentView" drawsBackground="NO" id="49z-Ee-EIj">
-                                    <rect key="frame" x="1" y="1" width="378" height="382"/>
+                                    <rect key="frame" x="1" y="1" width="378" height="371"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="FlM-aN-k73" id="oAC-HO-CSm">
-                                            <rect key="frame" x="0.0" y="0.0" width="378" height="382"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="378" height="371"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="0.0"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -960,7 +960,7 @@
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
                                                                     <connections>
-                                                                        <action selector="stateDidChange:" target="JY3-xm-DUu" id="l4X-5L-EjO"/>
+                                                                        <action selector="genreChanged:" target="kpr-t1-ECw" id="JJQ-Kp-5WJ"/>
                                                                     </connections>
                                                                 </button>
                                                             </subviews>
@@ -1414,7 +1414,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9B2-q1-FVf">
-                                <rect key="frame" x="108" y="293" width="321" height="21"/>
+                                <rect key="frame" x="108" y="293" width="320" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="gKf-nZ-r96">
                                     <font key="font" metaFont="system"/>
@@ -1768,14 +1768,14 @@ Nejla Abbas</string>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" headerView="Pln-Kv-bB1" viewBased="YES" id="J9Z-MS-J7g">
-                                            <rect key="frame" x="0.0" y="0.0" width="738" height="279"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="754" height="279"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="17" height="0.0"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="24" minWidth="24" maxWidth="24" id="ugB-tz-yeT">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                <tableColumn width="40" minWidth="24" maxWidth="40" id="ugB-tz-yeT">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Major">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
@@ -1786,18 +1786,24 @@ Nejla Abbas</string>
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="PersonaImportance" id="trM-6X-FL5">
-                                                            <rect key="frame" x="8" y="0.0" width="22" height="24"/>
+                                                        <tableCellView identifier="PersonaImportance" id="trM-6X-FL5" customClass="CheckboxTableCellView" customModule="BookFramer" customModuleProvider="target">
+                                                            <rect key="frame" x="18" y="0.0" width="38" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="DpV-Gs-C6C">
-                                                                    <rect key="frame" x="-11" y="-15" width="44" height="54"/>
+                                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lL-Fw-vOC">
+                                                                    <rect key="frame" x="10" y="3" width="18" height="18"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="4sR-55-NCe"/>
-                                                                </imageView>
+                                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="E95-Ct-CrM">
+                                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                        <font key="font" metaFont="system"/>
+                                                                    </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="importanceChanged:" target="OUu-0p-LjX" id="pdV-AU-ZXI"/>
+                                                                    </connections>
+                                                                </button>
                                                             </subviews>
                                                             <connections>
-                                                                <outlet property="imageView" destination="DpV-Gs-C6C" id="9y5-Hz-rfB"/>
+                                                                <outlet property="checkbox" destination="8lL-Fw-vOC" id="AZB-Ra-3IZ"/>
                                                             </connections>
                                                         </tableCellView>
                                                     </prototypeCellViews>
@@ -1815,17 +1821,20 @@ Nejla Abbas</string>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="PersonaName" id="hgh-4e-ktK">
-                                                            <rect key="frame" x="47" y="0.0" width="217" height="24"/>
+                                                            <rect key="frame" x="73" y="0.0" width="217" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ytG-Ow-eBm">
                                                                     <rect key="frame" x="1" y="4" width="217" height="16"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Name" id="LzR-bo-9Ah">
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" placeholderString="New Persona" id="LzR-bo-9Ah">
                                                                         <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
+                                                                    <connections>
+                                                                        <action selector="nameChanged:" target="OUu-0p-LjX" id="TvH-ZP-dKa"/>
+                                                                    </connections>
                                                                 </textField>
                                                             </subviews>
                                                             <connections>
@@ -1847,17 +1856,20 @@ Nejla Abbas</string>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="PersonaAliases" id="kj7-gR-yff">
-                                                            <rect key="frame" x="281" y="0.0" width="153" height="24"/>
+                                                            <rect key="frame" x="307" y="0.0" width="153" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oRl-NT-T4b">
                                                                     <rect key="frame" x="1" y="4" width="153" height="16"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Aliases" id="ADB-gS-tZl">
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Aliases" id="ADB-gS-tZl">
                                                                         <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
+                                                                    <connections>
+                                                                        <action selector="aliasesChanged:" target="OUu-0p-LjX" id="40B-8n-fTb"/>
+                                                                    </connections>
                                                                 </textField>
                                                             </subviews>
                                                             <connections>
@@ -1879,17 +1891,20 @@ Nejla Abbas</string>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="PersonaDescription" id="Fym-YJ-sFb">
-                                                            <rect key="frame" x="451" y="0.0" width="278" height="24"/>
+                                                            <rect key="frame" x="477" y="0.0" width="278" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mMP-S4-bMR">
                                                                     <rect key="frame" x="0.0" y="4" width="278" height="16"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Description" id="QAz-nq-UxV">
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" title="Description" id="QAz-nq-UxV">
                                                                         <font key="font" usesAppearanceFont="YES"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
+                                                                    <connections>
+                                                                        <action selector="descriptionChanged:" target="OUu-0p-LjX" id="xef-lc-eur"/>
+                                                                    </connections>
                                                                 </textField>
                                                             </subviews>
                                                             <connections>
@@ -1902,8 +1917,8 @@ Nejla Abbas</string>
                                         </tableView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="dde-Ff-vtM">
-                                    <rect key="frame" x="1" y="283" width="738" height="16"/>
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="dde-Ff-vtM">
+                                    <rect key="frame" x="1" y="292" width="738" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="8lh-cl-w4e">
@@ -1911,7 +1926,7 @@ Nejla Abbas</string>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" wantsLayer="YES" id="Pln-Kv-bB1">
-                                    <rect key="frame" x="0.0" y="0.0" width="738" height="28"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="754" height="28"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>

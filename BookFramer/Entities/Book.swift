@@ -158,10 +158,17 @@ class Book: Equatable, ObservableObject {
 	- Returns: array of Personas. Array is empty if there are no major personas in the book.
 	*/
 	var majorPersonas: [Persona] {
-		if let personas = headerInfo.personas[Persona.MAJOR] {
-			return personas
+		get {
+			if let personas = headerInfo.personas[Persona.MAJOR] {
+				return personas
+			}
+			return [Persona]()
 		}
-		return [Persona]()
+		set {
+			var h = headerInfo
+			h.personas[Persona.MAJOR] = newValue
+			self.headerInfo = h
+		}
 	}
     
     /**
@@ -170,10 +177,17 @@ class Book: Equatable, ObservableObject {
     - Returns: array of Personas. Array is empty if there are no minor personas in the book.
     */
     var minorPersonas: [Persona] {
-        if let personas = headerInfo.personas[Persona.MINOR] {
-            return personas
-        }
-        return [Persona]()
+		get {
+			if let personas = headerInfo.personas[Persona.MINOR] {
+				return personas
+			}
+			return [Persona]()
+		}
+		set {
+			var h = headerInfo
+			h.personas[Persona.MINOR] = newValue
+			self.headerInfo = h
+		}
     }
     
     /**
@@ -182,22 +196,24 @@ class Book: Equatable, ObservableObject {
     - Returns: array of Personas. Array is empty if there are no personas in the book.
     */
     var allPersonas: [Persona] {
-        var result = [Persona]()
-        if let personas = headerInfo.personas[Persona.MAJOR] {
-            result.append(contentsOf: personas)
-        }
-        if let personas = headerInfo.personas[Persona.MINOR] {
-            result.append(contentsOf: personas)
-        }
-        return result
-    }
+		get {
+			var result = [Persona]()
+			if let personas = headerInfo.personas[Persona.MAJOR] {
+				result.append(contentsOf: personas)
+			}
+			if let personas = headerInfo.personas[Persona.MINOR] {
+				result.append(contentsOf: personas)
+			}
+			return result
+		}
+	}
 	
 	/**
 	Check if a given persona is considered major
 	- Parameter persona: the persona to evaluate.
 	*/
 	func isMajor(persona: Persona) -> Bool {
-		return majorPersonas.contains(persona)
+		return majorPersonas.contains(where: { $0.id == persona.id })
 	}
 
 	/**

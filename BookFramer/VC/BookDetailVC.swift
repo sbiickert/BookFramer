@@ -37,8 +37,6 @@ class BookDetailVC: BFViewController {
 		authorField.delegate = self
 		yearField.delegate = self
 		keywordField.delegate = self
-		
-		NotificationCenter.default.addObserver(self, selector: #selector(genreChanged(notification:)), name: .genreDidChange, object: nil)
 	}
 	
 	/**
@@ -161,10 +159,10 @@ class BookDetailVC: BFViewController {
 	}
 	
 	/**
-	Listens for .genreDidChange Notification. Calls `setGenres`
-	- Parameter notification: Notification that a genre checkbox changed
+	Listens for tableView checkbox state changes. Calls `setGenres`
+	- Parameter sender: Checkbox that changed state
 	*/
-	@objc func genreChanged(notification:Notification) {
+	@IBAction func genreChanged(_ sender: NSButton) {
 		var newValues = [Genre]()
 		for index in 0..<Genre.allCases.count {
 			if let cbv = tableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? CheckboxTableCellView {
@@ -175,6 +173,7 @@ class BookDetailVC: BFViewController {
 		}
 		self.setGenres(newValues)
 	}
+	
 	/**
 	Undoable way to set the genres of the book.
 	- Parameter newValue: the value to change the genres to

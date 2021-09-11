@@ -53,7 +53,11 @@ class ChapterDetailVC: BFViewController {
         
         tableView.reloadData()
     }
-    
+	
+	@IBAction func openInBBEdit(_ sender: AnyObject) {
+		print("openInBBEdit in chapter detail")
+	}
+
     /**
      Target of action when `titleField` changes. Calls `setTitle`
      - Parameter sender: the NSTextField

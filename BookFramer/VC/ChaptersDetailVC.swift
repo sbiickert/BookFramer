@@ -36,6 +36,10 @@ class ChaptersDetailVC: BFViewController {
 		tableView.reloadData()
 	}
 	
+	@IBAction func openInBBEdit(_ sender: AnyObject) {
+		print("openInBBEdit in chapters detail")
+	}
+
 	@objc func tableViewWasDoubleClicked() {
 		//print("Double click on row \(tableView.clickedRow) and column \(tableView.clickedColumn)")
 		guard tableView.clickedRow >= 0 else {

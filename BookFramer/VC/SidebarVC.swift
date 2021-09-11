@@ -77,6 +77,22 @@ class SidebarVC: BFViewController  {
 		contextDidChange(notification: notification)
 	}
 	
+	@IBAction func openInBBEdit(_ sender: AnyObject) {
+		print("openInBBEdit in sidebar")
+	}
+	
+	@IBAction func addChapter(_ sender: AnyObject) {
+		print("addChapter in sidebar")
+	}
+	
+	@IBAction func addScene(_ sender: AnyObject) {
+		print("addScene in sidebar")
+	}
+	
+	@IBAction func addPersona(_ sender: AnyObject) {
+		print("addPersona in sidebar")
+	}
+
     enum NodeIcon: String {
         case book = "book"
         case chapter = "doc"

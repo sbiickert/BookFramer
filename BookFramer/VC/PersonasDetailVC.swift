@@ -48,6 +48,28 @@ class PersonasDetailVC: BFViewController {
 		tableView.reloadData()
 	}
 
+	private enum EditAction {
+		case create
+		case update
+		case delete
+	}
+	
+	private func actionsForSelectedRow() -> [EditAction] {
+		return actionsFor(row: tableView.selectedRow)
+	}
+	private func actionsFor(row: Int) -> [EditAction] {
+		guard personas != nil else {
+			return []
+		}
+		if row == -1 {
+			return []
+		}
+		if row < personas!.count {
+			return [.update, .delete]
+		}
+		return [.create]
+	}
+	
 	@IBAction func importanceChanged(_ sender: NSButton) {
 		updatePersona(at: tableView.row(for: sender))
 	}
@@ -67,7 +89,7 @@ class PersonasDetailVC: BFViewController {
 		}
 		var majorPersonas = personas!.filter { book!.isMajor(persona: $0) }
 		var minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false }
-		
+		let availableActions = actionsFor(row: row)
 		
 		if let idxColType = tableView.tableColumns.firstIndex(of: colType),
 		   let checkbox = (tableView.view(atColumn: idxColType, row: row, makeIfNecessary: false) as? CheckboxTableCellView)?.checkbox,
@@ -80,7 +102,7 @@ class PersonasDetailVC: BFViewController {
 			
 			let isMajor = checkbox.state == .on
 			
-			if row == personas!.count {
+			if availableActions.contains(.create) {
 				// This is a new persona
 				var p = Persona(name: nameField.stringValue, description: descField.stringValue, aliases: [])
 				p.joinedAliases = aliasField.stringValue
@@ -90,8 +112,9 @@ class PersonasDetailVC: BFViewController {
 				else {
 					minorPersonas.append(p)
 				}
+				setPersonas(major: majorPersonas, minor: minorPersonas)
 			}
-			else {
+			else if availableActions.contains(.update) {
 				var p = personas![row]
 				p.name = nameField.stringValue
 				p.joinedAliases = aliasField.stringValue
@@ -120,9 +143,35 @@ class PersonasDetailVC: BFViewController {
 						}
 					}
 				}
+				setPersonas(major: majorPersonas, minor: minorPersonas)
 			}
-			setPersonas(major: majorPersonas, minor: minorPersonas)
 		}
+	}
+	
+	@IBAction func addPersona(_ sender: AnyObject) {
+		print("New Persona Menu item selected")
+	}
+
+	@IBAction func delete(_ sender: AnyObject) {
+		print("Delete pressed")
+		if actionsForSelectedRow().contains(.delete) {
+			deletePersona(at: tableView.selectedRow)
+		}
+	}
+	
+	private func deletePersona(at row:Int) {
+		print("Delete persona at row \(row)")
+		let availableActions = actionsFor(row: row)
+		guard book != nil && personas != nil && availableActions.contains(.delete) else {
+			return
+		}
+		
+		let pToDelete = personas![row]
+		// Using filter to remove the persona. Simple!
+		let majorPersonas = personas!.filter { book!.isMajor(persona: $0) && $0.id != pToDelete.id }
+		let minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false && $0.id != pToDelete.id }
+		
+		setPersonas(major: majorPersonas, minor: minorPersonas)
 	}
 	
 	private func setPersonas(major: [Persona], minor: [Persona]) {
@@ -144,6 +193,31 @@ extension PersonasDetailVC: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 24.0
 	}
+	
+	// TODO: disabling menu item not working at the moment
+	func tableViewSelectionDidChange(_ notification: Notification) {
+//		if let editMenu = NSApplication.shared.menu?.item(withTitle: "Edit"),
+//		   let deleteMenuItem = editMenu.submenu?.item(withTitle: "Delete") {
+//			deleteMenuItem.isEnabled = actionsForSelectedRow().contains(.delete) ? true : false
+//			print("Delete menu isEnabled: \(deleteMenuItem.isEnabled)")
+//		}
+	}
+	
+	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+		switch edge {
+		case .trailing:
+			if row == personas?.count ?? -1 {
+				// Don't want a row action for the new persona row
+				return []
+			}
+			let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
+				self.deletePersona(at: row)
+			}
+			return [deleteAction]
+		default:
+			return []
+		}
+	}
 }
 
 extension PersonasDetailVC: NSTableViewDataSource {
@@ -153,10 +227,11 @@ extension PersonasDetailVC: NSTableViewDataSource {
 	}
 	
 	func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-		guard row >= 0 && self.personas != nil && row <= (self.personas!.count) else {
+		let availableActions = actionsFor(row: row)
+		guard availableActions.isEmpty == false else {
 			return nil
 		}
-		if row == self.personas!.count  {
+		if availableActions.contains(.create)  {
 			// This is the extra row for adding a new persona
 			// Maybe could return nil instead?
 			return Persona(name: "", description: "", aliases: [])

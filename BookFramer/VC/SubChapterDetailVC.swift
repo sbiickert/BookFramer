@@ -104,6 +104,10 @@ class SubChapterDetailVC: BFViewController {
         }
     }
 	
+	@IBAction func openInBBEdit(_ sender: AnyObject) {
+		print("openInBBEdit in subchapter detail")
+	}
+
 	/**
 	Target of action when `descriptionField` changes. Calls `setDescription`
 	- Parameter sender: the NSTextField

@@ -29,7 +29,6 @@ class SubChapterDetailVC: BFViewController {
 	@IBOutlet weak var charactersField: NSTextField!
 	@IBOutlet weak var paragraphsLabel: NSTextField!
 	@IBOutlet weak var wordsLabel: NSTextField!
-	@IBOutlet weak var startsAtLineLabel: NSTextField!
 	
 	
 	override func viewDidLoad() {
@@ -49,7 +48,6 @@ class SubChapterDetailVC: BFViewController {
 		charactersField.stringValue = personas
 		wordsLabel.stringValue = "Words: \(subchapter?.wordCount ?? 0)"
 		paragraphsLabel.stringValue = "Chapter: \(subchapter?.paragraphs.count ?? 0)"
-		startsAtLineLabel.stringValue = "Starts at Line: \(subchapter?.startLineNumber ?? 0)"
 		
 		
 		updateStatusMenu()

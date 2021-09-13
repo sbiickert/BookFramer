@@ -49,6 +49,14 @@ struct Chapter: Equatable, Hashable, IDable {
 		return wc
 	}
 	
+	var lineCount: Int {
+		var count = 2 // for title
+		for sub in subchapters {
+			count += sub.lineCount
+		}
+		return count
+	}
+	
 	var status: EditStatus {
 		var statuses = Set<EditStatus>()
 		for sub in subchapters {

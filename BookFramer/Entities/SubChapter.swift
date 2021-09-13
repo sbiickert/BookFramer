@@ -18,7 +18,6 @@ struct SubChapter: Equatable, Hashable, IDable {
 	
 	let id = UUID().uuidString
 	var headerInfo = SubChapterHeader()
-	var startLineNumber = 0
 	var paragraphs = [String]()
 	
 	/**
@@ -67,6 +66,11 @@ struct SubChapter: Equatable, Hashable, IDable {
 		return wc
 	}
 	
+	var lineCount: Int {
+		// 2 for the header, paragraphs are double-spaced
+		return 2 + (paragraphs.count * 2)
+	}
+
 	/**
 	Searches for a case-insensitive regex pattern in all paragraphs
 	

@@ -49,7 +49,6 @@ class ChapterDetailVC: BFViewController {
         subtitleField.stringValue = chapter?.subtitle ?? ""
         wordsLabel.stringValue = "Words: \(chapter?.wordCount ?? 0)"
         chapterNumberLabel.stringValue = "Chapter: \(chapter?.number ?? 0)"
-        lineNumberLabel.stringValue = "Starts at Line: \(chapter?.startLineNumber ?? 0)"
         
         tableView.reloadData()
     }

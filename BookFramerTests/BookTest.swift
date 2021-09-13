@@ -239,4 +239,32 @@ class BookTest: XCTestCase {
 			XCTAssert(elizabeth!.isIn(chapter: c))
 		}
 	}
+	
+	func testLineNumbers() throws {
+		let fileURL = URL(fileURLWithPath: BookTest.PRIDE_AND_PREJUDICE)
+		let fullBook = try Book(fromFile: fileURL)
+
+		var lineNum: Int
+		// Book: 1
+		lineNum = fullBook.startLineNumber
+		XCTAssert(lineNum == 1, "Expected book to start at line 1, got \(lineNum)")
+		// Chapter One: 5
+		lineNum = fullBook.lineNumberFor(chapter: fullBook.chapters[0])
+		XCTAssert(lineNum == 5, "Expected Chapter One to start at line 5, got \(lineNum)")
+		// Chapter One, first sub: 7
+		lineNum = fullBook.lineNumberFor(subchapter: fullBook.chapters[0].subchapters[0])
+		XCTAssert(lineNum == 7, "Expected first sub of Chapter One to start at line 7, got \(lineNum)")
+		// Chapter Two: 77
+		lineNum = fullBook.lineNumberFor(chapter: fullBook.chapters[1])
+		XCTAssert(lineNum == 77, "Expected Chapter Two to start at line 77, got \(lineNum)")
+		// Chapter Two, first sub: 79
+		lineNum = fullBook.lineNumberFor(subchapter: fullBook.chapters[1].subchapters[0])
+		XCTAssert(lineNum == 79, "Expected first sub of Chapter One to start at line 79, got \(lineNum)")
+		// Chapter Six 265
+		lineNum = fullBook.lineNumberFor(chapter: fullBook.chapters[5])
+		XCTAssert(lineNum == 265, "Expected first sub of Chapter Six to start at line 265, got \(lineNum)")
+		// Chapter Six, second sub: 317
+		lineNum = fullBook.lineNumberFor(subchapter: fullBook.chapters[5].subchapters[1])
+		XCTAssert(lineNum == 317, "Expected second sub of Chapter Six to start at line 317, got \(lineNum)")
+	}
 }

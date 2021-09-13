@@ -32,8 +32,8 @@ extension NSFont {
 extension NSNotification.Name {
     static let contextDidChange = Notification.Name("CONTEXT CHANGED")
 	static let changeContext = Notification.Name("CHANGE CONTEXT")
-    //static let genreDidChange = Notification.Name("GENRE CHANGED")
 	static let bookEdited = Notification.Name("BOOK EDITED")
+	static let openExternal = Notification.Name("IT DOESN'T SUCK")
 }
 
 

@@ -152,6 +152,34 @@ class Book: Equatable, ObservableObject {
 		return wc
 	}
 	
+	var startLineNumber = 1
+	
+	func lineNumberFor(chapter: Chapter) -> Int {
+		var count = startLineNumber + 4 // for title, header
+		for ch in chapters {
+			if ch.id == chapter.id {
+				break
+			}
+			count += ch.lineCount
+		}
+		return count
+	}
+	
+	func lineNumberFor(subchapter: SubChapter) -> Int {
+		var count = startLineNumber + 4 // for title, header
+		for ch in chapters {
+			if let idx = ch.indexOf(subchapter: subchapter) {
+				count += 2
+				for i in 0..<idx {
+					count += ch.subchapters[i].lineCount
+				}
+				break
+			}
+			count += ch.lineCount
+		}
+		return count
+	}
+	
 	/**
 	Convenience property for referencing `headerInfo.personas[Persona.MAJOR]`
 	

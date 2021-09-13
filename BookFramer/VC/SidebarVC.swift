@@ -79,6 +79,24 @@ class SidebarVC: BFViewController  {
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in sidebar")
+		guard book != nil else {
+			return
+		}
+		if let item = outlineView.item(atRow: outlineView.selectedRow) {
+			if item is Book {
+				print("Open book in BBEdit, line \(book!.startLineNumber)")
+			}
+			else if let ch = item as? Chapter {
+				print("Open chapter in BBEdit, line \(book!.lineNumberFor(chapter: ch))")
+			}
+			else if let sub = item as? SubChapter {
+				print("Open subchapter in BBEdit, line \(book!.lineNumberFor(subchapter: sub))")
+			}
+			else {
+				print("Was something else")
+			}
+			document?.notificationCenter.post(name: .openExternal, object: item)
+		}
 	}
 	
 	@IBAction func addChapter(_ sender: AnyObject) {

@@ -38,6 +38,9 @@ class ChaptersDetailVC: BFViewController {
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in chapters detail")
+		if let item = objectFor(row: tableView.selectedRow) {
+			document?.notificationCenter.post(name: .openExternal, object: item)
+		}
 	}
 
 	@objc func tableViewWasDoubleClicked() {

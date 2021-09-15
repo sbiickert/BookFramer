@@ -53,6 +53,7 @@ class BookDetailVC: BFViewController {
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in book detail")
+		document?.notificationCenter.post(name: .openExternal, object: book)
 	}
 
 	/**

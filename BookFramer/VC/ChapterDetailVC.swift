@@ -55,6 +55,13 @@ class ChapterDetailVC: BFViewController {
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in chapter detail")
+		if tableView.selectedRow > -1 ,
+		   let item = tableView(tableView, objectValueFor: nil, row: tableView.selectedRow) {
+			document?.notificationCenter.post(name: .openExternal, object: item)
+		}
+		else if let ch = chapter {
+			document?.notificationCenter.post(name: .openExternal, object: ch)
+		}
 	}
 
     /**

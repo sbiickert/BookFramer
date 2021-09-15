@@ -71,6 +71,17 @@ class DocVC: NSSplitViewController {
 		openInBBEdit(to: lineNumber)
 		
 	}
+	
+	// https://www.objc.io/issues/14-mac/sandbox-scripting/
+//	private var bbEditAppleEventDesc: NSAppleEventDescriptor {
+//		let param1 = NSAppleEventDescriptor(string: <#T##String#>)
+//	}
+//	
+//	private func openInBBEditAS(to lineNumber: Int) {
+//		guard document != nil else {
+//			return
+//		}
+//	}
 
 	private func openInBBEdit(to lineNumber: Int) {
 		guard document != nil else {

@@ -104,6 +104,9 @@ class SubChapterDetailVC: BFViewController {
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in subchapter detail")
+		if let sub = subchapter {
+			document?.notificationCenter.post(name: .openExternal, object: sub)
+		}
 	}
 
 	/**

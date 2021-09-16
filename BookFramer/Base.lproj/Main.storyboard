@@ -344,8 +344,7 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Book" id="ENv-Au-JEp">
                                     <items>
-                                        <menuItem title="Open in BBEdit" id="jY2-cG-vBM">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Open in BBEdit" keyEquivalent="e" id="jY2-cG-vBM">
                                             <connections>
                                                 <action selector="openInBBEdit:" target="Ady-hI-5gd" id="m2S-sW-UXV"/>
                                             </connections>
@@ -770,13 +769,13 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gee-5M-9Kx">
-                                <rect key="frame" x="0.0" y="0.0" width="380" height="359"/>
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="356"/>
                                 <clipView key="contentView" drawsBackground="NO" id="49z-Ee-EIj">
-                                    <rect key="frame" x="1" y="1" width="378" height="357"/>
+                                    <rect key="frame" x="1" y="1" width="378" height="354"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="FlM-aN-k73" id="oAC-HO-CSm">
-                                            <rect key="frame" x="0.0" y="0.0" width="378" height="357"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="378" height="354"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="0.0"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1366,6 +1365,17 @@ CA
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rBE-g9-6nY">
+                                <rect key="frame" x="945" y="189" width="58" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m7P-a2-9Nn">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="openInBBEdit:" target="jhh-Lp-dhL" id="whN-YQ-oBx"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -1540,6 +1550,17 @@ Nejla Abbas</string>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qhD-a7-Caa">
+                                <rect key="frame" x="371" y="13" width="58" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uf1-Zp-UYh">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="openInBBEdit:" target="jfc-Op-HG1" id="qqt-jv-65n"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>

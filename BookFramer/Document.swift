@@ -24,7 +24,7 @@ class Document: NSDocument {
 	}
 	
 	override class var autosavesInPlace: Bool {
-		return true
+		return false
 	}
 	
 	override func makeWindowControllers() {
@@ -60,65 +60,65 @@ class Document: NSDocument {
 	
 	// MARK: Monitoring for external changes
 	
-//	override func presentedItemDidChange() {
-//		guard fileContentsDidChange else {
-//			return
-//		}
-//		if isDocumentEdited {
-//			// Let the user know it happened. Would like to
-//			DispatchQueue.main.async {
-//				let alert = NSAlert()
-//				alert.messageText = "File Changed"
-//				alert.informativeText = "Book \(self.book.title) was edited outside BookFramer."
-//				alert.addButton(withTitle: "Reload")
-//				alert.addButton(withTitle: "Ignore")
-//				alert.beginSheetModal(for: self.windowForSheet!) { response in
-//					if response == .alertFirstButtonReturn {
-//						self.reloadFromFile()
-//					}
-//				}
-//			}
-//		}
-//		else {
-//			DispatchQueue.main.async {
-//				self.reloadFromFile()
-//			}
-//			return
-//		}
-//
-//	}
-//
-//	private func reloadFromFile() {
-//		guard fileURL != nil else { return }
-//		do {
-//			book = try Book(fromFile: fileURL!)
-//		}
-//		catch {return}
-//
-//		if let contentVC = contentViewController {
-//			contentVC.representedObject = book
-//		}
-//	}
-//
-//	private var fileContentsDidChange: Bool {
-//		if let fmd = fileModificationDateOnDisk() {
-//			return fmd > book.readAtTime
-//		}
-//		return false
-//	}
-//
-//	private func fileModificationDateOnDisk() -> Date? {
-//		guard let fileURL = self.fileURL else { return nil }
-//
-//		let fm = FileManager.default
-//		do {
-//			let attributes = try fm.attributesOfItem(atPath: fileURL.path)
-//			let modificationDate = attributes[FileAttributeKey.modificationDate] as? Date
-//			return modificationDate
-//		}
-//		catch {
-//			return nil
-//		}
-//	}
+	override func presentedItemDidChange() {
+		guard fileContentsDidChange else {
+			return
+		}
+		if isDocumentEdited {
+			// Let the user know it happened. Would like to
+			DispatchQueue.main.async {
+				let alert = NSAlert()
+				alert.messageText = "File Changed"
+				alert.informativeText = "Book \(self.book.title) was edited outside BookFramer."
+				alert.addButton(withTitle: "Reload")
+				alert.addButton(withTitle: "Ignore")
+				alert.beginSheetModal(for: self.windowForSheet!) { response in
+					if response == .alertFirstButtonReturn {
+						self.reloadFromFile()
+					}
+				}
+			}
+		}
+		else {
+			DispatchQueue.main.async {
+				self.reloadFromFile()
+			}
+			return
+		}
+
+	}
+
+	private func reloadFromFile() {
+		guard fileURL != nil else { return }
+		do {
+			book = try Book(fromFile: fileURL!)
+		}
+		catch {return}
+
+		if let contentVC = contentViewController {
+			contentVC.representedObject = book
+		}
+	}
+
+	private var fileContentsDidChange: Bool {
+		if let fmd = fileModificationDateOnDisk() {
+			return fmd > book.readAtTime
+		}
+		return false
+	}
+
+	private func fileModificationDateOnDisk() -> Date? {
+		guard let fileURL = self.fileURL else { return nil }
+
+		let fm = FileManager.default
+		do {
+			let attributes = try fm.attributesOfItem(atPath: fileURL.path)
+			let modificationDate = attributes[FileAttributeKey.modificationDate] as? Date
+			return modificationDate
+		}
+		catch {
+			return nil
+		}
+	}
 }
 

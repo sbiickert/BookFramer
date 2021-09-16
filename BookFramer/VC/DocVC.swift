@@ -49,14 +49,8 @@ class DocVC: NSSplitViewController {
     }
 	
 	@objc func openExternal(notification: NSNotification) {
-		guard undoManager != nil else {
+		guard document != nil && undoManager != nil else {
 			return
-		}
-		
-		// If there are unsaved changes, save them
-		if undoManager!.canUndo {
-			// TODO: prompt for user to confirm save
-			document!.save(self)
 		}
 		
 		var lineNumber = 1
@@ -67,9 +61,33 @@ class DocVC: NSSplitViewController {
 		else if let sub = notification.object as? SubChapter {
 			lineNumber = book?.lineNumberFor(subchapter: sub) ?? 1
 		}
-		
-		openInBBEdit(to: lineNumber)
-		
+
+		// If there are unsaved changes, save them
+		if document!.fileURL == nil {
+			// This document has not been saved
+			document!.save(self)
+			if document!.fileURL == nil { return }
+			openInBBEdit(to: lineNumber)
+		}
+		else if document!.isDocumentEdited {
+			// Prompt for user to confirm save
+			let alert = NSAlert()
+			alert.messageText = "Unsaved Changes"
+			alert.informativeText = "Book \(book!.title) has unsaved changes."
+			alert.addButton(withTitle: "Save")
+			alert.addButton(withTitle: "Cancel")
+			alert.beginSheetModal(for: self.view.window!) { response in
+				if response == .alertFirstButtonReturn {
+					DispatchQueue.main.async {
+						self.document!.save(self)
+						self.openInBBEdit(to: lineNumber)
+					}
+				}
+			}
+		}
+		else {
+			openInBBEdit(to: lineNumber)
+		}
 	}
 	
 	// https://www.objc.io/issues/14-mac/sandbox-scripting/
@@ -109,7 +127,9 @@ class DocVC: NSSplitViewController {
 			
 			task.execute(withArguments: args) {error in
 				if let error = error {
-					print("Open with BBEdit failed: ", error)
+					DispatchQueue.main.async {
+						print("Open with BBEdit failed: ", error)
+					}
 				}
 			}
 		}

@@ -21,7 +21,6 @@ struct Chapter: Equatable, Hashable, IDable {
 	var title = "Title"
 	var subtitle = "Subtitle"
 	var number = 0
-	var startLineNumber = 0
 	var subchapters = [SubChapter]()
 	
 	/**

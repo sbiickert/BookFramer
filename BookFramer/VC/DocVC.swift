@@ -48,6 +48,37 @@ class DocVC: NSSplitViewController {
         }
     }
 	
+	// These are the default handlers for these menu selections
+	// The detail VCs for Chapters, Chapter and SubChapter have more specific handlers
+	@IBAction func addChapter(_ sender: AnyObject) {
+		// Add a new chapter to the end of the book
+		guard book != nil else { return }
+		let ch = Chapter(title: "", subtitle: "", number: -1, subchapters: [SubChapter]())
+		book?.add(chapter: ch)
+		document?.notificationCenter.post(name: .changeContext, object: ch)
+	}
+	
+	@IBAction func addScene(_ sender: AnyObject) {
+		// Add a new subchapter to the end of the last chapter
+		guard book != nil else { return }
+		if var lastCh = book!.chapters.last {
+			let sub = SubChapter(text: "")
+			lastCh.subchapters.append(sub)
+			book!.replace(chapter: lastCh)
+			document?.notificationCenter.post(name: .changeContext, object: sub)
+		}
+	}
+	
+	@IBAction func addPersona(_ sender: AnyObject) {
+		// Add a new persona
+		guard book != nil else { return }
+		let p = Persona(name: "", description: "", aliases: [])
+		var major = book!.majorPersonas
+		major.append(p)
+		book!.majorPersonas = major
+		document?.notificationCenter.post(name: .changeContext, object: major)
+	}
+
 	@objc func openExternal(notification: NSNotification) {
 		guard document != nil && undoManager != nil else {
 			return

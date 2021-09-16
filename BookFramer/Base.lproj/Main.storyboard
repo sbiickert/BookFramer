@@ -344,7 +344,7 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Book" id="ENv-Au-JEp">
                                     <items>
-                                        <menuItem title="Open in BBEdit" keyEquivalent="e" id="jY2-cG-vBM">
+                                        <menuItem title="Open in BBEdit" keyEquivalent="E" id="jY2-cG-vBM">
                                             <connections>
                                                 <action selector="openInBBEdit:" target="Ady-hI-5gd" id="m2S-sW-UXV"/>
                                             </connections>
@@ -769,13 +769,13 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gee-5M-9Kx">
-                                <rect key="frame" x="0.0" y="0.0" width="380" height="356"/>
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="352"/>
                                 <clipView key="contentView" drawsBackground="NO" id="49z-Ee-EIj">
-                                    <rect key="frame" x="1" y="1" width="378" height="354"/>
+                                    <rect key="frame" x="1" y="1" width="378" height="350"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="FlM-aN-k73" id="oAC-HO-CSm">
-                                            <rect key="frame" x="0.0" y="0.0" width="378" height="354"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="378" height="350"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="0.0"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>

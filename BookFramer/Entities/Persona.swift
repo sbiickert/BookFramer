@@ -19,7 +19,7 @@ struct Persona: Codable, Equatable, Hashable, IDable {
 	static let MAJOR_IMAGE = NSImage(systemSymbolName: "person.crop.circle.badge.exclamationmark", accessibilityDescription: "Major character")
 	static let MINOR_IMAGE = NSImage(systemSymbolName: "person.crop.circle", accessibilityDescription: "Minor character")
 	
-	let id = UUID().uuidString
+	private(set) var id = UUID().uuidString
 	var name: String
 	var description: String
 	var aliases: [String]

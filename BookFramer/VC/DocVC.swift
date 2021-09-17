@@ -54,8 +54,19 @@ class DocVC: NSSplitViewController {
 		// Add a new chapter to the end of the book
 		guard book != nil else { return }
 		let ch = Chapter(title: "", subtitle: "", number: -1, subchapters: [SubChapter]())
-		book?.add(chapter: ch)
+		// For undo
+		let oldChapters = book!.chapters
+		book!.add(chapter: ch)
+		let newChapters = book!.chapters
+		book!.chapters = oldChapters
+		setChapters(newValue: newChapters)
 		document?.notificationCenter.post(name: .changeContext, object: ch)
+	}
+	private func setChapters(newValue: [Chapter]) {
+		guard book != nil else { return }
+		let oldChapters = book!.chapters
+		undoManager?.registerUndo(withTarget: self) { $0.setChapters(newValue: oldChapters)}
+		book!.chapters = newValue
 	}
 	
 	@IBAction func addScene(_ sender: AnyObject) {
@@ -64,19 +75,39 @@ class DocVC: NSSplitViewController {
 		if var lastCh = book!.chapters.last {
 			let sub = SubChapter(text: "")
 			lastCh.subchapters.append(sub)
-			book!.replace(chapter: lastCh)
+			setChapter(newValue: lastCh)
 			document?.notificationCenter.post(name: .changeContext, object: sub)
+		}
+	}
+	private func setChapter(newValue: Chapter) {
+		guard book != nil else {return}
+		if let oldCh = book!.chapters.last {
+			undoManager?.registerUndo(withTarget: self) { $0.setChapter(newValue: oldCh) }
+			book!.replace(chapter: newValue)
 		}
 	}
 	
 	@IBAction func addPersona(_ sender: AnyObject) {
 		// Add a new persona
 		guard book != nil else { return }
-		let p = Persona(name: "", description: "", aliases: [])
+		let p = Persona(name: "New Character", description: "", aliases: [])
 		var major = book!.majorPersonas
+		let minor = book!.minorPersonas
 		major.append(p)
-		book!.majorPersonas = major
+		setPersonas(major: major, minor: minor)
 		document?.notificationCenter.post(name: .changeContext, object: major)
+	}
+	private func setPersonas(major: [Persona], minor: [Persona]) {
+		guard book != nil else {
+			return
+		}
+		let oldMajor = book!.majorPersonas
+		let oldMinor = book!.minorPersonas
+		undoManager?.beginUndoGrouping()
+		undoManager?.registerUndo(withTarget: self) { $0.setPersonas(major: oldMajor, minor: oldMinor)}
+		book!.majorPersonas = major
+		book!.minorPersonas = minor
+		undoManager?.endUndoGrouping()
 	}
 
 	@objc func openExternal(notification: NSNotification) {

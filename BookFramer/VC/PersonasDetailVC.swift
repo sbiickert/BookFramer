@@ -147,10 +147,6 @@ class PersonasDetailVC: BFViewController {
 			}
 		}
 	}
-	
-	@IBAction func addPersona(_ sender: AnyObject) {
-		print("New Persona Menu item selected")
-	}
 
 	@IBAction func delete(_ sender: AnyObject) {
 		print("Delete pressed")

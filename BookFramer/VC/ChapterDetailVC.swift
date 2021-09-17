@@ -53,6 +53,24 @@ class ChapterDetailVC: BFViewController {
         tableView.reloadData()
     }
 	
+	@IBAction func delete(_ sender: AnyObject) {
+		if tableView.selectedRow > -1 {
+			// Delete the selected scene
+			
+		}
+		else {
+			// Delete this chapter
+		}
+	}
+	
+	@IBAction func addScene(_ sender: AnyObject) {
+		guard chapter != nil else { return }
+		let sub = SubChapter(text: "")
+		chapter!.subchapters.append(sub)
+		book!.replace(chapter: chapter!)
+		updateUI()
+	}
+
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in chapter detail")
 		if tableView.selectedRow > -1 ,

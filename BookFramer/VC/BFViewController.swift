@@ -14,8 +14,21 @@ class BFViewController: NSViewController {
         // Do view setup here.
     }
 	
+	private var _bookEditedObserverAdded = false
+	override func viewWillAppear() {
+		if let d = document {
+			d.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
+			_bookEditedObserverAdded = true
+		}
+	}
+	
 	public var document: Document? {
 		return self.view.window?.windowController?.document as? Document
 	}
 
+	@objc func bookEdited(notification: Notification) {
+		updateUI()
+	}
+	
+	func updateUI() {}
 }

@@ -34,6 +34,10 @@ extension NSNotification.Name {
 	static let changeContext = Notification.Name("CHANGE CONTEXT")
 	static let bookEdited = Notification.Name("BOOK EDITED")
 	static let openExternal = Notification.Name("IT DOESN'T SUCK")
+	static let addChapter = Notification.Name("ADD CHAPTER")
+	static let addSubChapter = Notification.Name("ADD SUBCHAPTER")
+	static let deleteChapter = Notification.Name("DELETE CHAPTER")
+	static let deleteSubChapter = Notification.Name("DELETE SUBCHAPTER")
 }
 
 

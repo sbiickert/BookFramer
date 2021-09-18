@@ -769,13 +769,13 @@ CA
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gee-5M-9Kx">
-                                <rect key="frame" x="0.0" y="0.0" width="380" height="352"/>
+                                <rect key="frame" x="0.0" y="0.0" width="380" height="350"/>
                                 <clipView key="contentView" drawsBackground="NO" id="49z-Ee-EIj">
-                                    <rect key="frame" x="1" y="1" width="378" height="350"/>
+                                    <rect key="frame" x="1" y="1" width="378" height="348"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="FlM-aN-k73" id="oAC-HO-CSm">
-                                            <rect key="frame" x="0.0" y="0.0" width="378" height="350"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="378" height="348"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="0.0"/>
                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1366,14 +1366,25 @@ CA
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rBE-g9-6nY">
-                                <rect key="frame" x="945" y="189" width="58" height="32"/>
+                                <rect key="frame" x="895" y="189" width="116" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m7P-a2-9Nn">
+                                <buttonCell key="cell" type="push" title="Edit in BBEdit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="m7P-a2-9Nn">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="openInBBEdit:" target="jhh-Lp-dhL" id="whN-YQ-oBx"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hRc-l1-vfa">
+                                <rect key="frame" x="823" y="189" width="74" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="glc-L0-pDw">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="delete:" target="jhh-Lp-dhL" id="DMg-Tn-F00"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1551,14 +1562,25 @@ Nejla Abbas</string>
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qhD-a7-Caa">
-                                <rect key="frame" x="371" y="13" width="58" height="32"/>
+                                <rect key="frame" x="321" y="13" width="116" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <buttonCell key="cell" type="push" title="Edit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uf1-Zp-UYh">
+                                <buttonCell key="cell" type="push" title="Edit in BBEdit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uf1-Zp-UYh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="openInBBEdit:" target="jfc-Op-HG1" id="qqt-jv-65n"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T7i-LG-mrM">
+                                <rect key="frame" x="249" y="13" width="74" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aJ2-IB-8LB">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="delete:" target="jfc-Op-HG1" id="4zk-lb-y8m"/>
                                 </connections>
                             </button>
                         </subviews>

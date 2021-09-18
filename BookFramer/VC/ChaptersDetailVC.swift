@@ -32,7 +32,8 @@ class ChaptersDetailVC: BFViewController {
 		tableView.registerForDraggedTypes([.tableViewIndex])
 	}
 	
-	private func updateUI() {
+	override func updateUI() {
+		super.updateUI()
 		tableView.reloadData()
 	}
 	
@@ -40,6 +41,17 @@ class ChaptersDetailVC: BFViewController {
 		print("openInBBEdit in chapters detail")
 		if let item = objectFor(row: tableView.selectedRow) {
 			document?.notificationCenter.post(name: .openExternal, object: item)
+		}
+	}
+	
+	@IBAction func delete(_ sender: AnyObject) {
+		print("delete in chapters detail")
+		let item = objectFor(row: tableView.selectedRow)
+		if item is Chapter {
+			document?.notificationCenter.post(name: .deleteChapter, object: item)
+		}
+		else if item is SubChapter {
+			document?.notificationCenter.post(name: .deleteSubChapter, object: item)
 		}
 	}
 
@@ -66,6 +78,18 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 	
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 24.0
+	}
+	
+	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+		switch edge {
+		case .trailing:
+			let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
+				self.delete(self.tableView)
+			}
+			return [deleteAction]
+		default:
+			return []
+		}
 	}
 	
 	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {

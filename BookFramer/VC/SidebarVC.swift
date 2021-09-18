@@ -25,16 +25,17 @@ class SidebarVC: BFViewController  {
     }
 	
 	override func viewWillAppear() {
+		super.viewWillAppear()
 		document?.notificationCenter.addObserver(self, selector: #selector(contextDidChange(notification:)), name: .contextDidChange, object: nil)
-		document?.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 	}
     
-    private func updateUI() {
+    override func updateUI() {
+		super.updateUI()
         outlineView.reloadData()
     }
 	
 	private var _shouldChangeContext = true
-	@objc func contextDidChange(notification: NSNotification) {
+	@objc func contextDidChange(notification: Notification) {
 		var row = outlineView.row(forItem: notification.object)
 		if row >= 0 {
 			_shouldChangeContext = false
@@ -72,8 +73,8 @@ class SidebarVC: BFViewController  {
 		}
 	}
 	
-	@objc func bookEdited(notification: NSNotification) {
-		outlineView.reloadData()
+	@objc override func bookEdited(notification: Notification) {
+		super.bookEdited(notification: notification)
 		contextDidChange(notification: notification)
 	}
 	
@@ -101,14 +102,40 @@ class SidebarVC: BFViewController  {
 	
 	@IBAction func addChapter(_ sender: AnyObject) {
 		print("addChapter in sidebar")
+		let item = outlineView.item(atRow: outlineView.selectedRow)
+		if item is Chapter || item is SubChapter {
+			// Will want to add the Chapter after selected Chapter
+			document?.notificationCenter.post(name: .addChapter, object: item)
+		}
+		else {
+			// Will want to add to end
+			document?.notificationCenter.post(name: .addChapter, object: nil)
+		}
 	}
 	
 	@IBAction func addScene(_ sender: AnyObject) {
 		print("addScene in sidebar")
+		let item = outlineView.item(atRow: outlineView.selectedRow)
+		if item is Chapter || item is SubChapter {
+			// Will want to add the SubChapter in selected Chapter
+			document?.notificationCenter.post(name: .addSubChapter, object: item)
+		}
+		else {
+			// Will want to add to end of book
+			document?.notificationCenter.post(name: .addSubChapter, object: nil)
+		}
 	}
 	
-	@IBAction func addPersona(_ sender: AnyObject) {
-		print("addPersona in sidebar")
+	@IBAction func delete(_ sender: AnyObject) {
+		print("delete in sidebar")
+		let item = outlineView.item(atRow: outlineView.selectedRow)
+		if item is Chapter {
+			document?.notificationCenter.post(name: .deleteChapter, object: item)
+		}
+		else if item is SubChapter {
+			// Will want to add the SubChapter in selected Chapter
+			document?.notificationCenter.post(name: .deleteSubChapter, object: item)
+		}
 	}
 
     enum NodeIcon: String {

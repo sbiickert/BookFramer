@@ -40,9 +40,9 @@ class SubChapterDetailVC: BFViewController {
 		statusPopupMenu.addItem(withTitle: EditStatus.good.rawValue)
 		statusPopupMenu.addItem(withTitle: EditStatus.finished.rawValue)
     }
-    
 	
-	private func updateUI() {
+	override func updateUI() {
+		super.updateUI()
 		descriptionField.stringValue = subchapter?.headerInfo.description ?? ""
 		locationField.stringValue = subchapter?.headerInfo.location ?? ""
 		charactersField.stringValue = personas
@@ -101,6 +101,13 @@ class SubChapterDetailVC: BFViewController {
             book!.replace(chapter: ch)
         }
     }
+	
+	@IBAction func delete(_ sender: Any) {
+		if sender is NSButton,
+		   let sub = subchapter {
+			document?.notificationCenter.post(name: .openExternal, object: sub)
+		}
+	}
 	
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in subchapter detail")

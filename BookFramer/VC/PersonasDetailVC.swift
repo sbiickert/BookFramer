@@ -44,7 +44,7 @@ class PersonasDetailVC: BFViewController {
 		colAliases.sortDescriptorPrototype = descriptorAliases
     }
 	
-	private func updateUI() {
+	override func updateUI() {
 		tableView.reloadData()
 	}
 

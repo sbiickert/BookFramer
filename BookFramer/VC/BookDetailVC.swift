@@ -42,7 +42,8 @@ class BookDetailVC: BFViewController {
 	/**
 	Updates all views
 	*/
-	private func updateUI() {
+	override func updateUI() {
+		super.updateUI()
 		titleField.stringValue = book?.title ?? ""
 		subtitleField.stringValue = book?.subtitle ?? ""
 		authorField.stringValue = book?.headerInfo.author ?? ""

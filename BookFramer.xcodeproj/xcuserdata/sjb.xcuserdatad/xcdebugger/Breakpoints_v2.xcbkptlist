@@ -7,32 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "171A38D6-390E-4F2E-854B-9E946432132A"
+            uuid = "09F4A57F-D4DC-4CE7-960E-C61DD0FB24EF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BookFramer/VC/DocVC.swift"
+            filePath = "BookFramer/VC/SidebarVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "BB95D3AC-14A9-4345-A66F-246971E82240"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BookFramer/VC/DocVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "addScene(_:)"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "bookEdited(notification:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

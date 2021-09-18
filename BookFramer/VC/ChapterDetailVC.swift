@@ -44,7 +44,8 @@ class ChapterDetailVC: BFViewController {
         tableView.registerForDraggedTypes([.tableViewIndex])
     }
     
-    private func updateUI() {
+    override func updateUI() {
+		super.updateUI()
         titleField.stringValue = chapter?.title ?? ""
         subtitleField.stringValue = chapter?.subtitle ?? ""
         wordsLabel.stringValue = "Words: \(chapter?.wordCount ?? 0)"
@@ -54,12 +55,13 @@ class ChapterDetailVC: BFViewController {
     }
 	
 	@IBAction func delete(_ sender: AnyObject) {
-		if tableView.selectedRow > -1 {
-			// Delete the selected scene
-			
+		if sender is NSButton,
+			let ch = chapter {
+			document?.notificationCenter.post(name: .deleteChapter, object: ch)
 		}
-		else {
-			// Delete this chapter
+		else if tableView.selectedRow > -1 ,
+		   let item = tableView(tableView, objectValueFor: nil, row: tableView.selectedRow) {
+			document?.notificationCenter.post(name: .deleteSubChapter, object: item)
 		}
 	}
 	
@@ -67,8 +69,15 @@ class ChapterDetailVC: BFViewController {
 		guard chapter != nil else { return }
 		let sub = SubChapter(text: "")
 		chapter!.subchapters.append(sub)
-		book!.replace(chapter: chapter!)
+		setChapter(newValue: chapter!)
 		updateUI()
+	}
+	private func setChapter(newValue: Chapter) {
+		guard book != nil else { return }
+		if let oldChapter = book!.chapters.first(where: { $0.id == newValue.id }) {
+			undoManager?.registerUndo(withTarget: self) { $0.setChapter(newValue: oldChapter) }
+			book!.replace(chapter: newValue)
+		}
 	}
 
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
@@ -149,6 +158,18 @@ extension ChapterDetailVC: NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 24.0
     }
+	
+	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
+		switch edge {
+		case .trailing:
+			let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
+				self.delete(self.tableView)
+			}
+			return [deleteAction]
+		default:
+			return []
+		}
+	}
     
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
         return TableReorderPasteboardWriter(id: chapter?.subchapters[row].id ?? "", at: row)

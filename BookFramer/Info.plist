@@ -7,6 +7,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>BookFramer Document</string>
 			<key>CFBundleTypeRole</key>
@@ -53,7 +55,14 @@
 			<key>UTTypeDescription</key>
 			<string>BookFramer Document</string>
 			<key>UTTypeIcons</key>
-			<dict/>
+			<dict>
+				<key>UTTypeIconBackgroundName</key>
+				<string>DocBackground</string>
+				<key>UTTypeIconBadgeName</key>
+				<string>DocIcon</string>
+				<key>UTTypeIconText</key>
+				<string>Book</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>ca.biickert.bookframer.book-md</string>
 			<key>UTTypeTagSpecification</key>

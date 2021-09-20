@@ -162,7 +162,6 @@ class DocVC: NSSplitViewController {
 		let minor = book!.minorPersonas
 		major.append(p)
 		setPersonas(major: major, minor: minor)
-		document?.notificationCenter.post(name: .changeContext, object: major)
 	}
 	private func setPersonas(major: [Persona], minor: [Persona]) {
 		guard book != nil else {
@@ -171,10 +170,14 @@ class DocVC: NSSplitViewController {
 		let oldMajor = book!.majorPersonas
 		let oldMinor = book!.minorPersonas
 		undoManager?.beginUndoGrouping()
-		undoManager?.registerUndo(withTarget: self) { $0.setPersonas(major: oldMajor, minor: oldMinor)}
+		undoManager?.registerUndo(withTarget: self) {
+			$0.setPersonas(major: oldMajor, minor: oldMinor)
+			self.document?.notificationCenter.post(name: .bookEdited, object: major)
+		}
 		book!.majorPersonas = major
 		book!.minorPersonas = minor
 		undoManager?.endUndoGrouping()
+		self.document?.notificationCenter.post(name: .bookEdited, object: major)
 	}
 
 	@objc func openExternal(notification: NSNotification) {

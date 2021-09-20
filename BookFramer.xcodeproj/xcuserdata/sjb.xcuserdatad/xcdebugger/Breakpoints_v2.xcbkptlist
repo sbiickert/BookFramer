@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "09F4A57F-D4DC-4CE7-960E-C61DD0FB24EF"
+            uuid = "B5A3AB7F-6433-4D46-AFCD-549E12FFFB67"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BookFramer/VC/SidebarVC.swift"
+            filePath = "BookFramer/Entities/SubChapter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "bookEdited(notification:)"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "init(withBlock:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "593A847D-3EB5-466C-8576-EB939EA1F5AB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BookFramer/Entities/Book.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "502"
+            endingLineNumber = "502"
+            landmarkName = "parseHeader(json:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

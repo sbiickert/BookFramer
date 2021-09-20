@@ -17,6 +17,9 @@ class ChapterDetailVC: BFViewController {
     
     var chapter: Chapter? {
         didSet {
+			if book != nil && chapter != nil {
+				assert(book!.chapters.contains(where: {$0.id == chapter!.id}))
+			}
             updateUI()
         }
     }

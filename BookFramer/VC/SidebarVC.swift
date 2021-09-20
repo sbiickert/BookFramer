@@ -62,6 +62,14 @@ class SidebarVC: BFViewController  {
 					outlineView.expandItem(containingChapter)
 				}
 			}
+			else if notification.object is [Persona] {
+				// Expand book > personas
+				outlineView.expandItem(book)
+				if let item = outlineView.child(1, ofItem: book) {
+					let personasRow = outlineView.row(forItem: item)
+					outlineView.selectRowIndexes(IndexSet(integer: personasRow), byExtendingSelection: false)
+				}
+			}
 			// Try again
 			row = outlineView.row(forItem: notification.object)
 			if row >= 0 {

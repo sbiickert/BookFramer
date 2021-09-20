@@ -74,8 +74,7 @@ class DetailTabVC: NSTabViewController {
 			}
             self.tabView.selectTabViewItem(at: TabIndex.personas.rawValue)
         }
-
-
+		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
     }
 }
 

@@ -24,6 +24,10 @@ struct Persona: Codable, Equatable, Hashable, IDable {
 	var description: String
 	var aliases: [String]
 	
+	private enum CodingKeys: String, CodingKey {
+		case name, description, aliases
+	}
+	
 	var joinedAliases: String {
 		get {
 			return aliases.joined(separator: ", ")

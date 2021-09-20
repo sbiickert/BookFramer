@@ -177,10 +177,14 @@ class PersonasDetailVC: BFViewController {
 		let oldMajor = book!.majorPersonas
 		let oldMinor = book!.minorPersonas
 		undoManager?.beginUndoGrouping()
-		undoManager?.registerUndo(withTarget: self) { $0.setPersonas(major: oldMajor, minor: oldMinor)}
+		undoManager?.registerUndo(withTarget: self) {
+			$0.setPersonas(major: oldMajor, minor: oldMinor)
+			self.document?.notificationCenter.post(name: .bookEdited, object: [oldMajor])
+		}
 		book!.majorPersonas = major
 		book!.minorPersonas = minor
 		undoManager?.endUndoGrouping()
+		self.document?.notificationCenter.post(name: .bookEdited, object: [major])
 		self.book = book!
 	}
 }

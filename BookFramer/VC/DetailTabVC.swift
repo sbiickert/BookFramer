@@ -9,11 +9,8 @@ import Cocoa
 
 class DetailTabVC: NSTabViewController {
     enum TabIndex: Int {
-        case book = 0
-        case chapter = 1
-        case subchapter = 2
-        case chapters = 3
-        case personas = 4
+        case chapter = 0
+        case subchapter = 1
     }
 	
 	var book: Book? {
@@ -37,14 +34,7 @@ class DetailTabVC: NSTabViewController {
     
     @objc func changeContext(notification: NSNotification) {
 		
-        if notification.object is Book {
-            let tvi = self.tabViewItems[TabIndex.book.rawValue]
-            if let bdvc = tvi.viewController as? BookDetailVC {
-				bdvc.book = self.book
-            }
-            self.tabView.selectTabViewItem(tvi)
-        }
-        else if notification.object is Chapter {
+        if notification.object is Chapter {
 			let tvi = self.tabViewItems[TabIndex.chapter.rawValue]
 			if let cdvc = tvi.viewController as? ChapterDetailVC {
 				cdvc.book = self.book
@@ -60,20 +50,7 @@ class DetailTabVC: NSTabViewController {
 			}
             self.tabView.selectTabViewItem(at: TabIndex.subchapter.rawValue)
         }
-        else if notification.object is [Chapter] {
-			let tvi = self.tabViewItems[TabIndex.chapters.rawValue]
-			if let chaptersVC = tvi.viewController as? ChaptersDetailVC {
-				chaptersVC.book = self.book
-			}
-            self.tabView.selectTabViewItem(at: TabIndex.chapters.rawValue)
-        }
-        else if notification.object is [Persona] {
-			let tvi = self.tabViewItems[TabIndex.personas.rawValue]
-			if let personasVC = tvi.viewController as? PersonasDetailVC {
-				personasVC.book = self.book
-			}
-            self.tabView.selectTabViewItem(at: TabIndex.personas.rawValue)
-        }
+		
 		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
     }
 }

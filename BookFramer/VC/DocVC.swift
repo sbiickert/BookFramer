@@ -12,10 +12,10 @@ class DocVC: NSSplitViewController {
         return representedObject as? Book
     }
 
-    var sidebar: SidebarVC? {
+    var chapters: ChaptersDetailVC? {
         for svi in self.splitViewItems {
-            if let sbvc = svi.viewController as? SidebarVC {
-                return sbvc
+            if let cdvc = svi.viewController as? ChaptersDetailVC {
+                return cdvc
             }
         }
         return nil
@@ -42,7 +42,7 @@ class DocVC: NSSplitViewController {
 
     override var representedObject: Any? {
         didSet {
-            sidebar?.book = book
+            chapters?.book = book
 			detail?.book = book
 			document?.notificationCenter.addObserver(self, selector: #selector(openExternal(notification:)), name: .openExternal, object: nil)
 			document?.notificationCenter.addObserver(self, selector: #selector(addChapter(notification:)), name: .addChapter, object: nil)

@@ -26,7 +26,6 @@
 		3767836726D3E3D700674C4A /* SubChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836226D3E3D700674C4A /* SubChapter.swift */; };
 		3767836826D3E3D700674C4A /* BookBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836326D3E3D700674C4A /* BookBlock.swift */; };
 		3767836A26D3E3EF00674C4A /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836926D3E3EF00674C4A /* Enums.swift */; };
-		3767836D26D3F74B00674C4A /* SidebarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836C26D3F74B00674C4A /* SidebarVC.swift */; };
 		3767837026D3F77A00674C4A /* DetailTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836E26D3F77A00674C4A /* DetailTabVC.swift */; };
 		3767837326D41A0700674C4A /* DocumentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767837226D41A0700674C4A /* DocumentWindowController.swift */; };
 		37DA61EB26F1538800298D20 /* AutomateBBEdit.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */; };
@@ -83,7 +82,6 @@
 		3767836226D3E3D700674C4A /* SubChapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubChapter.swift; sourceTree = "<group>"; };
 		3767836326D3E3D700674C4A /* BookBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookBlock.swift; sourceTree = "<group>"; };
 		3767836926D3E3EF00674C4A /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		3767836C26D3F74B00674C4A /* SidebarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarVC.swift; sourceTree = "<group>"; };
 		3767836E26D3F77A00674C4A /* DetailTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTabVC.swift; sourceTree = "<group>"; };
 		3767837226D41A0700674C4A /* DocumentWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentWindowController.swift; sourceTree = "<group>"; };
 		37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = AutomateBBEdit.scpt; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 			isa = PBXGroup;
 			children = (
 				3767832C26D3E33500674C4A /* DocVC.swift */,
-				3767836C26D3F74B00674C4A /* SidebarVC.swift */,
 				3767836E26D3F77A00674C4A /* DetailTabVC.swift */,
 				B8756FEB26E00A55009807BA /* BFViewController.swift */,
 				37EB462226D53BE4004DAE73 /* BookDetailVC.swift */,
@@ -362,7 +359,6 @@
 				3738A74A26D7EF10004095C1 /* CheckboxTableCellView.swift in Sources */,
 				3767832B26D3E33500674C4A /* AppDelegate.swift in Sources */,
 				3767836626D3E3D700674C4A /* Chapter.swift in Sources */,
-				3767836D26D3F74B00674C4A /* SidebarVC.swift in Sources */,
 				B8756FEC26E00A55009807BA /* BFViewController.swift in Sources */,
 				3767836526D3E3D700674C4A /* Persona.swift in Sources */,
 				371486B126D45C51002ACF32 /* Extensions.swift in Sources */,

@@ -277,7 +277,21 @@ class Book: Equatable, ObservableObject {
 		}
 		return nil
 	}
+
+	/**
+	Search for SubChapter with id
 	
+	- Parameter id: the subchapter id to search for.
+	*/
+	func findSubChapter(id: String) -> SubChapter? {
+		for c in chapters {
+			if c.subchapters.contains(where: { $0.id == id }) {
+				return c.subchapters.first(where: {$0.id == id})
+			}
+		}
+		return nil
+	}
+
 	/**
 	Renders the `Book` into logical `BookBlocks`, ready to write to markdown.
 	

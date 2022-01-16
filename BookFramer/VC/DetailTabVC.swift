@@ -9,14 +9,15 @@ import Cocoa
 
 class DetailTabVC: NSTabViewController {
     enum TabIndex: Int {
-        case chapter = 0
-        case subchapter = 1
+		case book = 0
+		case chapter = 1
+        case subchapter = 2
     }
 	
 	var book: Book? {
 		didSet {
 			let note = NSNotification(name: .changeContext, object: book)
-			self.changeContext(notification: note)
+			self.contextChanged(notification: note)
 		}
 	}
 	
@@ -28,12 +29,15 @@ class DetailTabVC: NSTabViewController {
         super.viewDidLoad()
     }
 	
+	private var _observerAdded = false
 	override func viewWillAppear() {
-		document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
+		if _observerAdded == false {
+			_observerAdded = true
+			document?.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
+		}
 	}
     
-    @objc func changeContext(notification: NSNotification) {
-		
+    @objc func contextChanged(notification: NSNotification) {
         if notification.object is Chapter {
 			let tvi = self.tabViewItems[TabIndex.chapter.rawValue]
 			if let cdvc = tvi.viewController as? ChapterDetailVC {
@@ -50,8 +54,13 @@ class DetailTabVC: NSTabViewController {
 			}
             self.tabView.selectTabViewItem(at: TabIndex.subchapter.rawValue)
         }
-		
-		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
+		else {
+			let tvi = self.tabViewItems[TabIndex.book.rawValue]
+			if let bdvc = tvi.viewController as? BookDetailVC {
+				bdvc.book = book
+			}
+			self.tabView.selectTabViewItem(at: TabIndex.book.rawValue)
+		}
     }
 }
 

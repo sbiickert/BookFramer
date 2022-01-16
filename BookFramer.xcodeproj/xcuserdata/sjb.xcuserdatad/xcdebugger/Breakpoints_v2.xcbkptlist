@@ -30,8 +30,8 @@
             filePath = "BookFramer/Entities/Book.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "502"
-            endingLineNumber = "502"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "parseHeader(json:)"
             landmarkType = "7">
          </BreakpointContent>

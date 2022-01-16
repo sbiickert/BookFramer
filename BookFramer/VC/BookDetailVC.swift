@@ -25,6 +25,10 @@ class BookDetailVC: BFViewController {
 	@IBOutlet weak var tableColCheckbox: NSTableColumn!
 	@IBOutlet weak var tableColDescription: NSTableColumn!
 	
+	@IBAction func openInBBEdit(_ sender: Any) {
+		print("openInBBEdit in book detail")
+		document?.notificationCenter.post(name: .openExternal, object: book)
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -50,11 +54,6 @@ class BookDetailVC: BFViewController {
 		yearField.stringValue = book?.headerInfo.year ?? ""
 		keywordField.stringValue = book?.headerInfo.joinedKeywords ?? ""
 		tableView.reloadData()
-	}
-	
-	@IBAction func openInBBEdit(_ sender: AnyObject) {
-		print("openInBBEdit in book detail")
-		document?.notificationCenter.post(name: .openExternal, object: book)
 	}
 
 	/**

@@ -40,17 +40,60 @@ class DocVC: NSSplitViewController {
         // Do any additional setup after loading the view.
     }
 
+	private var _observersAdded = false
     override var representedObject: Any? {
         didSet {
             chapters?.book = book
 			detail?.book = book
-			document?.notificationCenter.addObserver(self, selector: #selector(openExternal(notification:)), name: .openExternal, object: nil)
-			document?.notificationCenter.addObserver(self, selector: #selector(addChapter(notification:)), name: .addChapter, object: nil)
-			document?.notificationCenter.addObserver(self, selector: #selector(addSubChapter(notification:)), name: .addSubChapter, object: nil)
-			document?.notificationCenter.addObserver(self, selector: #selector(deleteChapter(notification:)), name: .deleteChapter, object: nil)
-			document?.notificationCenter.addObserver(self, selector: #selector(deleteSubChapter(notification:)), name: .deleteSubChapter, object: nil)
+			if _observersAdded == false {
+				_observersAdded = true
+				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(openExternal(notification:)), name: .openExternal, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(addChapter(notification:)), name: .addChapter, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(addSubChapter(notification:)), name: .addSubChapter, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(deleteChapter(notification:)), name: .deleteChapter, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(deleteSubChapter(notification:)), name: .deleteSubChapter, object: nil)
+			}
         }
     }
+	
+	@objc func changeContext(notification: Notification) {
+		if notification.object is Chapter {
+			_selectedChapterID = (notification.object as! Chapter).id
+			_selectedSubChapterID = nil
+		}
+		else if notification.object is SubChapter {
+			_selectedSubChapterID = (notification.object as! SubChapter).id
+			if let sub = selectedSubChapter,
+			let book = book,
+			   let ch = book.chapterContaining(subchapter: sub) {
+				_selectedChapterID = ch.id
+			}
+		}
+		else if notification.object is Book {
+			_selectedChapterID = nil
+			_selectedSubChapterID = nil
+		}
+		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
+	}
+	
+	private var _selectedChapterID: String?
+	private var selectedChapter: Chapter? {
+		if let id = _selectedChapterID,
+		   let book = book {
+			return book.chapters.first(where: {$0.id == id})
+		}
+		return nil
+	}
+	
+	private var _selectedSubChapterID: String?
+	private var selectedSubChapter: SubChapter? {
+		if let id = _selectedSubChapterID,
+		   let book = book {
+			return book.findSubChapter(id: id)
+		}
+		return nil
+	}
 
 	// Default handler for these menu selections pass nil
 	// The detail VCs for Chapters, Chapter and SubChapter will pass a Chapter or SubChapter to indicate context
@@ -72,6 +115,19 @@ class DocVC: NSSplitViewController {
 		}
 		else if let relativeSub = notification.object as? SubChapter,
 				let relativeCh = book!.chapterContaining(subchapter: relativeSub) {
+			// Add new chapter after relativeCh
+			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
+				insertIndex = relativeIndex + 1
+			}
+		}
+		else if let relativeSub = selectedSubChapter ,
+				let relativeCh = book!.chapterContaining(subchapter: relativeSub) {
+			// Add new chapter after relativeCh
+			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
+				insertIndex = relativeIndex + 1
+			}
+		}
+		else if let relativeCh = selectedChapter {
 			// Add new chapter after relativeCh
 			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
 				insertIndex = relativeIndex + 1
@@ -105,6 +161,9 @@ class DocVC: NSSplitViewController {
 			targetChapter = book!.chapterContaining(subchapter: sub)
 		}
 		else if let ch = notification.object as? Chapter {
+			targetChapter = ch
+		}
+		else if let ch = selectedChapter {
 			targetChapter = ch
 		}
 		guard targetChapter != nil else {return}

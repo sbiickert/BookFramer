@@ -27,8 +27,6 @@ class SubChapterDetailVC: BFViewController {
 	@IBOutlet weak var statusImage: NSImageView!
 	@IBOutlet weak var povPopupMenu: NSPopUpButton!
 	@IBOutlet weak var charactersField: NSTextField!
-	@IBOutlet weak var paragraphsLabel: NSTextField!
-	@IBOutlet weak var wordsLabel: NSTextField!
 	
 	
 	override func viewDidLoad() {
@@ -45,10 +43,7 @@ class SubChapterDetailVC: BFViewController {
 		super.updateUI()
 		descriptionField.stringValue = subchapter?.headerInfo.description ?? ""
 		locationField.stringValue = subchapter?.headerInfo.location ?? ""
-		charactersField.stringValue = personas
-		wordsLabel.stringValue = "Words: \(subchapter?.wordCount ?? 0)"
-		paragraphsLabel.stringValue = "Chapter: \(subchapter?.paragraphs.count ?? 0)"
-		
+		charactersField.stringValue = personas		
 		
 		updateStatusMenu()
 		

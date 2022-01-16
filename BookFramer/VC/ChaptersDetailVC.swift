@@ -61,7 +61,7 @@ class ChaptersDetailVC: BFViewController {
 			return // click on header
 		}
 		if let item = objectFor(row: tableView.clickedRow) {
-			document?.notificationCenter.post(name: .changeContext, object: item)
+			document?.notificationCenter.post(name: .openExternal, object: item)
 		}
 	}
 	
@@ -70,10 +70,11 @@ class ChaptersDetailVC: BFViewController {
 extension ChaptersDetailVC: NSTableViewDelegate {
 	func tableViewSelectionDidChange(_ notification: Notification) {
 		guard tableView.selectedRow >= 0 else {
-			return // no selected row
+			document?.notificationCenter.post(name: .changeContext, object: book)
+			return
 		}
 		let item = objectFor(row: tableView.selectedRow)
-		document?.notificationCenter.post(name: .contextDidChange, object: item)
+		document?.notificationCenter.post(name: .changeContext, object: item)
 	}
 	
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {

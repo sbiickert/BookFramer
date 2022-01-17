@@ -11,12 +11,14 @@ class SubChapterDetailVC: BFViewController {
 
 	var book: Book? {
 		didSet {
+			guard descriptionField != nil else { return }
 			updateUI()
 		}
 	}
 
 	var subchapter: SubChapter? {
 		didSet {
+			guard descriptionField != nil else { return }
 			updateUI()
 		}
 	}
@@ -37,6 +39,7 @@ class SubChapterDetailVC: BFViewController {
 		statusPopupMenu.addItem(withTitle: EditStatus.inProgress.rawValue)
 		statusPopupMenu.addItem(withTitle: EditStatus.good.rawValue)
 		statusPopupMenu.addItem(withTitle: EditStatus.finished.rawValue)
+		updateUI()
     }
 	
 	override func updateUI() {

@@ -11,12 +11,14 @@ class ChapterDetailVC: BFViewController {
     
     var book: Book? {
         didSet {
+			guard titleField != nil else { return }
             updateUI()
         }
     }
     
     var chapter: Chapter? {
         didSet {
+			guard titleField != nil else { return }
 			if book != nil && chapter != nil {
 				assert(book!.chapters.contains(where: {$0.id == chapter!.id}))
 			}
@@ -25,7 +27,6 @@ class ChapterDetailVC: BFViewController {
     }
     
     @IBOutlet weak var titleField: NSTextField!
-    
     @IBOutlet weak var subtitleField: NSTextField!
 
     override func viewDidLoad() {

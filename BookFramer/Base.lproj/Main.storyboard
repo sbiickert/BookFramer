@@ -728,7 +728,7 @@ CA
                         </connections>
                     </window>
                     <connections>
-                        <segue destination="aYQ-99-NZK" kind="relationship" relationship="window.shadowedContentViewController" id="YNB-he-cks"/>
+                        <segue destination="D9D-Iy-iql" kind="relationship" relationship="window.shadowedContentViewController" id="SHc-ue-esb"/>
                     </connections>
                 </windowController>
                 <customObject id="6f7-a7-6o1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -736,52 +736,47 @@ CA
             <point key="canvasLocation" x="219" y="298.5"/>
         </scene>
         <!--DocVC-->
-        <scene sceneID="fvI-Lu-K0W">
+        <scene sceneID="tL9-aM-rkI">
             <objects>
-                <splitViewController id="aYQ-99-NZK" customClass="DocVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
-                    <splitViewItems>
-                        <splitViewItem holdingPriority="750" id="Cy0-Oy-cUq"/>
-                        <splitViewItem id="BeN-Pn-Hww"/>
-                    </splitViewItems>
-                    <splitView key="splitView" arrangesAllSubviews="NO" dividerStyle="thin" id="SgL-Xy-dF7">
-                        <rect key="frame" x="0.0" y="-65" width="798" height="507"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    </splitView>
-                    <connections>
-                        <segue destination="ZLY-PZ-Z41" kind="relationship" relationship="splitItems" id="QPF-Ov-KPB"/>
-                        <segue destination="mcZ-Qy-VPZ" kind="relationship" relationship="splitItems" id="Wjv-BU-FK8"/>
-                    </connections>
-                </splitViewController>
-                <customObject id="NV3-z3-Ppx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="354" y="852"/>
-        </scene>
-        <!--Detail TabVC-->
-        <scene sceneID="UcC-1W-AVc">
-            <objects>
-                <tabViewController selectedTabViewItemIndex="0" tabStyle="unspecified" id="mcZ-Qy-VPZ" customClass="DetailTabVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabViewItems>
-                        <tabViewItem id="WO0-mP-Gc0"/>
-                        <tabViewItem identifier="" id="osf-lF-pHn"/>
-                        <tabViewItem id="xyA-Ry-pC9"/>
-                    </tabViewItems>
-                    <tabView key="tabView" type="noTabsNoBorder" id="pN6-lD-PfR">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                <viewController id="D9D-Iy-iql" customClass="DocVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="hsr-1L-NSF">
+                        <rect key="frame" x="0.0" y="0.0" width="644" height="421"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <font key="font" metaFont="message"/>
-                        <connections>
-                            <outlet property="delegate" destination="mcZ-Qy-VPZ" id="YQz-MT-BAb"/>
-                        </connections>
-                    </tabView>
+                        <subviews>
+                            <containerView translatesAutoresizingMaskIntoConstraints="NO" id="iMH-4A-cJ6">
+                                <rect key="frame" x="0.0" y="251" width="644" height="170"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="170" id="IdH-yT-Dxg"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="Yrt-Bf-dcY" kind="embed" id="2PL-FG-TXg"/>
+                                </connections>
+                            </containerView>
+                            <containerView translatesAutoresizingMaskIntoConstraints="NO" id="bdK-qa-W2f">
+                                <rect key="frame" x="0.0" y="0.0" width="644" height="251"/>
+                                <connections>
+                                    <segue destination="ZLY-PZ-Z41" kind="embed" id="mri-CU-uJu"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="bdK-qa-W2f" secondAttribute="trailing" id="3Ky-uz-nbd"/>
+                            <constraint firstAttribute="trailing" secondItem="iMH-4A-cJ6" secondAttribute="trailing" id="Hle-l0-g5B"/>
+                            <constraint firstItem="iMH-4A-cJ6" firstAttribute="top" secondItem="hsr-1L-NSF" secondAttribute="top" id="NND-MK-aNy"/>
+                            <constraint firstItem="bdK-qa-W2f" firstAttribute="leading" secondItem="hsr-1L-NSF" secondAttribute="leading" id="Ukj-gG-dRM"/>
+                            <constraint firstAttribute="bottom" secondItem="bdK-qa-W2f" secondAttribute="bottom" id="gF3-WO-UOS"/>
+                            <constraint firstItem="bdK-qa-W2f" firstAttribute="top" secondItem="hsr-1L-NSF" secondAttribute="top" constant="170" id="kR8-gL-gsy"/>
+                            <constraint firstItem="iMH-4A-cJ6" firstAttribute="leading" secondItem="hsr-1L-NSF" secondAttribute="leading" id="rWB-JE-ZPb"/>
+                        </constraints>
+                    </view>
                     <connections>
-                        <segue destination="kpr-t1-ECw" kind="relationship" relationship="tabItems" id="IEC-oR-4U3"/>
-                        <segue destination="jhh-Lp-dhL" kind="relationship" relationship="tabItems" id="xjG-O8-DMc"/>
-                        <segue destination="jfc-Op-HG1" kind="relationship" relationship="tabItems" id="Cwj-RE-rZ3"/>
+                        <outlet property="chaptersContainerView" destination="bdK-qa-W2f" id="jdA-oY-r0v"/>
+                        <outlet property="detailContainerView" destination="iMH-4A-cJ6" id="rnG-Fc-TNt"/>
                     </connections>
-                </tabViewController>
-                <customObject id="OBW-2o-flq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <customObject id="add-HC-8hF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1059" y="1062"/>
+            <point key="canvasLocation" x="408" y="839.5"/>
         </scene>
         <!--Book DetailVC-->
         <scene sceneID="1Es-3l-IBi">
@@ -1078,7 +1073,7 @@ CA
                 </viewController>
                 <customObject id="CMf-Gs-99l" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1780" y="1724"/>
+            <point key="canvasLocation" x="1671" y="1181"/>
         </scene>
         <!--Chapter DetailVC-->
         <scene sceneID="Q7G-Ph-ad6">
@@ -1176,7 +1171,7 @@ CA
                 </viewController>
                 <customObject id="9Bo-4J-pSy" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1819" y="1181"/>
+            <point key="canvasLocation" x="1631" y="1419"/>
         </scene>
         <!--Sub Chapter DetailVC-->
         <scene sceneID="egg-JY-KGs">
@@ -1382,7 +1377,7 @@ Nejla Abbas</string>
                 </viewController>
                 <customObject id="D4Y-ex-gz4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1766.5" y="1500"/>
+            <point key="canvasLocation" x="1658" y="1646"/>
         </scene>
         <!--Chapters DetailVC-->
         <scene sceneID="hZm-FL-imb">
@@ -1592,7 +1587,7 @@ Nejla Abbas</string>
                 </viewController>
                 <customObject id="Loz-lK-2HM" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1321" y="637"/>
+            <point key="canvasLocation" x="1657" y="871"/>
         </scene>
         <!--Personas DetailVC-->
         <scene sceneID="E0v-R9-Mhi">
@@ -1784,7 +1779,35 @@ Nejla Abbas</string>
                 </viewController>
                 <customObject id="RHU-Z7-jDa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="348" y="1353"/>
+            <point key="canvasLocation" x="166" y="1402"/>
+        </scene>
+        <!--Detail TabVC-->
+        <scene sceneID="qCi-pn-GLK">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="0" tabStyle="unspecified" id="Yrt-Bf-dcY" customClass="DetailTabVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem id="D5B-wp-kEN"/>
+                        <tabViewItem id="ayx-rs-KW5"/>
+                        <tabViewItem id="Gbd-gG-F1h"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="uKb-vJ-PG7">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="Yrt-Bf-dcY" id="eCD-TW-tM0"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="uKb-vJ-PG7" id="NZa-Ur-rPO"/>
+                        <segue destination="kpr-t1-ECw" kind="relationship" relationship="tabItems" id="F10-16-onp"/>
+                        <segue destination="jhh-Lp-dhL" kind="relationship" relationship="tabItems" id="qKq-2Q-mlE"/>
+                        <segue destination="jfc-Op-HG1" kind="relationship" relationship="tabItems" id="6Op-HI-8dy"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="WuL-9H-WAI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="917" y="1419"/>
         </scene>
     </scenes>
     <resources>

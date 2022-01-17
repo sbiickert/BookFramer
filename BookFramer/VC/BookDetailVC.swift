@@ -11,6 +11,7 @@ class BookDetailVC: BFViewController {
 	
 	var book: Book? {
 		didSet {
+			guard titleField != nil else { return }
 			updateUI()
 		}
 	}

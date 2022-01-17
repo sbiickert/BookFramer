@@ -7,23 +7,27 @@
 
 import Cocoa
 
-class DocVC: NSSplitViewController {
-    var book: Book? {
+class DocVC: NSViewController {
+	
+	@IBOutlet weak var chaptersContainerView: NSView!
+	@IBOutlet weak var detailContainerView: NSView!
+	
+	var book: Book? {
         return representedObject as? Book
     }
 
     var chapters: ChaptersDetailVC? {
-        for svi in self.splitViewItems {
-            if let cdvc = svi.viewController as? ChaptersDetailVC {
-                return cdvc
-            }
-        }
+		for childVC in children {
+			if let cdvc = childVC as? ChaptersDetailVC {
+				return cdvc
+			}
+		}
         return nil
     }
 	
 	var detail: DetailTabVC? {
-		for svi in self.splitViewItems {
-			if let dtvc = svi.viewController as? DetailTabVC {
+		for childVC in children {
+			if let dtvc = childVC as? DetailTabVC {
 				return dtvc
 			}
 		}

@@ -34,6 +34,15 @@ class DocVC: NSViewController {
 		return nil
 	}
 	
+	var personas: PersonasDetailVC? {
+		for childVC in children {
+			if let pdvc = childVC as? PersonasDetailVC {
+				return pdvc
+			}
+		}
+		return nil
+	}
+	
 	public var document: Document? {
 		return self.view.window?.windowController?.document as? Document
 	}

@@ -8,44 +8,57 @@
 import Cocoa
 
 class PersonasDetailVC: BFViewController {
+	private var _observersAdded = false
 	var book: Book? {
 		didSet {
-			self.personas = book?.allPersonas
-		}
-	}
-	
-	var personas: [Persona]? {
-		didSet {
+			if _observersAdded == false {
+				document?.notificationCenter.addObserver(self, selector: #selector(addPersona(notification:)), name: .addPersona, object: nil)
+				_observersAdded = true
+			}
 			updateUI()
 		}
 	}
+	
+	// Keep a mutable copy for sorting
+	var personas: [Persona]?
 
 	@IBOutlet weak var tableView: NSTableView!
-	@IBOutlet weak var colType: NSTableColumn!
 	@IBOutlet weak var colName: NSTableColumn!
-	@IBOutlet weak var colAliases: NSTableColumn!
-	@IBOutlet weak var colDescription: NSTableColumn!
+	
+	@IBOutlet weak var addButton: NSButton!
+	@IBOutlet weak var removeButton: NSButton!
+	
+	@IBOutlet weak var nameField: NSTextField!
+	@IBOutlet weak var aliasesField: NSTextField!
+	@IBOutlet weak var descriptionField: NSTextField!
+	@IBOutlet weak var importanceCheckbox: NSButton!
 	
 	override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
 		tableView.delegate = self
 		tableView.dataSource = self
-		
+				
 		// Create sort descriptors
-		let descriptorImportance = NSSortDescriptor(key: "importance", ascending: true)
 		let descriptorName = NSSortDescriptor(key: "name", ascending: true)
-		let descriptorDesc = NSSortDescriptor(key: "description", ascending: true)
-		let descriptorAliases = NSSortDescriptor(key: "aliases", ascending: true)
 
-		colType.sortDescriptorPrototype = descriptorImportance
 		colName.sortDescriptorPrototype = descriptorName
-		colDescription.sortDescriptorPrototype = descriptorDesc
-		colAliases.sortDescriptorPrototype = descriptorAliases
     }
 	
+	private var retainSelectedID: String?
 	override func updateUI() {
+		// Refresh local copy of the personas
+		personas = book?.allPersonas
+		
 		tableView.reloadData()
+		if let id = retainSelectedID,
+		   let idx = personas?.firstIndex(where: {$0.id == id}) {
+			let indexSet = IndexSet(integer: idx)
+			tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
+		}
+		retainSelectedID = nil
+		
+		updatePersonaForm()
 	}
 
 	private enum EditAction {
@@ -70,8 +83,19 @@ class PersonasDetailVC: BFViewController {
 		return [.create]
 	}
 	
+	@IBAction func newPersona(_ sender: Any) {
+		// Calls addPersona(notification:) below
+		document?.notificationCenter.post(name: .addPersona, object: nil)
+	}
+	@IBAction func deletePersona(_ sender: Any) {
+		// This should probably be removed, and the button connected to "delete" below
+		if actionsForSelectedRow().contains(.delete) {
+			deletePersona(at: tableView.selectedRow)
+		}
+	}
+	
 	@IBAction func importanceChanged(_ sender: NSButton) {
-		updatePersona(at: tableView.row(for: sender))
+		updatePersona(at: tableView.selectedRow)
 	}
 	@IBAction func nameChanged(_ sender: NSTextField) {
 		updatePersona(at: tableView.selectedRow)
@@ -83,69 +107,55 @@ class PersonasDetailVC: BFViewController {
 		updatePersona(at: tableView.selectedRow)
 	}
 	
+	@objc func addPersona(notification: Notification) {
+		guard book != nil else { return }
+		let p = Persona(name: "New Character", description: "", aliases: [])
+		var major = book!.majorPersonas
+		let minor = book!.minorPersonas
+		major.append(p)
+		retainSelectedID = p.id
+		setPersonas(major: major, minor: minor)
+	}
+	
 	private func updatePersona(at row: Int) {
 		guard book != nil && personas != nil && row > -1 else {
 			return
 		}
 		var majorPersonas = personas!.filter { book!.isMajor(persona: $0) }
 		var minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false }
-		let availableActions = actionsFor(row: row)
+					
+		let isMajor = importanceCheckbox.state == .on
+			
+		var p = personas![row]
+		p.name = nameField.stringValue
+		p.joinedAliases = aliasesField.stringValue
+		p.description = descriptionField.stringValue
 		
-		if let idxColType = tableView.tableColumns.firstIndex(of: colType),
-		   let checkbox = (tableView.view(atColumn: idxColType, row: row, makeIfNecessary: false) as? CheckboxTableCellView)?.checkbox,
-		   let idxColName = tableView.tableColumns.firstIndex(of: colName),
-		   let nameField = (tableView.view(atColumn: idxColName, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField,
-		   let idxColAlias = tableView.tableColumns.firstIndex(of: colAliases),
-		   let aliasField = (tableView.view(atColumn: idxColAlias, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField,
-		   let idxColDesc = tableView.tableColumns.firstIndex(of: colDescription),
-		   let descField = (tableView.view(atColumn: idxColDesc, row: row, makeIfNecessary: false) as? NSTableCellView)?.textField {
-			
-			let isMajor = checkbox.state == .on
-			
-			if availableActions.contains(.create) {
-				// This is a new persona
-				var p = Persona(name: nameField.stringValue, description: descField.stringValue, aliases: [])
-				p.joinedAliases = aliasField.stringValue
+		let wasMajor = book!.isMajor(persona: p)
+		if wasMajor {
+			if let idx = majorPersonas.firstIndex(where: {$0.id == p.id}) {
+				majorPersonas.remove(at: idx)
 				if isMajor {
-					majorPersonas.append(p)
+					majorPersonas.insert(p, at: idx)
 				}
 				else {
 					minorPersonas.append(p)
 				}
-				setPersonas(major: majorPersonas, minor: minorPersonas)
-			}
-			else if availableActions.contains(.update) {
-				var p = personas![row]
-				p.name = nameField.stringValue
-				p.joinedAliases = aliasField.stringValue
-				p.description = descField.stringValue
-				let wasMajor = book!.isMajor(persona: p)
-				
-				if wasMajor {
-					if let idx = majorPersonas.firstIndex(where: {$0.id == p.id}) {
-						majorPersonas.remove(at: idx)
-						if isMajor {
-							majorPersonas.insert(p, at: idx)
-						}
-						else {
-							minorPersonas.append(p)
-						}
-					}
-				}
-				else {
-					if let idx = minorPersonas.firstIndex(where: {$0.id == p.id}) {
-						minorPersonas.remove(at: idx)
-						if isMajor {
-							majorPersonas.append(p)
-						}
-						else {
-							minorPersonas.insert(p, at: idx)
-						}
-					}
-				}
-				setPersonas(major: majorPersonas, minor: minorPersonas)
 			}
 		}
+		else {
+			if let idx = minorPersonas.firstIndex(where: {$0.id == p.id}) {
+				minorPersonas.remove(at: idx)
+				if isMajor {
+					majorPersonas.append(p)
+				}
+				else {
+					minorPersonas.insert(p, at: idx)
+				}
+			}
+		}
+		retainSelectedID = p.id
+		setPersonas(major: majorPersonas, minor: minorPersonas)
 	}
 
 	@IBAction func delete(_ sender: AnyObject) {
@@ -185,31 +195,49 @@ class PersonasDetailVC: BFViewController {
 		book!.minorPersonas = minor
 		undoManager?.endUndoGrouping()
 		self.document?.notificationCenter.post(name: .bookEdited, object: [major])
-		self.book = book!
 	}
 }
 
 extension PersonasDetailVC: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-		return 24.0
+		return 18.0
 	}
 	
-	// TODO: disabling menu item not working at the moment
 	func tableViewSelectionDidChange(_ notification: Notification) {
-//		if let editMenu = NSApplication.shared.menu?.item(withTitle: "Edit"),
-//		   let deleteMenuItem = editMenu.submenu?.item(withTitle: "Delete") {
-//			deleteMenuItem.isEnabled = actionsForSelectedRow().contains(.delete) ? true : false
-//			print("Delete menu isEnabled: \(deleteMenuItem.isEnabled)")
-//		}
+		updatePersonaForm()
+	}
+	
+	func updatePersonaForm() {
+		if let tableView = tableView,
+		   let personas = personas,
+		   tableView.selectedRow >= 0 {
+			let p = personas[tableView.selectedRow]
+			nameField.isEnabled = true
+			aliasesField.isEnabled = true
+			descriptionField.isEnabled = true
+			importanceCheckbox.isEnabled = true
+			
+			nameField.stringValue = p.name
+			aliasesField.stringValue = p.joinedAliases
+			descriptionField.stringValue = p.description
+			importanceCheckbox.state = (book!.isMajor(persona: p)) ? .on : .off
+		}
+		else {
+			nameField.isEnabled = false
+			aliasesField.isEnabled = false
+			descriptionField.isEnabled = false
+			importanceCheckbox.isEnabled = false
+			
+			nameField.stringValue = ""
+			aliasesField.stringValue = ""
+			descriptionField.stringValue = ""
+			importanceCheckbox.state = .off
+		}
 	}
 	
 	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
 		switch edge {
 		case .trailing:
-			if row == personas?.count ?? -1 {
-				// Don't want a row action for the new persona row
-				return []
-			}
 			let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
 				self.deletePersona(at: row)
 			}
@@ -223,18 +251,13 @@ extension PersonasDetailVC: NSTableViewDelegate {
 extension PersonasDetailVC: NSTableViewDataSource {
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		// Returns one extra row for adding a new persona
-		return (self.personas?.count ?? 0) + 1
+		return (self.personas?.count ?? 0)
 	}
 	
 	func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
 		let availableActions = actionsFor(row: row)
 		guard availableActions.isEmpty == false else {
 			return nil
-		}
-		if availableActions.contains(.create)  {
-			// This is the extra row for adding a new persona
-			// Maybe could return nil instead?
-			return Persona(name: "", description: "", aliases: [])
 		}
 		return self.personas![row]
 	}
@@ -243,24 +266,10 @@ extension PersonasDetailVC: NSTableViewDataSource {
 		var cellView: NSTableCellView?
 		
 		if let persona = self.tableView(tableView, objectValueFor: nil, row: row) as? Persona {
-			if tableColumn == colType {
-				let cbView = tableView.makeView(withIdentifier: .personaImportance, owner: self) as? CheckboxTableCellView
-				let isMajor = book!.isMajor(persona: persona)
-				cbView?.checkbox?.state = isMajor ? .on : .off
-				cellView = cbView
-			}
+			let isMajor = book!.isMajor(persona: persona)
 			if tableColumn == colName {
 				cellView = tableView.makeView(withIdentifier: .personaName, owner: self) as? NSTableCellView
-				cellView?.textField?.stringValue = persona.name
-			}
-			if tableColumn == colAliases {
-				cellView = tableView.makeView(withIdentifier: .personaAliases, owner: self) as? NSTableCellView
-				cellView?.textField?.stringValue = persona.joinedAliases
-			}
-			if tableColumn == colDescription {
-				cellView = tableView.makeView(withIdentifier: .personaDescription, owner: self) as? NSTableCellView
-				cellView?.textField?.stringValue = persona.description
-
+				cellView?.textField?.stringValue = "\(isMajor ? "+" : "-") \(persona.name)"
 			}
 		}
 		
@@ -275,52 +284,20 @@ extension PersonasDetailVC: NSTableViewDataSource {
 		}
 
 		// Sort functions
-		func sortByImportance(lhs: Persona, rhs: Persona) -> Bool {
-			let lhsIsMajor = book?.isMajor(persona: lhs)
-			let rhsIsMajor = book?.isMajor(persona: rhs)
-			if sortDescriptor.ascending {
-				return lhsIsMajor == false && lhsIsMajor != rhsIsMajor
-			}
-			return lhsIsMajor == true && lhsIsMajor != rhsIsMajor
-		}
 		func sortByName(lhs: Persona, rhs: Persona) -> Bool {
 			if sortDescriptor.ascending {
 				return lhs.name < rhs.name
 			}
 			return lhs.name > rhs.name
 		}
-		func sortByAliases(lhs: Persona, rhs: Persona) -> Bool {
-			if sortDescriptor.ascending {
-				return lhs.joinedAliases < rhs.joinedAliases
-			}
-			return lhs.joinedAliases > rhs.joinedAliases
-		}
-		func sortByDesc(lhs: Persona, rhs: Persona) -> Bool {
-			if sortDescriptor.ascending {
-				return lhs.description < rhs.description
-			}
-			return lhs.description > rhs.description
-		}
 		
 		// Sort
-		switch sortDescriptor.key {
-		case "importance":
-			self.personas?.sort(by: sortByImportance(lhs:rhs:))
-		case "name":
-			self.personas?.sort(by: sortByName(lhs:rhs:))
-		case "aliases":
-			self.personas?.sort(by: sortByAliases(lhs:rhs:))
-		default:
-			self.personas?.sort(by: sortByDesc(lhs:rhs:))
-		}
+		self.personas?.sort(by: sortByName(lhs:rhs:))
 		tableView.reloadData()
 
 	}
 }
 
 extension NSUserInterfaceItemIdentifier {
-	static let personaImportance = NSUserInterfaceItemIdentifier(rawValue: "PersonaImportance")
 	static let personaName = NSUserInterfaceItemIdentifier(rawValue: "PersonaName")
-	static let personaAliases = NSUserInterfaceItemIdentifier(rawValue: "PersonaAliases")
-	static let personaDescription = NSUserInterfaceItemIdentifier(rawValue: "PersonaDescription")
 }

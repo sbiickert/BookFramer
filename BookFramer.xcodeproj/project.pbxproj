@@ -130,6 +130,7 @@
 		3767831E26D3E33500674C4A = {
 			isa = PBXGroup;
 			children = (
+				3767833226D3E33600674C4A /* Main.storyboard */,
 				3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */,
 				3767832926D3E33500674C4A /* BookFramer */,
 				3767833E26D3E33600674C4A /* BookFramerTests */,
@@ -161,7 +162,6 @@
 				371486B026D45C51002ACF32 /* Extensions.swift */,
 				3767833026D3E33600674C4A /* Assets.xcassets */,
 				37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */,
-				3767833226D3E33600674C4A /* Main.storyboard */,
 				3767833526D3E33600674C4A /* Info.plist */,
 				3767833626D3E33600674C4A /* BookFramer.entitlements */,
 			);

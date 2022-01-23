@@ -288,31 +288,40 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 			
 			if tableColumn == colPOV {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailPOV, owner: self) as? NSTableCellView
+				let f = cellView?.textField?.font
 				if let sub = rowObject as? SubChapter {
 					cellView?.textField?.stringValue = sub.headerInfo.pov
+					cellView?.textField?.font = f?.resized(to: 11)
 				}
 				else {
 					cellView?.textField?.stringValue = ""
+					cellView?.textField?.font = f?.resized(to: 13)
 				}
 			}
 			
 			if tableColumn == colLocation {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailLocation, owner: self) as? NSTableCellView
+				let f = cellView?.textField?.font
 				if let sub = rowObject as? SubChapter {
 					cellView?.textField?.stringValue = sub.headerInfo.location
+					cellView?.textField?.font = f?.resized(to: 11)
 				}
 				else {
 					cellView?.textField?.stringValue = ""
+					cellView?.textField?.font = f?.resized(to: 13)
 				}
 			}
 			
 			if tableColumn == colWords {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailWords, owner: self) as? NSTableCellView
+				let f = cellView?.textField?.font
 				if let sub = rowObject as? SubChapter {
 					cellView?.textField?.stringValue = "\(sub.wordCount)"
+					cellView?.textField?.font = f?.resized(to: 11)
 				}
 				else if let ch = rowObject as? Chapter {
 					cellView?.textField?.stringValue = "\(ch.wordCount)"
+					cellView?.textField?.font = f?.resized(to: 13)
 				}
 			}
 		}

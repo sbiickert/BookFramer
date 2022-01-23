@@ -58,6 +58,7 @@ class DocVC: NSViewController {
         didSet {
             chapters?.book = book
 			detail?.book = book
+			personas?.book = book
 			if _observersAdded == false {
 				_observersAdded = true
 				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
@@ -228,12 +229,7 @@ class DocVC: NSViewController {
 
 	@IBAction func addPersona(_ sender: AnyObject) {
 		// Add a new persona
-		guard book != nil else { return }
-		let p = Persona(name: "New Character", description: "", aliases: [])
-		var major = book!.majorPersonas
-		let minor = book!.minorPersonas
-		major.append(p)
-		setPersonas(major: major, minor: minor)
+		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
 	private func setPersonas(major: [Persona], minor: [Persona]) {
 		guard book != nil else {

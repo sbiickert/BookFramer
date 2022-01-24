@@ -111,18 +111,17 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 	}
 	
 	func tableView(_ tableView: NSTableView, rowActionsForRow row: Int, edge: NSTableView.RowActionEdge) -> [NSTableViewRowAction] {
-		switch edge {
-		case .trailing:
-			let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
-				self.delete(self.tableView)
-			}
-			return [deleteAction]
-		default:
-			return []
+		guard row > 0 else { return [] }
+		guard edge == .trailing else { return [] }
+		let deleteAction = NSTableViewRowAction(style: .destructive, title: "Delete") { action, row in
+			self.delete(self.tableView)
 		}
+		return [deleteAction]
 	}
 	
 	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+		guard row > 0 else {return nil}
+		
 		if let rowObject = objectFor(row: row) as? IDable,
 		   searchText == nil {
 			// Can only drag and drop when no search filter
@@ -150,12 +149,12 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 			if let id = ids.first,
 			   let draggedObject = objectFor(id: id) {
 				if draggedObject is SubChapter {
-					// Can go anywhere except to row 0 (before first chapter)
-					return row > 0 ? .move : []
+					// Can go anywhere except to row 0 or 1 (before book / first chapter)
+					return row > 1 ? .move : []
 				}
 				else if let _ = objectFor(row: row) as? Chapter {
 					// Dragged onto another chapter
-					return .move
+					return row > 0 ? .move : []
 				}
 				else if row >= numberOfRows(in: tableView) {
 					// Dragging chapter to end. objectFor(row: row) is nil
@@ -243,6 +242,7 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 						sourceChapter.subchapters.remove(at: sourceIndex)
 						if sourceChapter.id == targetChapter.id {
 							sourceChapter.subchapters.append(draggedSub)
+							book!.replace(chapter: sourceChapter)
 						}
 						else {
 							targetChapter.subchapters.append(draggedSub)
@@ -278,23 +278,26 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 
 extension ChaptersDetailVC: NSTableViewDataSource {
 	func numberOfRows(in tableView: NSTableView) -> Int {
-		// One row for each chapter, one row for each subchapter
+		// One row for the book, one row for each chapter, one row for each subchapter
 		var n = 0
 		if let searched = searchedObjects {
-			n = searched.count
+			n = searched.count + 1 // the book
 		}
 		else if let b = book {
-			n = b.count
+			n = b.count + 1 // the book
 		}
 		return n
 	}
 	
 	private func objectFor(row: Int) -> Any? {
+		if row == 0 && book != nil {
+			return book
+		}
 		if let searched = searchedObjects {
-			return searched[row]
+			return searched[row-1] // indexes are off by one b/c the book is the first row
 		}
 		else if let b = book {
-			return b[row]
+			return b[row-1] // indexes are off by one b/c the book is the first row
 		}
 		return nil
 	}
@@ -306,7 +309,10 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 			if tableColumn == colStatus {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailStatus, owner: self) as? NSTableCellView
 				var status = EditStatus.multiple
-				if let ch = rowObject as? Chapter {
+				if let b = rowObject as? Book {
+					status = b.status
+				}
+				else if let ch = rowObject as? Chapter {
 					status = ch.status
 				}
 				else if let sub = rowObject as? SubChapter {
@@ -320,7 +326,11 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 			if tableColumn == colInfo {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailInfo, owner: self) as? NSTableCellView
 				let f = cellView?.textField?.font
-				if let sub = rowObject as? SubChapter {
+				if let b = rowObject as? Book {
+					cellView?.textField?.stringValue = b.titleSubtitle
+					cellView?.textField?.font = f?.bolded()?.resized(to: 14)
+				}
+				else if let sub = rowObject as? SubChapter {
 					cellView?.textField?.stringValue = sub.headerInfo.description
 					cellView?.textField?.font = f?.unbolded()?.resized(to: 11)
 				}
@@ -360,7 +370,11 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 			if tableColumn == colWords {
 				cellView = tableView.makeView(withIdentifier: .chaptersDetailWords, owner: self) as? NSTableCellView
 				let f = cellView?.textField?.font
-				if let sub = rowObject as? SubChapter {
+				if let b = rowObject as? Book {
+					cellView?.textField?.stringValue = "\(b.wordCount)"
+					cellView?.textField?.font = f?.resized(to: 14)
+				}
+				else if let sub = rowObject as? SubChapter {
 					cellView?.textField?.stringValue = "\(sub.wordCount)"
 					cellView?.textField?.font = f?.resized(to: 11)
 				}

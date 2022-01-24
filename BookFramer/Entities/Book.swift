@@ -189,6 +189,29 @@ class Book: Equatable, ObservableObject {
 		return i
 	}
 	
+	var status: EditStatus {
+		var chapterStatus = Set<EditStatus>()
+		for chapter in chapters {
+			chapterStatus.insert(chapter.status)
+		}
+		if chapterStatus.count == 1 {
+			return chapterStatus.first!
+		}
+		return EditStatus.multiple
+	}
+	
+	/**
+	Convenience property joining the title and the (optional) subtitle
+	
+	- Returns: "title" or "title: subtitle"
+	*/
+	var titleSubtitle: String {
+		if subtitle.trimmingCharacters(in: .whitespaces) == "" {
+			return title
+		}
+		return "\(title): \(subtitle)"
+	}
+
 	/**
 	 Subscript accessor for chapters and subchapters. First element at [0] is the first chapter,
 	 The second element will be the first subchapter in the chapter, etc.

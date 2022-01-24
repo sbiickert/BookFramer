@@ -28,7 +28,7 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 	@IBOutlet weak var statusPopupMenu: NSPopUpButton!
 	@IBOutlet weak var statusImage: NSImageView!
 	@IBOutlet weak var povPopupMenu: NSPopUpButton!
-	@IBOutlet weak var charactersField: NSTextField!
+	@IBOutlet var charactersTextView: NSTextView!
 	
 	
 	override func viewDidLoad() {
@@ -46,7 +46,7 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 		super.updateUI()
 		descriptionField.stringValue = subchapter?.headerInfo.description ?? ""
 		locationField.stringValue = subchapter?.headerInfo.location ?? ""
-		charactersField.stringValue = personas		
+		charactersTextView.string = personas		
 		
 		updateStatusMenu()
 		

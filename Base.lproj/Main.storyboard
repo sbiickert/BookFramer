@@ -1287,28 +1287,6 @@ CA
                                     <action selector="povChanged:" target="jfc-Op-HG1" id="sQe-nb-0h6"/>
                                 </connections>
                             </popUpButton>
-                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OW5-38-2Wa">
-                                <rect key="frame" x="504" y="7" width="263" height="105"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="105" id="Icx-ll-i0e"/>
-                                    <constraint firstAttribute="width" constant="263" id="fFH-4r-aNi"/>
-                                </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="yJ2-kY-TWX">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <string key="title">Boglárka Rowan
-Lidochka Vrubel
-Shantanu Broadbent
-Taisa MacKay
-Krasimir Whittemore
-Iakob Boothman
-Ludolf Wickham
-Quetzalcoatl Tímár
-Roimata Szőke
-Nejla Abbas</string>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UPF-8U-XfJ">
                                 <rect key="frame" x="287" y="32" width="20" height="26"/>
                                 <constraints>
@@ -1317,21 +1295,77 @@ Nejla Abbas</string>
                                 </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="VTj-e4-6MA"/>
                             </imageView>
+                            <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t3d-1r-P9V">
+                                <rect key="frame" x="504" y="7" width="263" height="105"/>
+                                <clipView key="contentView" drawsBackground="NO" id="rzh-Qc-OHb">
+                                    <rect key="frame" x="0.0" y="0.0" width="263" height="105"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" id="dsf-hM-ITd">
+                                            <rect key="frame" x="0.0" y="0.0" width="263" height="130"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="263" height="105"/>
+                                            <size key="maxSize" width="263" height="10000000"/>
+                                            <attributedString key="textStorage">
+                                                <fragment>
+                                                    <string key="content">Boglárka Rowan
+Lidochka Vrubel
+Shantanu Broadbent
+Taisa MacKay
+Krasimir Whittemore
+Iakob Boothman
+Ludolf Wickham
+Quetzalcoatl Tímár
+Roimata Szőke
+</string>
+                                                    <attributes>
+                                                        <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                        <font key="NSFont" metaFont="smallSystem"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                                <fragment content="Nejla Abbas">
+                                                    <attributes>
+                                                        <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                        <font key="NSFont" metaFont="smallSystem"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="263" id="DLQ-1W-dDL"/>
+                                    <constraint firstAttribute="height" constant="105" id="VfI-qi-5Iy"/>
+                                </constraints>
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="39l-ZI-DbY">
+                                    <rect key="frame" x="-100" y="-100" width="240" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="mRR-GK-fqa">
+                                    <rect key="frame" x="247" y="0.0" width="16" height="105"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="Bvi-wi-yNo" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="88" id="5mm-IC-2KW"/>
                             <constraint firstItem="xhI-l4-buB" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="33" id="AXF-6Z-y4A"/>
                             <constraint firstItem="9B2-q1-FVf" firstAttribute="leading" secondItem="pH7-je-eyR" secondAttribute="trailing" constant="3" id="Dup-P3-Sbd"/>
                             <constraint firstItem="HqQ-2p-5uf" firstAttribute="leading" secondItem="Bvi-wi-yNo" secondAttribute="trailing" constant="8" symbolic="YES" id="EBu-Ue-qhx"/>
-                            <constraint firstItem="OW5-38-2Wa" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="28" id="Ers-LH-aBN"/>
                             <constraint firstItem="rbf-da-Z76" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="59" id="M8S-8a-uSQ"/>
                             <constraint firstItem="r1n-ke-ukk" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="62" id="Na2-jG-eyf"/>
                             <constraint firstAttribute="height" constant="140" id="PFK-z2-Nb1"/>
                             <constraint firstItem="Bvi-wi-yNo" firstAttribute="leading" secondItem="rjV-3a-v0d" secondAttribute="leading" constant="10" id="PN6-0a-jl8"/>
+                            <constraint firstItem="t3d-1r-P9V" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="28" id="Pa9-AD-yUl"/>
                             <constraint firstItem="xeM-ti-jbr" firstAttribute="leading" secondItem="9B2-q1-FVf" secondAttribute="trailing" constant="23" id="Pun-HX-fsa"/>
-                            <constraint firstItem="OW5-38-2Wa" firstAttribute="leading" secondItem="xeM-ti-jbr" secondAttribute="leading" id="RLs-0d-3xR"/>
                             <constraint firstItem="r1n-ke-ukk" firstAttribute="leading" secondItem="rjV-3a-v0d" secondAttribute="leading" constant="10" id="TOE-07-O6N"/>
                             <constraint firstItem="HqQ-2p-5uf" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="85" id="Uhr-Ml-AIB"/>
+                            <constraint firstItem="t3d-1r-P9V" firstAttribute="leading" secondItem="xeM-ti-jbr" secondAttribute="leading" id="VV5-Xd-j1v"/>
                             <constraint firstItem="HqQ-2p-5uf" firstAttribute="centerY" secondItem="UPF-8U-XfJ" secondAttribute="centerY" id="a1n-lY-8wt"/>
                             <constraint firstItem="xeM-ti-jbr" firstAttribute="top" secondItem="rjV-3a-v0d" secondAttribute="top" constant="10" id="dAV-RX-CJf"/>
                             <constraint firstItem="9B2-q1-FVf" firstAttribute="leading" secondItem="rjV-3a-v0d" secondAttribute="leading" constant="100" id="dI6-OI-3nc"/>
@@ -1347,7 +1381,7 @@ Nejla Abbas</string>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="charactersField" destination="OW5-38-2Wa" id="Qs1-uZ-N8s"/>
+                        <outlet property="charactersTextView" destination="dsf-hM-ITd" id="SMS-ne-S3R"/>
                         <outlet property="descriptionField" destination="9B2-q1-FVf" id="b37-C7-T6A"/>
                         <outlet property="locationField" destination="rbf-da-Z76" id="3fu-QW-9m1"/>
                         <outlet property="povPopupMenu" destination="xhI-l4-buB" id="kdV-UC-RSB"/>

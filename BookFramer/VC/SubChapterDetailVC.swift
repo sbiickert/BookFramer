@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class SubChapterDetailVC: BFViewController {
+class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 
 	var book: Book? {
 		didSet {
@@ -138,6 +138,37 @@ class SubChapterDetailVC: BFViewController {
 	}
 	
 	/**
+	 `NSTextFieldDelegate` event raised on each typed change to the location field. Using to implement auto-suggest.
+	 - Parameter obj: Notification of the change.
+	 */
+	private var _prevLocLen: Int? = nil
+	func controlTextDidChange(_ obj: Notification) {
+		if let field = obj.object as? NSTextField,
+		   field.stringValue.isEmpty == false,
+		   let book = book {
+			// This is the "location" text field. Want to implement auto-suggestion
+			// Only suggest if the string is growing (i.e. user typing more chars)
+			if _prevLocLen ?? 0 < field.stringValue.count {
+				_prevLocLen = field.stringValue.count
+				let locs = book.allLocations.filter({$0.starts(with: field.stringValue)})
+				if let match = locs.first,
+				   let ed = field.currentEditor() {
+					// It looks like the user is starting to type something that matches a location
+					// Set the text to the match, but select the letters that are only suggested
+					let nsMatch = NSString(string: match)
+					let nsText = NSString(string: field.stringValue)
+					field.stringValue = match
+					let range = NSMakeRange(nsText.length, nsMatch.length - nsText.length)
+					ed.selectedRange = range
+				}
+			}
+			else {
+				_prevLocLen = field.stringValue.count
+			}
+		}
+	}
+
+	/**
 	Target of action when `locationField` changes. Calls `setLocation`
 	- Parameter sender: the NSTextField
 	*/
@@ -157,6 +188,7 @@ class SubChapterDetailVC: BFViewController {
 		subchapter!.headerInfo.location = newValue
 		locationField.stringValue = newValue
 		writeChangedSubChapterToBook()
+		document?.notificationCenter.post(name: .bookEdited, object: subchapter!)
 	}
 	
 	@IBAction func statusChanged(_ sender: NSPopUpButton) {
@@ -189,6 +221,6 @@ class SubChapterDetailVC: BFViewController {
         subchapter!.headerInfo.pov = newValue
         writeChangedSubChapterToBook()
         updatePovMenu()
+		document?.notificationCenter.post(name: .bookEdited, object: subchapter!)
 	}
-	
 }

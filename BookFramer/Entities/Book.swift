@@ -245,6 +245,20 @@ class Book: Equatable, ObservableObject {
 	}
 
 	/**
+	 Iterates through all subchapters in the book, finding unique locations.
+	 - Returns: array of Strings, sorted.
+	 */
+	var allLocations: [String] {
+		var locs = Set<String>()
+		for chapter in chapters {
+			for sub in chapter.subchapters {
+				locs.insert(sub.headerInfo.location)
+			}
+		}
+		return locs.sorted()
+	}
+	
+	/**
 	Searches major and minor personas for name or alias matching `name`
 	
 	- Parameter name: the name to search for

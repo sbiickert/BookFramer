@@ -180,6 +180,39 @@ class Book: Equatable, ObservableObject {
 		return count
 	}
 	
+	var count: Int {
+		var i = 0
+		for chapter in chapters {
+			i += 1
+			i += chapter.subchapters.count
+		}
+		return i
+	}
+	
+	/**
+	 Subscript accessor for chapters and subchapters. First element at [0] is the first chapter,
+	 The second element will be the first subchapter in the chapter, etc.
+	 - Returns: Chapter or SubChapter if a valid index. nil if not.
+	 */
+	subscript(index: Int) -> Any? {
+		get {
+			var i = -1
+			for c in chapters {
+				i += 1
+				if i == index {
+					return c as Any
+				}
+				for sub in c.subchapters {
+					i += 1
+					if i == index {
+						return sub as Any
+					}
+				}
+			}
+			return nil
+		}
+	}
+	
 	/**
 	Convenience property for referencing `headerInfo.personas[Persona.MAJOR]`
 	

@@ -13,6 +13,7 @@ class PersonasDetailVC: BFViewController {
 		didSet {
 			if _observersAdded == false {
 				document?.notificationCenter.addObserver(self, selector: #selector(addPersona(notification:)), name: .addPersona, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
 				_observersAdded = true
 			}
 			updateUI()
@@ -59,6 +60,36 @@ class PersonasDetailVC: BFViewController {
 		retainSelectedID = nil
 		
 		updatePersonaForm()
+	}
+	
+	@objc func search(notification: Notification) {
+		if let searchText = notification.object as? String,
+		   let personas = personas {
+			let lowerSearchText = searchText.localizedLowercase
+			var firstRow: Int?
+			var lastRow: Int?
+			for (i, p) in personas.enumerated() {
+				let rowView = tableView.rowView(atRow: i, makeIfNecessary: true)
+				if p.name.localizedLowercase.contains(lowerSearchText)
+					|| p.joinedAliases.localizedLowercase.contains(lowerSearchText) {
+					//|| p.description.contains(searchText) {
+					rowView?.backgroundColor = NSColor.findHighlightColor
+					if firstRow == nil {
+						firstRow = i
+					}
+					lastRow = i
+				}
+				else {
+					rowView?.backgroundColor = NSColor.controlBackgroundColor
+				}
+			}
+			if lastRow != nil {
+				tableView.scrollRowToVisible(lastRow!)
+			}
+			if firstRow != nil {
+				tableView.scrollRowToVisible(firstRow!)
+			}
+		}
 	}
 
 	private enum EditAction {

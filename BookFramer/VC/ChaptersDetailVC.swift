@@ -8,13 +8,17 @@
 import Cocoa
 
 class ChaptersDetailVC: BFViewController {
-	
+	private var _observersAdded = false
 	var book: Book? {
 		didSet {
+			if _observersAdded == false {
+				document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
+				_observersAdded = true
+			}
 			updateUI()
 		}
 	}
-	
+
 	@IBOutlet weak var tableView: NSTableView!
 	
 	@IBOutlet weak var colStatus: NSTableColumn!
@@ -32,11 +36,36 @@ class ChaptersDetailVC: BFViewController {
 		tableView.registerForDraggedTypes([.tableViewIndex])
 	}
 	
+	private var searchedObjects: [Any]?
 	override func updateUI() {
 		super.updateUI()
+		searchedObjects = nil
+		if let searchText = searchText {
+			searchedObjects = allObjects.filter({
+				if let ch = $0 as? Chapter {
+					return ch.search(for: searchText)
+				}
+				if let sub = $0 as? SubChapter {
+					return sub.search(for: searchText)
+				}
+				return false
+			})
+		}
 		tableView.reloadData()
 	}
 	
+	private var searchText: String? {
+		didSet {
+			if searchText != nil && searchText!.isEmpty {
+				searchText = nil
+			}
+		}
+	}
+	@objc func search(notification: Notification) {
+		searchText = notification.object as? String
+		updateUI()
+	}
+
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in chapters detail")
 		if let item = objectFor(row: tableView.selectedRow) {
@@ -94,7 +123,9 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 	}
 	
 	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		if let rowObject = objectFor(row: row) as? IDable {
+		if let rowObject = objectFor(row: row) as? IDable,
+		   searchText == nil {
+			// Can only drag and drop when no search filter
 			return TableReorderPasteboardWriter(id: rowObject.id, at: row)
 		}
 		return nil
@@ -104,6 +135,7 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 		guard dropOperation == .above else {
 			return []
 		}
+		assert(searchText == nil)
 		
 		// Only drops from same table, chapters can only drop
 		// above/below other chapters
@@ -137,7 +169,8 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 	
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
 		guard let items = info.draggingPasteboard.pasteboardItems else { return false }
-		
+		assert(searchText == nil)
+
 		// What got dragged? Chapter or SubChapter?
 		let ids:[String] = items.compactMap {
 			$0.string(forType: .string)
@@ -231,6 +264,8 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 		guard book != nil && book!.chapters != newValue else {
 			return
 		}
+		assert(searchText == nil) // Cannot do drag and drop ops when not all records showing
+		
 		let oldValue = book!.chapters
 		undoManager?.registerUndo(withTarget: self) { $0.setChapters(oldValue) }
 		book!.chapters = newValue
@@ -245,15 +280,25 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		// One row for each chapter, one row for each subchapter
 		var n = 0
-		if let b = book {
-			n = b.chapters.count
-			for c in b.chapters {
-				n += c.subchapters.count
-			}
+		if let searched = searchedObjects {
+			n = searched.count
+		}
+		else if let b = book {
+			n = b.count
 		}
 		return n
 	}
 	
+	private func objectFor(row: Int) -> Any? {
+		if let searched = searchedObjects {
+			return searched[row]
+		}
+		else if let b = book {
+			return b[row]
+		}
+		return nil
+	}
+
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		var cellView: NSTableCellView?
 		
@@ -282,7 +327,7 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 				else if let ch = rowObject as? Chapter {
 					cellView?.textField?.stringValue = ch.titleSubtitle
 					cellView?.textField?.font = f?.bolded()?.resized(to: 13)
-					tableView.rowView(atRow: row, makeIfNecessary: false)?.backgroundColor = NSColor.unemphasizedSelectedTextBackgroundColor
+					//tableView.rowView(atRow: row, makeIfNecessary: false)?.backgroundColor = NSColor.controlAccentColor
 				}
 			}
 			
@@ -329,23 +374,15 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 		return cellView
 	}
 	
-	private func objectFor(row: Int) -> Any? {
-		if let b = book {
-			var index = -1
-			for c in b.chapters {
-				index += 1
-				if index == row {
-					return c as Any
-				}
-				for sub in c.subchapters {
-					index += 1
-					if index == row {
-						return sub as Any
-					}
-				}
+	private var allObjects: [Any] {
+		var result = [Any]()
+		if let book = book {
+			for c in book.chapters {
+				result.append(c)
+				result.append(contentsOf: c.subchapters)
 			}
 		}
-		return nil
+		return result
 	}
 	
 	private func objectFor(id: String) -> Any? {

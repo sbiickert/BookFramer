@@ -39,6 +39,7 @@ extension NSNotification.Name {
 	static let deleteChapter = Notification.Name("DELETE CHAPTER")
 	static let deleteSubChapter = Notification.Name("DELETE SUBCHAPTER")
 	static let addPersona = Notification.Name("ADD PERSONA")
+	static let search = Notification.Name("SEARCH")
 }
 
 

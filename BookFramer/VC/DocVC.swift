@@ -52,6 +52,17 @@ class DocVC: NSViewController {
 
         // Do any additional setup after loading the view.
     }
+	
+	override func viewDidAppear() {
+		guard let toolbar = self.view.window?.toolbar else { return }
+		for item in toolbar.items {
+			if let searchItem = item as? NSSearchToolbarItem {
+				searchItem.searchField.target = self
+				searchItem.searchField.action = #selector (searchFieldAction(sender:))
+				return
+			}
+		}
+	}
 
 	private var _observersAdded = false
     override var representedObject: Any? {
@@ -246,6 +257,12 @@ class DocVC: NSViewController {
 		book!.minorPersonas = minor
 		undoManager?.endUndoGrouping()
 		self.document?.notificationCenter.post(name: .bookEdited, object: major)
+	}
+	
+	@objc func searchFieldAction(sender: AnyObject) {
+		guard let searchField = sender as? NSSearchField else { return }
+		
+		document?.notificationCenter.post(name: .search, object: searchField.stringValue)
 	}
 
 	@objc func openExternal(notification: NSNotification) {

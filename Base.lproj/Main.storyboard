@@ -715,6 +715,82 @@ CA
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>
+        <!--DocVC-->
+        <scene sceneID="tMg-h0-6TF">
+            <objects>
+                <customObject id="V6y-v0-GSR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <tabViewController selectedTabViewItemIndex="0" tabStyle="bottom" id="2WL-zg-IrW" customClass="DocVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem label="Manage" image="book" catalog="system" id="dPe-P2-v9N"/>
+                        <tabViewItem label="Preview" image="printer" catalog="system" id="LEC-xN-ZYT"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="hy8-HB-yXY">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="2WL-zg-IrW" id="2db-Yp-Y6T"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="hy8-HB-yXY" id="3IT-Ix-DpT"/>
+                        <segue destination="D9D-Iy-iql" kind="relationship" relationship="tabItems" id="c9A-0Q-VzY"/>
+                        <segue destination="Pe3-p4-TNQ" kind="relationship" relationship="tabItems" id="AHP-6o-Zww"/>
+                    </connections>
+                </tabViewController>
+            </objects>
+            <point key="canvasLocation" x="-725" y="808"/>
+        </scene>
+        <!--PreviewVC-->
+        <scene sceneID="E5e-mi-Zme">
+            <objects>
+                <viewController id="Pe3-p4-TNQ" customClass="PreviewVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="65x-n3-IIb">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <scrollView appearanceType="aqua" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eFg-lT-q7a">
+                                <rect key="frame" x="45" y="0.0" width="360" height="300"/>
+                                <clipView key="contentView" drawsBackground="NO" id="Eu5-oo-xMF">
+                                    <rect key="frame" x="0.0" y="0.0" width="360" height="300"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" allowsDocumentBackgroundColorChange="YES" spellingCorrection="YES" smartInsertDelete="YES" id="Xih-xa-cKL">
+                                            <rect key="frame" x="0.0" y="0.0" width="360" height="300"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="360" height="300"/>
+                                            <size key="maxSize" width="457" height="10000000"/>
+                                            <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xpo-Eq-cCb">
+                                    <rect key="frame" x="-100" y="-100" width="240" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="hnD-DP-f7q">
+                                    <rect key="frame" x="344" y="0.0" width="16" height="300"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="eFg-lT-q7a" firstAttribute="centerX" secondItem="65x-n3-IIb" secondAttribute="centerX" id="2GJ-T6-Hma"/>
+                            <constraint firstAttribute="bottom" secondItem="eFg-lT-q7a" secondAttribute="bottom" id="Zc1-Cy-7q0"/>
+                            <constraint firstItem="eFg-lT-q7a" firstAttribute="width" secondItem="65x-n3-IIb" secondAttribute="width" multiplier="0.8" id="kbh-xk-O4g"/>
+                            <constraint firstItem="eFg-lT-q7a" firstAttribute="top" secondItem="65x-n3-IIb" secondAttribute="top" id="tdp-LF-Bnp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textView" destination="Xih-xa-cKL" id="xlK-TH-KJS"/>
+                    </connections>
+                </viewController>
+                <customObject id="UWy-mn-Aa4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-607" y="1278"/>
+        </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
@@ -754,17 +830,17 @@ CA
                         </connections>
                     </window>
                     <connections>
-                        <segue destination="D9D-Iy-iql" kind="relationship" relationship="window.shadowedContentViewController" id="SHc-ue-esb"/>
+                        <segue destination="2WL-zg-IrW" kind="relationship" relationship="window.shadowedContentViewController" id="7fD-Gh-mN4"/>
                     </connections>
                 </windowController>
                 <customObject id="6f7-a7-6o1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="219" y="298.5"/>
         </scene>
-        <!--DocVC-->
+        <!--ManageVC-->
         <scene sceneID="tL9-aM-rkI">
             <objects>
-                <viewController id="D9D-Iy-iql" customClass="DocVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="D9D-Iy-iql" customClass="ManageVC" customModule="BookFramer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="hsr-1L-NSF">
                         <rect key="frame" x="0.0" y="0.0" width="1038" height="600"/>
                         <subviews>
@@ -814,7 +890,7 @@ CA
                 </viewController>
                 <customObject id="add-HC-8hF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="539" y="839"/>
+            <point key="canvasLocation" x="520" y="960"/>
         </scene>
         <!--Book DetailVC-->
         <scene sceneID="1Es-3l-IBi">
@@ -1878,7 +1954,9 @@ Roimata Szőke
     </scenes>
     <resources>
         <image name="NSActionTemplate" width="15" height="15"/>
+        <image name="book" catalog="system" width="18" height="14"/>
         <image name="minus" catalog="system" width="14" height="4"/>
         <image name="plus" catalog="system" width="14" height="13"/>
+        <image name="printer" catalog="system" width="18" height="16"/>
     </resources>
 </document>

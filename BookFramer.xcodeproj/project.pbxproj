@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		37075F8227A0A99800BD1F86 /* PreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37075F8127A0A99800BD1F86 /* PreviewVC.swift */; };
+		37075F8427A0B85900BD1F86 /* ManageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37075F8327A0B85900BD1F86 /* ManageVC.swift */; };
 		371486B126D45C51002ACF32 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371486B026D45C51002ACF32 /* Extensions.swift */; };
 		3738A74A26D7EF10004095C1 /* CheckboxTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3738A74926D7EF10004095C1 /* CheckboxTableCellView.swift */; };
 		3743950E26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */; };
@@ -56,6 +58,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		37075F8127A0A99800BD1F86 /* PreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewVC.swift; sourceTree = "<group>"; };
+		37075F8327A0B85900BD1F86 /* ManageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageVC.swift; sourceTree = "<group>"; };
 		371486B026D45C51002ACF32 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3738A74926D7EF10004095C1 /* CheckboxTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxTableCellView.swift; sourceTree = "<group>"; };
 		3743950D26E2F28B00F93026 /* class SubChapterPasteboardWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "class SubChapterPasteboardWriter.swift"; path = "BookFramer/class SubChapterPasteboardWriter.swift"; sourceTree = "<group>"; };
@@ -213,6 +217,8 @@
 				37EB462426D53BF9004DAE73 /* ChapterDetailVC.swift */,
 				37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */,
 				37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */,
+				37075F8127A0A99800BD1F86 /* PreviewVC.swift */,
+				37075F8327A0B85900BD1F86 /* ManageVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -304,6 +310,8 @@
 				Base,
 			);
 			mainGroup = 3767831E26D3E33500674C4A;
+			packageReferences = (
+			);
 			productRefGroup = 3767832826D3E33500674C4A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -351,7 +359,9 @@
 				37EB462B26D53C20004DAE73 /* SubChapterDetailVC.swift in Sources */,
 				3767836826D3E3D700674C4A /* BookBlock.swift in Sources */,
 				3767836426D3E3D700674C4A /* Book.swift in Sources */,
+				37075F8427A0B85900BD1F86 /* ManageVC.swift in Sources */,
 				3767837026D3F77A00674C4A /* DetailTabVC.swift in Sources */,
+				37075F8227A0A99800BD1F86 /* PreviewVC.swift in Sources */,
 				3767832D26D3E33500674C4A /* DocVC.swift in Sources */,
 				37EB463026D54E49004DAE73 /* PersonasDetailVC.swift in Sources */,
 				37EB462326D53BE4004DAE73 /* BookDetailVC.swift in Sources */,

@@ -440,7 +440,7 @@ class Book: Equatable, ObservableObject {
 		var markdownContent = [
 			"# \(self.title)",
 			"\(self.subtitle)",
-			"©\(self.headerInfo.author), \(self.headerInfo.author)"]
+			"©\(self.headerInfo.year), \(self.headerInfo.author)"]
 		for chapter in self.chapters {
 			markdownContent.append(contentsOf: chapter.compile())
 		}

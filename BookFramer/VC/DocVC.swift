@@ -7,37 +7,26 @@
 
 import Cocoa
 
-class DocVC: NSViewController {
+class DocVC: NSTabViewController {
 	
-	@IBOutlet weak var chaptersContainerView: NSView!
-	@IBOutlet weak var detailContainerView: NSView!
 	
 	var book: Book? {
         return representedObject as? Book
     }
-
-    var chapters: ChaptersDetailVC? {
-		for childVC in children {
-			if let cdvc = childVC as? ChaptersDetailVC {
-				return cdvc
-			}
-		}
-        return nil
-    }
 	
-	var detail: DetailTabVC? {
+	var manage: ManageVC? {
 		for childVC in children {
-			if let dtvc = childVC as? DetailTabVC {
-				return dtvc
+			if let mvc = childVC as? ManageVC {
+				return mvc
 			}
 		}
 		return nil
 	}
 	
-	var personas: PersonasDetailVC? {
+	var preview: PreviewVC? {
 		for childVC in children {
-			if let pdvc = childVC as? PersonasDetailVC {
-				return pdvc
+			if let pvc = childVC as? PreviewVC {
+				return pvc
 			}
 		}
 		return nil
@@ -67,9 +56,8 @@ class DocVC: NSViewController {
 	private var _observersAdded = false
     override var representedObject: Any? {
         didSet {
-            chapters?.book = book
-			detail?.book = book
-			personas?.book = book
+            manage?.book = book
+			preview?.book = book
 			if _observersAdded == false {
 				_observersAdded = true
 				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
@@ -83,21 +71,23 @@ class DocVC: NSViewController {
     }
 	
 	@objc func changeContext(notification: Notification) {
-		if notification.object is Chapter {
-			_selectedChapterID = (notification.object as! Chapter).id
+		if let ch = notification.object as? Chapter {
+			_selectedChapterID = ch.id
 			_selectedSubChapterID = nil
+			preview?.selectedPart = ch
 		}
-		else if notification.object is SubChapter {
-			_selectedSubChapterID = (notification.object as! SubChapter).id
-			if let sub = selectedSubChapter,
-			let book = book,
+		else if let sub = notification.object as? SubChapter {
+			_selectedSubChapterID = sub.id
+			if let book = book,
 			   let ch = book.chapterContaining(subchapter: sub) {
 				_selectedChapterID = ch.id
 			}
+			preview?.selectedPart = sub
 		}
-		else if notification.object is Book {
+		else if let b = notification.object as? Book {
 			_selectedChapterID = nil
 			_selectedSubChapterID = nil
+			preview?.selectedPart = b
 		}
 		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
 	}
@@ -350,6 +340,11 @@ class DocVC: NSViewController {
 				}
 			}
 		}
+	}
+	
+	private func exportToPDF() {
+		// pandoc {source} --pdf-engine=xelatex -o {target}
+		// or pipe in like cat {source} | pandoc --pdf-engine=xelatex -o {target}
 	}
 
 }

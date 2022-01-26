@@ -16,7 +16,8 @@ class BFViewController: NSViewController {
 	
 	private var _bookEditedObserverAdded = false
 	override func viewWillAppear() {
-		if let d = document {
+		if let d = document,
+		   _bookEditedObserverAdded == false {
 			d.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 			_bookEditedObserverAdded = true
 		}

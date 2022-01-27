@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3706D48427A1F90900F871DF /* BookAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3706D48327A1F90900F871DF /* BookAnalytics.swift */; };
+		3706D48727A201FA00F871DF /* NaturalLanguage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3706D48627A201FA00F871DF /* NaturalLanguage.framework */; platformFilter = maccatalyst; };
 		37075F8227A0A99800BD1F86 /* PreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37075F8127A0A99800BD1F86 /* PreviewVC.swift */; };
 		37075F8427A0B85900BD1F86 /* ManageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37075F8327A0B85900BD1F86 /* ManageVC.swift */; };
 		371486B126D45C51002ACF32 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371486B026D45C51002ACF32 /* Extensions.swift */; };
@@ -58,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3706D48327A1F90900F871DF /* BookAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAnalytics.swift; sourceTree = "<group>"; };
+		3706D48627A201FA00F871DF /* NaturalLanguage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NaturalLanguage.framework; path = System/Library/Frameworks/NaturalLanguage.framework; sourceTree = SDKROOT; };
 		37075F8127A0A99800BD1F86 /* PreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewVC.swift; sourceTree = "<group>"; };
 		37075F8327A0B85900BD1F86 /* ManageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageVC.swift; sourceTree = "<group>"; };
 		371486B026D45C51002ACF32 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3706D48727A201FA00F871DF /* NaturalLanguage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +128,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3706D48527A201FA00F871DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3706D48627A201FA00F871DF /* NaturalLanguage.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3738A74826D7EEDC004095C1 /* UI Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +153,7 @@
 				3767833E26D3E33600674C4A /* BookFramerTests */,
 				3767834926D3E33600674C4A /* BookFramerUITests */,
 				3767832826D3E33500674C4A /* Products */,
+				3706D48527A201FA00F871DF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +182,7 @@
 				37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */,
 				3767833526D3E33600674C4A /* Info.plist */,
 				3767833626D3E33600674C4A /* BookFramer.entitlements */,
+				3706D48327A1F90900F871DF /* BookAnalytics.swift */,
 			);
 			path = BookFramer;
 			sourceTree = "<group>";
@@ -356,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37EB462E26D54E33004DAE73 /* ChaptersDetailVC.swift in Sources */,
+				3706D48427A1F90900F871DF /* BookAnalytics.swift in Sources */,
 				37EB462B26D53C20004DAE73 /* SubChapterDetailVC.swift in Sources */,
 				3767836826D3E3D700674C4A /* BookBlock.swift in Sources */,
 				3767836426D3E3D700674C4A /* Book.swift in Sources */,
@@ -598,7 +614,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -620,7 +636,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

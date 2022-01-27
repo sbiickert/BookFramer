@@ -111,6 +111,38 @@ class PreviewVC: BFViewController {
 					do {
 						var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))
 						aString.setAttributes(paragraphAttributes)
+						
+						// Grammar highlighting
+						let adverbs = BookAnalytics.tagAdverbs(in: part)
+						let sentences = BookAnalytics.tokens(in: part, unit: .sentence)
+						for sentence in sentences {
+							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: part)
+							let difficulty = BookAnalytics.classifyFRES(score: fres)
+							let passiveVoiceRange = BookAnalytics.tagPassiveVoice(in: sentence)
+							
+							if let sRange = aString.range(of: sentence) {
+								if difficulty == .veryHard {
+									aString[sRange].backgroundColor = HighlightType.veryHard.color
+								}
+								else if difficulty == .hard {
+									aString[sRange].backgroundColor = HighlightType.hard.color
+								}
+								if let passiveVoiceRange = passiveVoiceRange {
+									// passiveVoiceRange is a range in sentence. Need to translate to aString.
+									let lower = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.lowerBound.utf16Offset(in: sentence))
+									let upper = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.upperBound.utf16Offset(in: sentence))
+									let range = lower..<upper
+									aString[range].backgroundColor = HighlightType.passive.color
+								}
+								for adverb in adverbs {
+									// adverb is a range in part. Need to translate to aString.
+									let lower = aString.index(aString.startIndex, offsetByCharacters: adverb.lowerBound.utf16Offset(in: part))
+									let upper = aString.index(aString.startIndex, offsetByCharacters: adverb.upperBound.utf16Offset(in: part))
+									let range = lower..<upper
+									aString[range].backgroundColor = HighlightType.adverb.color
+								}
+							}
+						}
 						aStrings.append(NSAttributedString(aString))
 					} catch {
 						aStrings.append(NSAttributedString(string: "Error compiling: \(error)"))
@@ -127,6 +159,30 @@ class PreviewVC: BFViewController {
 		}
 		else {
 			textView.string = ""
+		}
+	}
+	
+	enum HighlightType {
+		case veryHard
+		case hard
+		case passive
+		case adverb
+		
+		var color: NSColor {
+			switch self {
+			case .veryHard:
+				//#e4b9b9
+				return NSColor(red: 0.89, green: 0.73, blue: 0.73, alpha: 1.0)
+			case .hard:
+				//#f7ecb5
+				return NSColor(red: 0.95, green: 0.92, blue: 0.71, alpha: 1.0)
+			case .passive:
+				//#c4ed9d
+				return NSColor(red: 0.77, green: 0.93, blue: 0.62, alpha: 1.0)
+			case .adverb:
+				//#c4e3f3
+				return NSColor(red: 0.77, green: 0.89, blue: 0.95, alpha: 1.0)
+			}
 		}
 	}
 }

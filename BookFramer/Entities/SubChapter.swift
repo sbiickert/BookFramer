@@ -15,6 +15,24 @@ struct SubChapter: Equatable, Hashable, IDable {
 //	static func == (lhs: SubChapter, rhs: SubChapter) -> Bool {
 //		return lhs.id == rhs.id
 //	}
+	/**
+	 Roughly equal to. If there's similarities between the SubChapters, even if they're not fully equal.
+	 - Parameter other: the SubChapter to compare to
+	 - Returns: true if other is equal, the headers are equal or more than half the paragraphs are equal
+	 */
+	func roughlyEqual(to other: SubChapter) -> Bool {
+		if self == other { return true }
+		if self.headerInfo == other.headerInfo { return true }
+		var paraSet = Set<String>()
+		for para in self.paragraphs {
+			paraSet.insert(para)
+		}
+		var eqCount = 0
+		for para in other.paragraphs {
+			if paraSet.contains(para) { eqCount += 1 }
+		}
+		return eqCount >= (self.paragraphs.count / 2)
+	}
 	
 	let id = UUID().uuidString
 	var headerInfo = SubChapterHeader()

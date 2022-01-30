@@ -65,4 +65,30 @@ class ChapterTest: XCTestCase {
 		XCTAssert(ch0.id == ch1.id)
 		XCTAssert(ch0 != ch1)
 	}
+	
+	func testFuzzyEquality() throws {
+		let simpleBook = try Book.init(fromMarkdown: BookTest.SIMPLE_BOOK)
+
+		var ch0 = simpleBook.chapters[0]
+		ch0.subchapters.append(SubChapter(text: "Extra sub"))
+		var ch1 = ch0
+		XCTAssert(ch0.roughlyEqual(to: ch1))
+		
+		// Change title
+		ch1.title = "Test string"
+		XCTAssert(ch0.roughlyEqual(to: ch1))
+
+		// Change subtitle
+		ch1.subtitle = "Test string"
+		XCTAssert(ch0.roughlyEqual(to: ch1))
+
+		// Change one sub
+		ch1.subchapters[0].headerInfo.description = "Test string"
+		XCTAssert(ch0.roughlyEqual(to: ch1))
+
+		// Change the second sub
+		ch1.subchapters[1].headerInfo.description = "Test string"
+		XCTAssert(ch0.roughlyEqual(to: ch1) == false)
+
+	}
 }

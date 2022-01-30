@@ -16,7 +16,25 @@ struct Chapter: Equatable, Hashable, IDable {
 //	static func == (lhs: Chapter, rhs: Chapter) -> Bool {
 //		return lhs.id == rhs.id
 //	}
-	
+	/**
+	 Roughly equal to. If there's similarities between the Chapters, even if they're not fully equal.
+	 - Parameter other: the Chapter to compare to
+	 - Returns: true if other is equal, the title/subtitle are equal or more than half the SubChapters are equal
+	 */
+	func roughlyEqual(to other: Chapter) -> Bool {
+		if self == other { return true }
+		if self.title == other.title && self.subtitle == other.subtitle { return true }
+		var subs = Set<SubChapter>()
+		for sub in self.subchapters {
+			subs.insert(sub)
+		}
+		var eqCount = 0
+		for sub in other.subchapters {
+			if subs.contains(sub) { eqCount += 1 }
+		}
+		return eqCount >= (subchapters.count / 2)
+	}
+
 	let id = UUID().uuidString
 	var title = "Title"
 	var subtitle = "Subtitle"

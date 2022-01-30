@@ -55,9 +55,22 @@ class DocVC: NSTabViewController {
 
 	private var _observersAdded = false
     override var representedObject: Any? {
+		willSet {
+			// If the current value is not null, this represents a re-load b/c BBEdit changed the file
+			// Need to compare the two and set the selected chapter/subchapter
+			// So that we have continuity when the doc reloads.
+			if let book = book,
+			   let newBook = newValue as? Book {
+				handleDocReload(old: book, new: newBook)
+			}
+		}
         didSet {
             manage?.book = book
 			preview?.book = book
+			if _selectedChapterID == nil && _selectedSubChapterID == nil { preview?.selectedPart = book }
+			else if _selectedSubChapterID != nil { preview?.selectedPart = selectedSubChapter }
+			else { preview?.selectedPart = selectedChapter }
+
 			if _observersAdded == false {
 				_observersAdded = true
 				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
@@ -108,6 +121,33 @@ class DocVC: NSTabViewController {
 			return book.findSubChapter(id: id)
 		}
 		return nil
+	}
+	
+	private func handleDocReload(old: Book, new: Book) {
+		let temp = selectedChapter
+		
+		if let currentSelectedChapter = temp {
+			_selectedChapterID = nil // if we don't find it
+			// Find the old Chapter in the new Book
+			for ch in new.chapters {
+				if ch.roughlyEqual(to: currentSelectedChapter) {
+					_selectedChapterID = ch.id
+					break
+				}
+			}
+		}
+		
+		if let currentSelectedSubChapter = selectedSubChapter,
+		   let currentSelectedChapter = temp {
+			_selectedSubChapterID = nil // if we don't find it
+			// Find the old SubChapter in the new Book
+			for sub in currentSelectedChapter.subchapters {
+				if sub.roughlyEqual(to: currentSelectedSubChapter) {
+					_selectedSubChapterID = sub.id
+					break
+				}
+			}
+		}
 	}
 
 	// Default handler for these menu selections pass nil

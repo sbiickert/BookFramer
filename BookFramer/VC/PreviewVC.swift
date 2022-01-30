@@ -107,6 +107,10 @@ class PreviewVC: BFViewController {
 					let aString = AttributedString(part.dropFirst(4), attributes: subtitleAttributes)
 					aStrings.append(NSAttributedString(aString))
 				}
+				else if part.starts(with: "***") {
+					let aString = AttributedString(part, attributes: paragraphAttributes)
+					aStrings.append(NSAttributedString(aString))
+				}
 				else {
 					do {
 						var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))

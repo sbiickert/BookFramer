@@ -228,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				3767832C26D3E33500674C4A /* DocVC.swift */,
+				37075F8327A0B85900BD1F86 /* ManageVC.swift */,
 				3767836E26D3F77A00674C4A /* DetailTabVC.swift */,
 				B8756FEB26E00A55009807BA /* BFViewController.swift */,
 				37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */,
@@ -236,7 +237,6 @@
 				37EB462926D53C20004DAE73 /* SubChapterDetailVC.swift */,
 				37EB462F26D54E49004DAE73 /* PersonasDetailVC.swift */,
 				37075F8127A0A99800BD1F86 /* PreviewVC.swift */,
-				37075F8327A0B85900BD1F86 /* ManageVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";

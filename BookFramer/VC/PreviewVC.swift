@@ -16,8 +16,9 @@ class PreviewVC: BFViewController {
 	
 	var book: Book? {
 		didSet {
-			needsCompile = true
-			updateUI()
+			selectedPart = nil
+//			needsCompile = true
+//			updateUI()
 		}
 	}
 	

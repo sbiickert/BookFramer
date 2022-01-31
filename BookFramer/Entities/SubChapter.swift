@@ -31,7 +31,7 @@ struct SubChapter: Equatable, Hashable, IDable {
 		for para in other.paragraphs {
 			if paraSet.contains(para) { eqCount += 1 }
 		}
-		return eqCount >= (self.paragraphs.count / 2)
+		return eqCount > 0 && eqCount >= (self.paragraphs.count / 2)
 	}
 	
 	let id = UUID().uuidString

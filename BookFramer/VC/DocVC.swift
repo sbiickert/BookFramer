@@ -67,9 +67,19 @@ class DocVC: NSTabViewController {
         didSet {
             manage?.book = book
 			preview?.book = book
-			if _selectedChapterID == nil && _selectedSubChapterID == nil { preview?.selectedPart = book }
-			else if _selectedSubChapterID != nil { preview?.selectedPart = selectedSubChapter }
-			else { preview?.selectedPart = selectedChapter }
+			
+			if selectedChapter == nil && selectedSubChapter == nil {
+				self.changeContext(notification: Notification(name: .changeContext, object: book, userInfo: nil))
+				//preview?.selectedPart = book
+			}
+			else if selectedSubChapter != nil {
+				self.changeContext(notification: Notification(name: .changeContext, object: selectedSubChapter, userInfo: nil))
+				//preview?.selectedPart = selectedSubChapter
+			}
+			else {
+				self.changeContext(notification: Notification(name: .changeContext, object: selectedChapter, userInfo: nil))
+				//preview?.selectedPart = selectedChapter
+			}
 
 			if _observersAdded == false {
 				_observersAdded = true
@@ -124,9 +134,7 @@ class DocVC: NSTabViewController {
 	}
 	
 	private func handleDocReload(old: Book, new: Book) {
-		let temp = selectedChapter
-		
-		if let currentSelectedChapter = temp {
+		if let currentSelectedChapter = selectedChapter {
 			_selectedChapterID = nil // if we don't find it
 			// Find the old Chapter in the new Book
 			for ch in new.chapters {
@@ -137,14 +145,15 @@ class DocVC: NSTabViewController {
 			}
 		}
 		
-		if let currentSelectedSubChapter = selectedSubChapter,
-		   let currentSelectedChapter = temp {
+		if let currentSelectedSubChapter = selectedSubChapter {
 			_selectedSubChapterID = nil // if we don't find it
 			// Find the old SubChapter in the new Book
-			for sub in currentSelectedChapter.subchapters {
-				if sub.roughlyEqual(to: currentSelectedSubChapter) {
-					_selectedSubChapterID = sub.id
-					break
+			for ch in new.chapters {
+				for sub in ch.subchapters {
+					if sub.roughlyEqual(to: currentSelectedSubChapter) {
+						_selectedSubChapterID = sub.id
+						break
+					}
 				}
 			}
 		}

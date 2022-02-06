@@ -8,17 +8,6 @@
 import Cocoa
 
 class ChaptersDetailVC: BFViewController {
-	private var _observersAdded = false
-	var book: Book? {
-		didSet {
-			if _observersAdded == false {
-				document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
-				_observersAdded = true
-			}
-			updateUI()
-		}
-	}
-
 	@IBOutlet weak var tableView: NSTableView!
 	
 	@IBOutlet weak var colStatus: NSTableColumn!
@@ -27,6 +16,7 @@ class ChaptersDetailVC: BFViewController {
 	@IBOutlet weak var colLocation: NSTableColumn!
 	@IBOutlet weak var colWords: NSTableColumn!
 	
+	private var _observersAdded = false
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do view setup here.
@@ -34,6 +24,21 @@ class ChaptersDetailVC: BFViewController {
 		tableView.dataSource = self
 		tableView.doubleAction = #selector(tableViewWasDoubleClicked)
 		tableView.registerForDraggedTypes([.tableViewIndex])
+		
+		if document != nil && _observersAdded == false {
+			document!.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
+			document?.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
+			_observersAdded = true
+		}
+	}
+	
+	@objc func contextChanged(notification: NSNotification) {
+		updateUI()
+	}
+
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateUI()
 	}
 	
 	private var searchedObjects: [Any]?
@@ -99,7 +104,9 @@ class ChaptersDetailVC: BFViewController {
 extension ChaptersDetailVC: NSTableViewDelegate {
 	func tableViewSelectionDidChange(_ notification: Notification) {
 		guard tableView.selectedRow >= 0 else {
-			document?.notificationCenter.post(name: .changeContext, object: book)
+			if let book = context?.book {
+				document?.notificationCenter.post(name: .changeContext, object: book)
+			}
 			return
 		}
 		let item = objectFor(row: tableView.selectedRow)
@@ -175,104 +182,87 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 			$0.string(forType: .string)
 		}
 		if let id = ids.first,
+		   let book = context?.book,
 		   let draggedObject = objectFor(id: id) {
 			// Preserve the chapters as-is for undo
-			let oldChapters = book!.chapters
 			
 			if let draggedChapter = draggedObject as? Chapter {
 				if let targetChapter = objectFor(row: row) as? Chapter {
 					// draggedChapter needs to be reordered before targetChapter
-					if let oldIndex = book!.indexOf(chapter: draggedChapter),
-					   var newIndex = book!.indexOf(chapter: targetChapter) {
+					if let oldIndex = book.indexOf(chapter: draggedChapter),
+					   var newIndex = book.indexOf(chapter: targetChapter) {
 						if newIndex > oldIndex { newIndex -= 1 }
-						book!.reorderChapter(fromIndex: oldIndex, toIndex: newIndex)
+						book.reorderChapter(fromIndex: oldIndex, toIndex: newIndex)
 					}
 				}
 				else {
 					// draggedChapter was dragged to the end
-					if let oldIndex = book!.indexOf(chapter: draggedChapter) {
-						book!.reorderChapter(fromIndex: oldIndex, toIndex: book!.chapters.count - 1)
+					if let oldIndex = book.indexOf(chapter: draggedChapter) {
+						book.reorderChapter(fromIndex: oldIndex, toIndex: book.chapters.count - 1)
 					}
 				}
 			}
 			else if let draggedSub = draggedObject as? SubChapter,
-					var sourceChapter = book!.chapterContaining(subchapter: draggedSub) {
+					var sourceChapter = book.chapterContaining(subchapter: draggedSub) {
 				let targetObject = objectFor(row: row)
 				
 				if var targetChapter = targetObject as? Chapter {
 					// draggedSub has to be moved to the end of the chapter before targetChapter
 					if let sourceIndex = sourceChapter.indexOf(subchapter: draggedSub),
-					   let targetChIndex = book!.indexOf(chapter: targetChapter) {
+					   let targetChIndex = book.indexOf(chapter: targetChapter) {
 					    let chapterBeforeTargetChapterIndex = targetChIndex - 1
-						targetChapter = book!.chapters[chapterBeforeTargetChapterIndex]
+						targetChapter = book.chapters[chapterBeforeTargetChapterIndex]
 						sourceChapter.subchapters.remove(at: sourceIndex)
 						if sourceChapter.id == targetChapter.id {
 							sourceChapter.subchapters.append(draggedSub)
-							book!.replace(chapter: sourceChapter)
+							book.replace(chapter: sourceChapter)
 						}
 						else {
 							targetChapter.subchapters.append(draggedSub)
-							book!.replace(chapter: sourceChapter)
-							book!.replace(chapter: targetChapter)
+							book.replace(chapter: sourceChapter)
+							book.replace(chapter: targetChapter)
 						}
 					}
 				}
 				else if let targetSub = targetObject as? SubChapter {
 					// draggedSub has to be moved to before targetSub
-					if var targetChapter = book!.chapterContaining(subchapter: targetSub),
+					if var targetChapter = book.chapterContaining(subchapter: targetSub),
 					   let sourceIndex = sourceChapter.indexOf(subchapter: draggedSub),
 					   var targetIndex = targetChapter.indexOf(subchapter: targetSub) {
 						if targetIndex > sourceIndex { targetIndex -= 1 }
 						sourceChapter.subchapters.remove(at: sourceIndex)
 						if sourceChapter.id == targetChapter.id {
 							sourceChapter.subchapters.insert(draggedSub, at: targetIndex)
-							book!.replace(chapter: sourceChapter)
+							book.replace(chapter: sourceChapter)
 						}
 						else {
 							targetChapter.subchapters.insert(draggedSub, at: targetIndex)
-							book!.replace(chapter: sourceChapter)
-							book!.replace(chapter: targetChapter)
+							book.replace(chapter: sourceChapter)
+							book.replace(chapter: targetChapter)
 						}
 					}
 				}
 				else if targetObject == nil {
 					// draggedSub has to be moved to the end of the last chapter
-					if var targetChapter = book!.chapters.last,
+					if var targetChapter = book.chapters.last,
 					   let sourceIndex = sourceChapter.indexOf(subchapter: draggedSub) {
 						sourceChapter.subchapters.remove(at: sourceIndex)
 						if sourceChapter.id == targetChapter.id {
 							sourceChapter.subchapters.append(draggedSub)
-							book!.replace(chapter: sourceChapter)
+							book.replace(chapter: sourceChapter)
 						}
 						else {
 							targetChapter.subchapters.append(draggedSub)
-							book!.replace(chapter: sourceChapter)
-							book!.replace(chapter: targetChapter)
+							book.replace(chapter: sourceChapter)
+							book.replace(chapter: targetChapter)
 						}
 					}
 				}
 			}
-			// Redo the edit so that it's captured by undoManager
-			let newChapters = book!.chapters
-			book!.chapters = oldChapters
-			setChapters(newChapters)
+			// Send the edit to DocEditor
+			document?.notificationCenter.post(name: .modifyChapters, object: book.chapters)
 		}
 		return true
-	}
-	
-	private func setChapters(_ newValue: [Chapter], reloadTableData: Bool = true) {
-		guard book != nil && book!.chapters != newValue else {
-			return
-		}
-		assert(searchText == nil) // Cannot do drag and drop ops when not all records showing
-		
-		let oldValue = book!.chapters
-		undoManager?.registerUndo(withTarget: self) { $0.setChapters(oldValue) }
-		book!.chapters = newValue
-		if reloadTableData {
-			tableView.reloadData()
-		}
-		document?.notificationCenter.post(name: .bookEdited, object: book!.chapters)
 	}
 }
 
@@ -283,21 +273,21 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 		if let searched = searchedObjects {
 			n = searched.count + 1 // the book
 		}
-		else if let b = book {
-			n = b.count + 1 // the book
+		else if let book = context?.book {
+			n = book.count + 1 // the book
 		}
 		return n
 	}
 	
 	private func objectFor(row: Int) -> Any? {
-		if row == 0 && book != nil {
-			return book
+		if row == 0 && context?.book != nil {
+			return context!.book!
 		}
 		if let searched = searchedObjects {
 			return searched[row-1] // indexes are off by one b/c the book is the first row
 		}
-		else if let b = book {
-			return b[row-1] // indexes are off by one b/c the book is the first row
+		else if let book = context?.book {
+			return book[row-1] // indexes are off by one b/c the book is the first row
 		}
 		return nil
 	}
@@ -390,7 +380,7 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 	
 	private var allObjects: [Any] {
 		var result = [Any]()
-		if let book = book {
+		if let book = context?.book {
 			for c in book.chapters {
 				result.append(c)
 				result.append(contentsOf: c.subchapters)
@@ -400,7 +390,7 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 	}
 	
 	private func objectFor(id: String) -> Any? {
-		if let b = book {
+		if let b = context?.book {
 			for c in b.chapters {
 				if c.id == id {
 					return c as Any

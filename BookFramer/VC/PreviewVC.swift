@@ -14,21 +14,7 @@ class PreviewVC: BFViewController {
 	var subtitleAttributes: AttributeContainer!
 	var paragraphAttributes: AttributeContainer!
 	
-	var book: Book? {
-		didSet {
-			selectedPart = nil
-//			needsCompile = true
-//			updateUI()
-		}
-	}
-	
-	var selectedPart: Any? {
-		didSet {
-			needsCompile = true
-			updateUI()
-		}
-	}
-
+	private var _observersAdded = false
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -59,11 +45,23 @@ class PreviewVC: BFViewController {
 	override func viewDidAppear() {
 		super.viewDidAppear()
 		// The view.window isn't non-nil until after the view appears
+		
+		if _observersAdded == false {
+			assert(document != nil)
+			document?.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
+			_observersAdded = true
+		}
+
 		updateUI()
 	}
 	
 	
 	override func bookEdited(notification: Notification) {
+		needsCompile = true
+		updateUI()
+	}
+	
+	@objc func contextChanged(notification: Notification) {
 		needsCompile = true
 		updateUI()
 	}
@@ -81,12 +79,14 @@ class PreviewVC: BFViewController {
 	
 	private func compilePreview() {
 		var mdParts: [String]?
-		if let sub = selectedPart as? SubChapter {
-			mdParts = sub.compile()
-		}
-		else if let ch = selectedPart as? Chapter {
-			mdParts = ch.compile()
-			mdParts!.removeFirst() // the first thing is the LaTeX \newpage
+		if let context = context {
+			if let sub = context.selectedPart as? SubChapter {
+				mdParts = sub.compile()
+			}
+			else if let ch = context.selectedPart as? Chapter {
+				mdParts = ch.compile()
+				mdParts!.removeFirst() // the first thing is the LaTeX \newpage
+			}
 		}
 //		else if let b = selectedPart as? Book {
 //			// Book

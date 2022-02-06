@@ -549,6 +549,23 @@ class Book: Equatable, ObservableObject {
 	}
 	
 	/**
+	Replaces the subchapter from the book identified by the same id
+	Takes no action if no subchapter in the book has the same id.
+	
+	- Parameter chapter: the revised Chapter
+	*/
+	public func replace(subChapter: SubChapter) {
+		for (cIndex, ch) in chapters.enumerated() {
+			for (sIndex, sub) in ch.subchapters.enumerated() {
+				if sub.id == subChapter.id {
+					chapters[cIndex].subchapters[sIndex] = subChapter
+					return
+				}
+			}
+		}
+	}
+
+	/**
 	Checks the file modification date against readAtTime.
 	
 	- Throws: `SBSError.fileNotFound`

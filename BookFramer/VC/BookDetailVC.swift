@@ -8,14 +8,6 @@
 import Cocoa
 
 class BookDetailVC: BFViewController {
-	
-	var book: Book? {
-		didSet {
-			guard titleField != nil else { return }
-			updateUI()
-		}
-	}
-	
 	@IBOutlet weak var titleField: NSTextField!
 	@IBOutlet weak var subtitleField: NSTextField!
 	@IBOutlet weak var authorField: NSTextField!
@@ -28,7 +20,9 @@ class BookDetailVC: BFViewController {
 	
 	@IBAction func openInBBEdit(_ sender: Any) {
 		print("openInBBEdit in book detail")
-		document?.notificationCenter.post(name: .openExternal, object: book)
+		if let book = context?.book {
+			document?.notificationCenter.post(name: .openExternal, object: book)
+		}
 	}
 	
 	override func viewDidLoad() {
@@ -36,12 +30,20 @@ class BookDetailVC: BFViewController {
 		
 		tableView.delegate = self
 		tableView.dataSource = self
-		
-		titleField.delegate = self
-		subtitleField.delegate = self
-		authorField.delegate = self
-		yearField.delegate = self
-		keywordField.delegate = self
+	}
+	
+	private var _observerAdded = false
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateUI()
+		if _observerAdded == false {
+			document?.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
+			_observerAdded = true
+		}
+	}
+	
+	@objc func contextChanged(notification: NSNotification) {
+		updateUI()
 	}
 	
 	/**
@@ -49,6 +51,7 @@ class BookDetailVC: BFViewController {
 	*/
 	override func updateUI() {
 		super.updateUI()
+		let book = context?.book
 		titleField.stringValue = book?.title ?? ""
 		subtitleField.stringValue = book?.subtitle ?? ""
 		authorField.stringValue = book?.headerInfo.author ?? ""
@@ -57,166 +60,76 @@ class BookDetailVC: BFViewController {
 		tableView.reloadData()
 	}
 
-	/**
-	Target of action when `titleField` changes. Calls `setTitle`
-	- Parameter sender: the NSTextField
-	*/
-	@IBAction func titleChanged(_ sender: NSTextField) {
-		self.setTitle(sender.stringValue)
-	}
-	/**
-	Undoable way to set the title of the book.
-	- Parameter newValue: the value to change the title to
-	*/
-	private func setTitle(_ newValue: String) {
-		guard book != nil && book!.title != newValue else {
-			return
-		}
-		let oldValue = book!.title
-		undoManager?.registerUndo(withTarget: self) { $0.setTitle(oldValue) }
-		book!.title = newValue
-		titleField.stringValue = newValue
-		document?.notificationCenter.post(name: .bookEdited, object: book)
-	}
-	
-	/**
-	Target of action when `subtitleField` changes. Calls `setSubtitle`
-	- Parameter sender: the NSTextField
-	*/
-	@IBAction func subtitleChanged(_ sender: NSTextField) {
-		self.setSubtitle(sender.stringValue)
-	}
-	/**
-	Undoable way to set the subtitle of the book.
-	- Parameter newValue: the value to change the subtitle to
-	*/
-	private func setSubtitle(_ newValue: String) {
-		guard book != nil && book!.subtitle != newValue else {
-			return
-		}
-		let oldValue = book!.subtitle
-		undoManager?.registerUndo(withTarget: self) { $0.setSubtitle(oldValue) }
-		book!.subtitle = newValue
-		subtitleField.stringValue = newValue
-		document?.notificationCenter.post(name: .bookEdited, object: book)
-	}
-	
-	/**
-	Target of action when `authorField` changes. Calls `setAuthor`
-	- Parameter sender: the NSTextField
-	*/
-	@IBAction func authorChanged(_ sender: NSTextField) {
-		self.setAuthor(sender.stringValue)
-	}
-	/**
-	Undoable way to set the author of the book.
-	- Parameter newValue: the value to change the author to
-	*/
-	private func setAuthor(_ newValue: String) {
-		guard book != nil && book!.headerInfo.author != newValue else {
-			return
-		}
-		let oldValue = book!.headerInfo.author
-		undoManager?.registerUndo(withTarget: self) { $0.setAuthor(oldValue) }
-		book!.headerInfo.author = newValue
-		authorField.stringValue = newValue
-	}
-	
-	/**
-	Target of action when `yearField` changes. Calls `setYear`
-	- Parameter sender: the NSTextField
-	*/
-	@IBAction func yearChanged(_ sender: NSTextField) {
-		self.setYear(sender.stringValue)
-	}
-	/**
-	Undoable way to set the year of the book.
-	- Parameter newValue: the value to change the year to
-	*/
-	private func setYear(_ newValue: String) {
-		guard book != nil && book!.headerInfo.year != newValue else {
-			return
-		}
-		let oldValue = book!.headerInfo.year
-		undoManager?.registerUndo(withTarget: self) { $0.setYear(oldValue) }
-		book!.headerInfo.year = newValue
-		yearField.stringValue = newValue
-	}
-	
-	/**
-	Target of action when `keywordsField` changes. Calls `setKeywords`
-	- Parameter sender: the NSTextField
-	*/
-	@IBAction func keywordsChanged(_ sender: NSTextField) {
-		self.setKeywords(sender.stringValue)
-	}
-	/**
-	Undoable way to set the keywords of the book. Keywords are comma-separated by the `Book`
-	- Parameter newValue: the value to change the keywords to
-	*/
-	private func setKeywords(_ newValue: String) {
-		guard book != nil && book!.headerInfo.joinedKeywords != newValue else {
-			return
-		}
-		let oldValue = book!.headerInfo.joinedKeywords
-		undoManager?.registerUndo(withTarget: self) { $0.setKeywords(oldValue) }
-		book!.headerInfo.joinedKeywords = newValue
-		keywordField.stringValue = newValue
-	}
-	
-	/**
-	Listens for tableView checkbox state changes. Calls `setGenres`
-	- Parameter sender: Checkbox that changed state
-	*/
-	@IBAction func genreChanged(_ sender: NSButton) {
-		var newValues = [Genre]()
+	private func modifyBook() {
+		var newGenres = [Genre]()
 		for index in 0..<Genre.allCases.count {
 			if let cbv = tableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? CheckboxTableCellView {
 				if cbv.checkbox?.state == NSControl.StateValue.on {
-					newValues.append(Genre.allCases[index])
+					newGenres.append(Genre.allCases[index])
 				}
 			}
 		}
-		self.setGenres(newValues)
+
+		var header = BookHeader(author: authorField.stringValue,
+								year: yearField.stringValue,
+								personas: context!.book!.headerInfo.personas,
+								genres: newGenres,
+								keywords: [])
+		header.joinedKeywords = keywordField.stringValue
+		
+		let info = DocEditor.BookInfo(title: titleField.stringValue,
+									  subtitle: subtitleField.stringValue,
+									  header: header)
+		document?.notificationCenter.post(name: .modifyBookInfo, object: info)
 	}
 	
 	/**
-	Undoable way to set the genres of the book.
-	- Parameter newValue: the value to change the genres to
+	Target of action when `titleField` changes. Calls `modifyBook`
+	- Parameter sender: the NSTextField
 	*/
-	private func setGenres(_ newValue: [Genre]) {
-		guard book != nil && book!.headerInfo.genres != newValue else {
-			return
-		}
-		let oldValue = book!.headerInfo.genres
-		undoManager?.registerUndo(withTarget: self) { $0.setGenres(oldValue) }
-		book!.headerInfo.genres = newValue
-		tableView.reloadData()
+	@IBAction func titleChanged(_ sender: NSTextField) {
+		modifyBook()
 	}
-}
-
-extension BookDetailVC: NSTextFieldDelegate {
-	// This code is for logging continuous edits to text. Disabled to make undo/redo simpler.
-	//    func controlTextDidChange(_ obj: Notification) {
-	//        if let textField = obj.object as? NSTextField {
-	//            if textField == titleField {
-	//                setTitle(textField.stringValue)
-	//            }
-	//            else if textField == subtitleField {
-	//                setSubtitle(textField.stringValue)
-	//            }
-	//			else if textField == authorField {
-	//				setAuthor(textField.stringValue)
-	//			}
-	//			else if textField == yearField {
-	//				setYear(textField.stringValue)
-	//			}
-	//            else if textField == keywordField {
-	//               setKeywords(textField.stringValue)
-	//            }
-	//            document?.notificationCenter.post(name: .bookDidChange, object: nil)
-	//        }
-	//    }
+	
+	/**
+	Target of action when `subtitleField` changes. Calls `modifyBook`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func subtitleChanged(_ sender: NSTextField) {
+		modifyBook()
+	}
+	
+	/**
+	Target of action when `authorField` changes. Calls `modifyBook`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func authorChanged(_ sender: NSTextField) {
+		modifyBook()
+	}
+	
+	/**
+	Target of action when `yearField` changes. Calls `modifyBook`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func yearChanged(_ sender: NSTextField) {
+		modifyBook()
+	}
+	
+	/**
+	Target of action when `keywordsField` changes. Calls `modifyBook`
+	- Parameter sender: the NSTextField
+	*/
+	@IBAction func keywordsChanged(_ sender: NSTextField) {
+		modifyBook()
+	}
+	
+	/**
+	Listens for tableView checkbox state changes. Calls `modifyBook`
+	- Parameter sender: Checkbox that changed state
+	*/
+	@IBAction func genreChanged(_ sender: NSButton) {
+		modifyBook()
+	}
 }
 
 extension BookDetailVC: NSTableViewDelegate {
@@ -236,7 +149,7 @@ extension BookDetailVC: NSTableViewDataSource {
 		if tableColumn == tableColCheckbox {
 			if let cbv = tableView.makeView(withIdentifier: .check, owner: self) as? CheckboxTableCellView {
 				let g = Genre.allCases[row]
-				let isChecked = book?.headerInfo.genres.contains(g) ?? false
+				let isChecked = context?.book?.headerInfo.genres.contains(g) ?? false
 				//print("Genre \(g) is checked? \(isChecked)")
 				cbv.checkbox?.state = isChecked ? NSControl.StateValue.on : NSControl.StateValue.off
 				cellView = cbv

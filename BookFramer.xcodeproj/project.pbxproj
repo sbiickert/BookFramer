@@ -33,6 +33,8 @@
 		3767836A26D3E3EF00674C4A /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836926D3E3EF00674C4A /* Enums.swift */; };
 		3767837026D3F77A00674C4A /* DetailTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836E26D3F77A00674C4A /* DetailTabVC.swift */; };
 		3767837326D41A0700674C4A /* DocumentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767837226D41A0700674C4A /* DocumentWindowController.swift */; };
+		378E659527AB4FA10039D50B /* DocEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E659427AB4FA10039D50B /* DocEditor.swift */; };
+		37C5A34D27A98D3A004C52E1 /* BFContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C5A34C27A98D3A004C52E1 /* BFContextProvider.swift */; };
 		37DA61EB26F1538800298D20 /* AutomateBBEdit.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */; };
 		37EB462326D53BE4004DAE73 /* BookDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462226D53BE4004DAE73 /* BookDetailVC.swift */; };
 		37EB462626D53BF9004DAE73 /* ChapterDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB462426D53BF9004DAE73 /* ChapterDetailVC.swift */; };
@@ -94,6 +96,8 @@
 		3767836926D3E3EF00674C4A /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		3767836E26D3F77A00674C4A /* DetailTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTabVC.swift; sourceTree = "<group>"; };
 		3767837226D41A0700674C4A /* DocumentWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentWindowController.swift; sourceTree = "<group>"; };
+		378E659427AB4FA10039D50B /* DocEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocEditor.swift; sourceTree = "<group>"; };
+		37C5A34C27A98D3A004C52E1 /* BFContextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFContextProvider.swift; sourceTree = "<group>"; };
 		37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = AutomateBBEdit.scpt; sourceTree = "<group>"; };
 		37EB462226D53BE4004DAE73 /* BookDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailVC.swift; sourceTree = "<group>"; };
 		37EB462426D53BF9004DAE73 /* ChapterDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterDetailVC.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 				3767832A26D3E33500674C4A /* AppDelegate.swift */,
 				3767837226D41A0700674C4A /* DocumentWindowController.swift */,
 				3767832E26D3E33500674C4A /* Document.swift */,
+				37C5A34C27A98D3A004C52E1 /* BFContextProvider.swift */,
 				3767836B26D3F6F700674C4A /* VC */,
 				3738A74826D7EEDC004095C1 /* UI Support */,
 				3767835E26D3E3C700674C4A /* Entities */,
@@ -228,9 +233,10 @@
 			isa = PBXGroup;
 			children = (
 				3767832C26D3E33500674C4A /* DocVC.swift */,
+				378E659427AB4FA10039D50B /* DocEditor.swift */,
+				B8756FEB26E00A55009807BA /* BFViewController.swift */,
 				37075F8327A0B85900BD1F86 /* ManageVC.swift */,
 				3767836E26D3F77A00674C4A /* DetailTabVC.swift */,
-				B8756FEB26E00A55009807BA /* BFViewController.swift */,
 				37EB462D26D54E33004DAE73 /* ChaptersDetailVC.swift */,
 				37EB462226D53BE4004DAE73 /* BookDetailVC.swift */,
 				37EB462426D53BF9004DAE73 /* ChapterDetailVC.swift */,
@@ -304,7 +310,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					3767832626D3E33500674C4A = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -380,6 +386,8 @@
 				3767836426D3E3D700674C4A /* Book.swift in Sources */,
 				37075F8427A0B85900BD1F86 /* ManageVC.swift in Sources */,
 				3767837026D3F77A00674C4A /* DetailTabVC.swift in Sources */,
+				37C5A34D27A98D3A004C52E1 /* BFContextProvider.swift in Sources */,
+				378E659527AB4FA10039D50B /* DocEditor.swift in Sources */,
 				37075F8227A0A99800BD1F86 /* PreviewVC.swift in Sources */,
 				3767832D26D3E33500674C4A /* DocVC.swift in Sources */,
 				37EB463026D54E49004DAE73 /* PersonasDetailVC.swift in Sources */,

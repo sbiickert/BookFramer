@@ -8,20 +8,9 @@
 import Cocoa
 
 class PersonasDetailVC: BFViewController {
-	private var _observersAdded = false
-	var book: Book? {
-		didSet {
-			if _observersAdded == false {
-				document?.notificationCenter.addObserver(self, selector: #selector(addPersona(notification:)), name: .addPersona, object: nil)
-				document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
-				_observersAdded = true
-			}
-			updateUI()
-		}
-	}
 	
 	// Keep a mutable copy for sorting
-	var personas: [Persona]?
+	private var personas: [Persona]?
 
 	@IBOutlet weak var tableView: NSTableView!
 	@IBOutlet weak var colName: NSTableColumn!
@@ -34,22 +23,33 @@ class PersonasDetailVC: BFViewController {
 	@IBOutlet weak var descriptionField: NSTextField!
 	@IBOutlet weak var importanceCheckbox: NSButton!
 	
+	private var _observersAdded = false
 	override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
 		tableView.delegate = self
 		tableView.dataSource = self
-				
+		
+		if _observersAdded == false {
+			document?.notificationCenter.addObserver(self, selector: #selector(addPersona(notification:)), name: .addPersona, object: nil)
+			document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
+			_observersAdded = true
+		}
+
 		// Create sort descriptors
 		let descriptorName = NSSortDescriptor(key: "name", ascending: true)
-
 		colName.sortDescriptorPrototype = descriptorName
     }
+	
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateUI()
+	}
 	
 	private var retainSelectedID: String?
 	override func updateUI() {
 		// Refresh local copy of the personas
-		personas = book?.allPersonas
+		personas = context?.book?.allPersonas
 		
 		tableView.reloadData()
 		if let id = retainSelectedID,
@@ -139,54 +139,25 @@ class PersonasDetailVC: BFViewController {
 	}
 	
 	@objc func addPersona(notification: Notification) {
-		guard book != nil else { return }
-		let p = Persona(name: "New Character", description: "", aliases: [])
-		var major = book!.majorPersonas
-		let minor = book!.minorPersonas
-		major.append(p)
-		retainSelectedID = p.id
-		setPersonas(major: major, minor: minor)
+		if personas != nil && tableView.selectedRow != -1 {
+			let p = personas![tableView.selectedRow]
+			retainSelectedID = p.id
+		}
+		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
 	
 	private func updatePersona(at row: Int) {
-		guard book != nil && personas != nil && row > -1 else {
-			return
-		}
-		var majorPersonas = personas!.filter { book!.isMajor(persona: $0) }
-		var minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false }
-					
-		let isMajor = importanceCheckbox.state == .on
-			
+		guard personas != nil && row > -1 else { return }
 		var p = personas![row]
 		p.name = nameField.stringValue
 		p.joinedAliases = aliasesField.stringValue
 		p.description = descriptionField.stringValue
 		
-		let wasMajor = book!.isMajor(persona: p)
-		if wasMajor {
-			if let idx = majorPersonas.firstIndex(where: {$0.id == p.id}) {
-				majorPersonas.remove(at: idx)
-				if isMajor {
-					majorPersonas.insert(p, at: idx)
-				}
-				else {
-					minorPersonas.append(p)
-				}
-			}
-		}
-		else {
-			if let idx = minorPersonas.firstIndex(where: {$0.id == p.id}) {
-				minorPersonas.remove(at: idx)
-				if isMajor {
-					majorPersonas.append(p)
-				}
-				else {
-					minorPersonas.insert(p, at: idx)
-				}
-			}
-		}
+		let pInfo = DocEditor.PersonaInfo(persona: p,
+										  isMajor: importanceCheckbox.state == .on)
+
 		retainSelectedID = p.id
-		setPersonas(major: majorPersonas, minor: minorPersonas)
+		document?.notificationCenter.post(name: .modifyPersona, object: pInfo)
 	}
 
 	@IBAction func delete(_ sender: AnyObject) {
@@ -199,33 +170,11 @@ class PersonasDetailVC: BFViewController {
 	private func deletePersona(at row:Int) {
 		print("Delete persona at row \(row)")
 		let availableActions = actionsFor(row: row)
-		guard book != nil && personas != nil && availableActions.contains(.delete) else {
+		guard personas != nil && availableActions.contains(.delete) else {
 			return
 		}
-		
 		let pToDelete = personas![row]
-		// Using filter to remove the persona. Simple!
-		let majorPersonas = personas!.filter { book!.isMajor(persona: $0) && $0.id != pToDelete.id }
-		let minorPersonas = personas!.filter { book!.isMajor(persona: $0) == false && $0.id != pToDelete.id }
-		
-		setPersonas(major: majorPersonas, minor: minorPersonas)
-	}
-	
-	private func setPersonas(major: [Persona], minor: [Persona]) {
-		guard book != nil && personas != nil else {
-			return
-		}
-		let oldMajor = book!.majorPersonas
-		let oldMinor = book!.minorPersonas
-		undoManager?.beginUndoGrouping()
-		undoManager?.registerUndo(withTarget: self) {
-			$0.setPersonas(major: oldMajor, minor: oldMinor)
-			self.document?.notificationCenter.post(name: .bookEdited, object: [oldMajor])
-		}
-		book!.majorPersonas = major
-		book!.minorPersonas = minor
-		undoManager?.endUndoGrouping()
-		self.document?.notificationCenter.post(name: .bookEdited, object: [major])
+		document?.notificationCenter.post(name: .deletePersona, object: pToDelete)
 	}
 }
 
@@ -251,7 +200,7 @@ extension PersonasDetailVC: NSTableViewDelegate {
 			nameField.stringValue = p.name
 			aliasesField.stringValue = p.joinedAliases
 			descriptionField.stringValue = p.description
-			importanceCheckbox.state = (book!.isMajor(persona: p)) ? .on : .off
+			importanceCheckbox.state = (context!.book!.isMajor(persona: p)) ? .on : .off
 		}
 		else {
 			nameField.isEnabled = false
@@ -297,7 +246,7 @@ extension PersonasDetailVC: NSTableViewDataSource {
 		var cellView: NSTableCellView?
 		
 		if let persona = self.tableView(tableView, objectValueFor: nil, row: row) as? Persona {
-			let isMajor = book!.isMajor(persona: persona)
+			let isMajor = context?.book?.isMajor(persona: persona) ?? false
 			if tableColumn == colName {
 				cellView = tableView.makeView(withIdentifier: .personaName, owner: self) as? NSTableCellView
 				cellView?.textField?.stringValue = "\(isMajor ? "+" : "-") \(persona.name)"

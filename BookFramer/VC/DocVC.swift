@@ -7,12 +7,47 @@
 
 import Cocoa
 
-class DocVC: NSTabViewController {
+class DocVC: NSTabViewController, BFContextProvider {
+	var editor: DocEditor
+
 	
+	required init?(coder: NSCoder) {
+		editor = DocEditor()
+		super.init(coder: coder)
+	}
 	
 	var book: Book? {
-        return representedObject as? Book
-    }
+		return representedObject as? Book
+	}
+	
+	var selectedPart: Any? {
+		if selectedSubChapter != nil {
+			return selectedSubChapter
+		}
+		if selectedChapter != nil {
+			return selectedChapter
+		}
+		return book
+	}
+	
+	private var _selectedChapterID: String?
+	var selectedChapter: Chapter? {
+		if let id = _selectedChapterID,
+		   let book = book {
+			return book.chapters.first(where: {$0.id == id})
+		}
+		return nil
+	}
+	
+	private var _selectedSubChapterID: String?
+	var selectedSubChapter: SubChapter? {
+		if let id = _selectedSubChapterID,
+		   let book = book {
+			return book.findSubChapter(id: id)
+		}
+		return nil
+	}
+
 	
 	var manage: ManageVC? {
 		for childVC in children {
@@ -43,6 +78,7 @@ class DocVC: NSTabViewController {
     }
 	
 	override func viewDidAppear() {
+		super.viewDidAppear()
 		guard let toolbar = self.view.window?.toolbar else { return }
 		for item in toolbar.items {
 			if let searchItem = item as? NSSearchToolbarItem {
@@ -65,31 +101,24 @@ class DocVC: NSTabViewController {
 			}
 		}
         didSet {
-            manage?.book = book
-			preview?.book = book
-			
+			editor.registerDocumentVC(vc: self)
 			if selectedChapter == nil && selectedSubChapter == nil {
 				self.changeContext(notification: Notification(name: .changeContext, object: book, userInfo: nil))
-				//preview?.selectedPart = book
 			}
 			else if selectedSubChapter != nil {
 				self.changeContext(notification: Notification(name: .changeContext, object: selectedSubChapter, userInfo: nil))
-				//preview?.selectedPart = selectedSubChapter
 			}
 			else {
 				self.changeContext(notification: Notification(name: .changeContext, object: selectedChapter, userInfo: nil))
-				//preview?.selectedPart = selectedChapter
 			}
 
 			if _observersAdded == false {
 				_observersAdded = true
 				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 				document?.notificationCenter.addObserver(self, selector: #selector(openExternal(notification:)), name: .openExternal, object: nil)
-				document?.notificationCenter.addObserver(self, selector: #selector(addChapter(notification:)), name: .addChapter, object: nil)
-				document?.notificationCenter.addObserver(self, selector: #selector(addSubChapter(notification:)), name: .addSubChapter, object: nil)
-				document?.notificationCenter.addObserver(self, selector: #selector(deleteChapter(notification:)), name: .deleteChapter, object: nil)
-				document?.notificationCenter.addObserver(self, selector: #selector(deleteSubChapter(notification:)), name: .deleteSubChapter, object: nil)
 			}
+			document?.notificationCenter.post(name: .bookEdited, object: nil)
         }
     }
 	
@@ -97,7 +126,6 @@ class DocVC: NSTabViewController {
 		if let ch = notification.object as? Chapter {
 			_selectedChapterID = ch.id
 			_selectedSubChapterID = nil
-			preview?.selectedPart = ch
 		}
 		else if let sub = notification.object as? SubChapter {
 			_selectedSubChapterID = sub.id
@@ -105,34 +133,22 @@ class DocVC: NSTabViewController {
 			   let ch = book.chapterContaining(subchapter: sub) {
 				_selectedChapterID = ch.id
 			}
-			preview?.selectedPart = sub
 		}
-		else if let b = notification.object as? Book {
+		else if let _ = notification.object as? Book {
 			_selectedChapterID = nil
 			_selectedSubChapterID = nil
-			preview?.selectedPart = b
 		}
 		document?.notificationCenter.post(name: .contextDidChange, object: notification.object)
 	}
 	
-	private var _selectedChapterID: String?
-	private var selectedChapter: Chapter? {
-		if let id = _selectedChapterID,
-		   let book = book {
-			return book.chapters.first(where: {$0.id == id})
+	@objc func bookEdited(notification: Notification) {
+		// Send a context changed event if the selected chapter or subchapter was deleted
+		if (_selectedChapterID != nil && selectedChapter == nil) ||
+			(_selectedSubChapterID != nil && selectedSubChapter == nil) {
+			document?.notificationCenter.post(name: .contextDidChange, object: nil)
 		}
-		return nil
 	}
-	
-	private var _selectedSubChapterID: String?
-	private var selectedSubChapter: SubChapter? {
-		if let id = _selectedSubChapterID,
-		   let book = book {
-			return book.findSubChapter(id: id)
-		}
-		return nil
-	}
-	
+
 	private func handleDocReload(old: Book, new: Book) {
 		if let currentSelectedChapter = selectedChapter {
 			_selectedChapterID = nil // if we don't find it
@@ -166,136 +182,14 @@ class DocVC: NSTabViewController {
 		document?.notificationCenter.post(name: .addChapter, object: nil)
 	}
 	
-	@objc func addChapter(notification: Notification) {
-		guard book != nil else { return }
-		
-		var insertIndex = book!.chapters.count // default
-		
-		if let relativeCh = notification.object as? Chapter {
-			// Add new chapter after relativeCh
-			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
-				insertIndex = relativeIndex + 1
-			}
-		}
-		else if let relativeSub = notification.object as? SubChapter,
-				let relativeCh = book!.chapterContaining(subchapter: relativeSub) {
-			// Add new chapter after relativeCh
-			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
-				insertIndex = relativeIndex + 1
-			}
-		}
-		else if let relativeSub = selectedSubChapter ,
-				let relativeCh = book!.chapterContaining(subchapter: relativeSub) {
-			// Add new chapter after relativeCh
-			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
-				insertIndex = relativeIndex + 1
-			}
-		}
-		else if let relativeCh = selectedChapter {
-			// Add new chapter after relativeCh
-			if let relativeIndex = book!.chapters.firstIndex(where: { $0.id == relativeCh.id} ) {
-				insertIndex = relativeIndex + 1
-			}
-		}
-		
-		let ch = Chapter(title: "", subtitle: "", number: -1, subchapters: [SubChapter]())
-		// For undo
-		let oldChapters = book!.chapters
-		book!.add(chapter: ch, at: insertIndex)
-		let newChapters = book!.chapters
-		book!.chapters = oldChapters
-		undoManager?.registerUndo(withTarget: book!) {
-			$0.chapters = oldChapters
-			self.document?.notificationCenter.post(name: .bookEdited, object: [oldChapters])
-		}
-		book!.chapters = newChapters
-		document?.notificationCenter.post(name: .bookEdited, object: ch)
-	}
-	
 	@IBAction func addScene(_ sender: AnyObject) {
 		// Add a new subchapter to the end of the last chapter
 		document?.notificationCenter.post(name: .addSubChapter, object: nil)
-	}
-	
-	@objc func addSubChapter(notification: Notification) {
-		guard book != nil else { return }
-		
-		var targetChapter = book!.chapters.last
-		if let sub = notification.object as? SubChapter {
-			targetChapter = book!.chapterContaining(subchapter: sub)
-		}
-		else if let ch = notification.object as? Chapter {
-			targetChapter = ch
-		}
-		else if let ch = selectedChapter {
-			targetChapter = ch
-		}
-		guard targetChapter != nil else {return}
-		
-		let sub = SubChapter(text: "")
-		targetChapter!.subchapters.append(sub)
-		// For undo
-		let oldChapters = book!.chapters
-		book!.replace(chapter: targetChapter!)
-		let newChapters = book!.chapters
-		book!.chapters = oldChapters
-		undoManager?.registerUndo(withTarget: book!) {
-			$0.chapters = oldChapters
-			self.document?.notificationCenter.post(name: .bookEdited, object: targetChapter!)
-		}
-		book!.chapters = newChapters
-		document?.notificationCenter.post(name: .bookEdited, object: sub)
-	}
-	
-	@objc func deleteChapter(notification: Notification) {
-		guard book != nil && notification.object != nil else {return}
-		if let ch = notification.object as? Chapter {
-			if let index = book!.indexOf(chapter: ch) {
-				undoManager?.registerUndo(withTarget: book!) {
-					$0.add(chapter: ch, at: index)
-					self.document?.notificationCenter.post(name: .bookEdited, object: self.book!)
-				}
-				book!.removeChapter(at: index)
-				document?.notificationCenter.post(name: .bookEdited, object: book!.chapters)
-			}
-		}
-	}
-	
-	@objc func deleteSubChapter(notification: Notification) {
-		guard book != nil && notification.object != nil else {return}
-		if let sub = notification.object as? SubChapter,
-		   let origCh = book!.chapterContaining(subchapter: sub),
-		   var modCh = book!.chapterContaining(subchapter: sub),
-		   let index = modCh.subchapters.firstIndex(where: {$0.id == sub.id}) {
-			modCh.subchapters.remove(at: index)
-			undoManager?.registerUndo(withTarget: book!) {
-				$0.replace(chapter: origCh)
-				self.document?.notificationCenter.post(name: .bookEdited, object: origCh)
-			}
-			book!.replace(chapter: modCh)
-			document?.notificationCenter.post(name: .bookEdited, object: modCh)
-		}
 	}
 
 	@IBAction func addPersona(_ sender: AnyObject) {
 		// Add a new persona
 		document?.notificationCenter.post(name: .addPersona, object: nil)
-	}
-	private func setPersonas(major: [Persona], minor: [Persona]) {
-		guard book != nil else {
-			return
-		}
-		let oldMajor = book!.majorPersonas
-		let oldMinor = book!.minorPersonas
-		undoManager?.beginUndoGrouping()
-		undoManager?.registerUndo(withTarget: self) {
-			$0.setPersonas(major: oldMajor, minor: oldMinor)
-			self.document?.notificationCenter.post(name: .bookEdited, object: major)
-		}
-		book!.majorPersonas = major
-		book!.minorPersonas = minor
-		undoManager?.endUndoGrouping()
-		self.document?.notificationCenter.post(name: .bookEdited, object: major)
 	}
 	
 	@objc func searchFieldAction(sender: AnyObject) {

@@ -8,24 +8,6 @@
 import Cocoa
 
 class ChapterDetailVC: BFViewController {
-    
-    var book: Book? {
-        didSet {
-			guard titleField != nil else { return }
-            updateUI()
-        }
-    }
-    
-    var chapter: Chapter? {
-        didSet {
-			guard titleField != nil else { return }
-			if book != nil && chapter != nil {
-				assert(book!.chapters.contains(where: {$0.id == chapter!.id}))
-			}
-            updateUI()
-        }
-    }
-    
     @IBOutlet weak var titleField: NSTextField!
     @IBOutlet weak var subtitleField: NSTextField!
 
@@ -33,85 +15,76 @@ class ChapterDetailVC: BFViewController {
         super.viewDidLoad()
         // Do view setup here.
     }
-    
+	
+	private var _observerAdded = false
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		updateUI()
+		if _observerAdded == false {
+			document?.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
+			_observerAdded = true
+		}
+	}
+	
+	@objc func contextChanged(notification: NSNotification) {
+		updateUI()
+	}
+
     override func updateUI() {
 		super.updateUI()
-        titleField.stringValue = chapter?.title ?? ""
-        subtitleField.stringValue = chapter?.subtitle ?? ""
+		titleField.stringValue = context?.selectedChapter?.title ?? ""
+        subtitleField.stringValue = context?.selectedChapter?.subtitle ?? ""
     }
 	
 	@IBAction func delete(_ sender: AnyObject) {
 		if sender is NSButton,
-			let ch = chapter {
+			let ch = context?.selectedChapter {
 			document?.notificationCenter.post(name: .deleteChapter, object: ch)
 		}
 	}
 	
 	@IBAction func addScene(_ sender: AnyObject) {
-		guard chapter != nil else { return }
-		document?.notificationCenter.post(name: .addSubChapter, object: chapter)
-//		let sub = SubChapter(text: "")
-//		chapter!.subchapters.append(sub)
-//		setChapter(newValue: chapter!)
-//		updateUI()
+		if let ch = context?.selectedChapter {
+			document?.notificationCenter.post(name: .addSubChapter, object: ch)
+		}
 	}
 	private func setChapter(newValue: Chapter) {
-		guard book != nil else { return }
-		if let oldChapter = book!.chapters.first(where: { $0.id == newValue.id }) {
+		if let book = context?.book,
+		   let oldChapter = book.chapters.first(where: { $0.id == newValue.id }) {
 			undoManager?.registerUndo(withTarget: self) { $0.setChapter(newValue: oldChapter) }
-			book!.replace(chapter: newValue)
+			book.replace(chapter: newValue)
 		}
 	}
 
 	@IBAction func openInBBEdit(_ sender: AnyObject) {
 		print("openInBBEdit in chapter detail")
-		if let ch = chapter {
+		if let ch = context?.selectedChapter {
 			document?.notificationCenter.post(name: .openExternal, object: ch)
+		}
+	}
+	
+	private func modifyChapter() {
+		if var ch = context?.selectedChapter {
+			ch.title = titleField.stringValue
+			ch.subtitle = subtitleField.stringValue
+			document?.notificationCenter.post(name: .modifyChapter, object: ch)
 		}
 	}
 
     /**
-     Target of action when `titleField` changes. Calls `setTitle`
+     Target of action when `titleField` changes. Calls `modifyChapter`
      - Parameter sender: the NSTextField
      */
     @IBAction func titleChanged(_ sender: NSTextField) {
-        setTitle(sender.stringValue)
-    }
-    /**
-     Undoable way to set the title of the chapter.
-     - Parameter newValue: the value to change the title to
-     */
-    private func setTitle(_ newValue: String) {
-        guard book != nil && chapter != nil && chapter!.title != newValue else {
-            return
-        }
-        let oldValue = chapter!.title
-        undoManager?.registerUndo(withTarget: self) { $0.setTitle(oldValue) }
-        chapter!.title = newValue
-        titleField.stringValue = newValue
-        // Chapter is a value type. Need to replace it in the book
-        book!.replace(chapter: chapter!)
-        document?.notificationCenter.post(name: .bookEdited, object: chapter!)
+        modifyChapter()
     }
     
     /**
-     Target of action when `subtitleField` changes. Calls `setSubtitle`
+     Target of action when `subtitleField` changes. Calls `modifyChapter`
      - Parameter sender: the NSTextField
      */
     @IBAction func subtitleChanged(_ sender: NSTextField) {
-        setSubtitle(sender.stringValue)
-    }
-    private func setSubtitle(_ newValue: String) {
-        guard book != nil && chapter != nil && chapter!.subtitle != newValue else {
-            return
-        }
-        let oldValue = chapter!.subtitle
-        undoManager?.registerUndo(withTarget: self) { $0.setSubtitle(oldValue) }
-        chapter!.subtitle = newValue
-        subtitleField.stringValue = newValue
-        // Chapter is a value type. Need to replace it in the book
-        book!.replace(chapter: chapter!)
-        document?.notificationCenter.post(name: .bookEdited, object: chapter!)
+        modifyChapter()
     }
 }
 

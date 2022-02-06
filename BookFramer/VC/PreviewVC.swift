@@ -26,12 +26,14 @@ class PreviewVC: BFViewController {
 		titlePS.paragraphSpacing = 16.0
 		titleAttributes = AttributeContainer()
 		titleAttributes.font = textView.font?.bolded()?.resized(to: 20)
+		titleAttributes.foregroundColor = NSColor.controlTextColor
 		titleAttributes.paragraphStyle = titlePS
 		
 		let subtitlePS = NSMutableParagraphStyle()
 		subtitlePS.paragraphSpacing = 16.0
 		subtitleAttributes = AttributeContainer()
 		subtitleAttributes.font = textView.font?.bolded()?.resized(to: 18)
+		subtitleAttributes.foregroundColor = NSColor.controlTextColor
 		subtitleAttributes.paragraphStyle = subtitlePS
 		
 		let ps = NSMutableParagraphStyle()
@@ -39,8 +41,9 @@ class PreviewVC: BFViewController {
 		ps.paragraphSpacing = 16.0
 		paragraphAttributes = AttributeContainer()
 		paragraphAttributes.font = textView.font
+		paragraphAttributes.foregroundColor = NSColor.controlTextColor
 		paragraphAttributes.paragraphStyle = ps
-    }
+	}
 	
 	override func viewDidAppear() {
 		super.viewDidAppear()
@@ -71,6 +74,9 @@ class PreviewVC: BFViewController {
 
 	override func updateUI() {
 		super.updateUI()
+		if #available(macOS 10.14, *) {
+			textView.appearance = NSAppearance.currentDrawing()
+		}
 		if view.window != nil && needsCompile {
 			compilePreview()
 			needsCompile = false
@@ -176,17 +182,17 @@ class PreviewVC: BFViewController {
 		var color: NSColor {
 			switch self {
 			case .veryHard:
-				//#e4b9b9
-				return NSColor(red: 0.89, green: 0.73, blue: 0.73, alpha: 1.0)
+				// Reddish
+				return NSColor.init(named: "GrammarVHard") ?? NSColor.magenta
 			case .hard:
-				//#f7ecb5
-				return NSColor(red: 0.95, green: 0.92, blue: 0.71, alpha: 1.0)
+				// Yellow
+				return NSColor.init(named: "GrammarHard") ?? NSColor.magenta
 			case .passive:
-				//#c4ed9d
-				return NSColor(red: 0.77, green: 0.93, blue: 0.62, alpha: 1.0)
+				// Green
+				return NSColor.init(named: "GrammarPassive") ?? NSColor.magenta
 			case .adverb:
-				//#c4e3f3
-				return NSColor(red: 0.77, green: 0.89, blue: 0.95, alpha: 1.0)
+				// Blue
+				return NSColor.init(named: "GrammarAdverb") ?? NSColor.magenta
 			}
 		}
 	}

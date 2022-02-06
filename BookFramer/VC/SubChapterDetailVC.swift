@@ -46,7 +46,8 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 		let subchapter = context?.selectedSubChapter
 		descriptionField.stringValue = subchapter?.headerInfo.description ?? ""
 		locationField.stringValue = subchapter?.headerInfo.location ?? ""
-		charactersTextView.string = personas		
+		charactersTextView.string = personas
+		charactersTextView.setTextColor(NSColor.textColor, range: NSMakeRange(0, personas.count))
 		
 		updateStatusMenu()
 		

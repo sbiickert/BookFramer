@@ -26,6 +26,9 @@ class DocEditor {
 			nc.addObserver(self, selector: #selector(modifyBookInfo(notification:)),
 						   name: .modifyBookInfo, object: nil)
 
+			nc.addObserver(self, selector: #selector(modifyChapters(notification:)),
+						   name: .modifyChapters, object: nil)
+
 			nc.addObserver(self, selector: #selector(addChapter(notification:)),
 						   name: .addChapter, object: nil)
 			nc.addObserver(self, selector: #selector(modifyChapter(notification:)),
@@ -82,7 +85,7 @@ class DocEditor {
 				$0.setBookInfo(oldValue)
 			}
 			docVC.book!.title = newValue.title
-			docVC.book!.subtitle = newValue.title
+			docVC.book!.subtitle = newValue.subtitle
 			docVC.book!.headerInfo = newValue.header
 			notificationCenter?.post(name: .bookEdited, object: docVC.book!)
 		}

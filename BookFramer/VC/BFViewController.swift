@@ -30,10 +30,33 @@ class BFViewController: NSViewController {
 	public var context: BFContextProvider? {
 		return self.view.window?.contentViewController as? BFContextProvider
 	}
+	
+	func updateUI() {}
+
+	
+	// MARK: Notifications
 
 	@objc func bookEdited(notification: Notification) {
 		updateUI()
 	}
 	
-	func updateUI() {}
+	// MARK: menu actions
+	// These are all menu items whose target can be inferred from context.
+	
+	@IBAction func newChapterMenuHandler(_ sender: AnyObject) {
+		// Add a new chapter to the end of the book
+		document?.notificationCenter.post(name: .addChapter, object: nil)
+	}
+
+	@IBAction func newSceneMenuHandler(_ sender: AnyObject) {
+		document?.notificationCenter.post(name: .addSubChapter, object: nil)
+	}
+
+	@IBAction func newPersonaMenuHandler(_ sender: Any) {
+		document?.notificationCenter.post(name: .addPersona, object: nil)
+	}
+	
+	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
+		document?.notificationCenter.post(name: .openExternal, object: nil)
+	}
 }

@@ -43,26 +43,6 @@ class ChapterDetailVC: BFViewController {
 		}
 	}
 	
-	@IBAction func addScene(_ sender: AnyObject) {
-		if let ch = context?.selectedChapter {
-			document?.notificationCenter.post(name: .addSubChapter, object: ch)
-		}
-	}
-	private func setChapter(newValue: Chapter) {
-		if let book = context?.book,
-		   let oldChapter = book.chapters.first(where: { $0.id == newValue.id }) {
-			undoManager?.registerUndo(withTarget: self) { $0.setChapter(newValue: oldChapter) }
-			book.replace(chapter: newValue)
-		}
-	}
-
-	@IBAction func openInBBEdit(_ sender: AnyObject) {
-		print("openInBBEdit in chapter detail")
-		if let ch = context?.selectedChapter {
-			document?.notificationCenter.post(name: .openExternal, object: ch)
-		}
-	}
-	
 	private func modifyChapter() {
 		if var ch = context?.selectedChapter {
 			ch.title = titleField.stringValue

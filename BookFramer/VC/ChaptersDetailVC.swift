@@ -70,13 +70,6 @@ class ChaptersDetailVC: BFViewController {
 		searchText = notification.object as? String
 		updateUI()
 	}
-
-	@IBAction func openInBBEdit(_ sender: AnyObject) {
-		print("openInBBEdit in chapters detail")
-		if let item = objectFor(row: tableView.selectedRow) {
-			document?.notificationCenter.post(name: .openExternal, object: item)
-		}
-	}
 	
 	@IBAction func delete(_ sender: AnyObject) {
 		print("delete in chapters detail")

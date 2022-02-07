@@ -18,13 +18,6 @@ class BookDetailVC: BFViewController {
 	@IBOutlet weak var tableColCheckbox: NSTableColumn!
 	@IBOutlet weak var tableColDescription: NSTableColumn!
 	
-	@IBAction func openInBBEdit(_ sender: Any) {
-		print("openInBBEdit in book detail")
-		if let book = context?.book {
-			document?.notificationCenter.post(name: .openExternal, object: book)
-		}
-	}
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		

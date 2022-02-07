@@ -114,10 +114,10 @@ class PersonasDetailVC: BFViewController {
 		return [.create]
 	}
 	
-	@IBAction func newPersona(_ sender: Any) {
-		// Calls addPersona(notification:) below
-		document?.notificationCenter.post(name: .addPersona, object: nil)
+	@IBAction func newPersona(_ sender: NSButton) {
+		addPersona(notification: Notification(name: .addPersona, object: nil, userInfo: nil))
 	}
+	
 	@IBAction func deletePersona(_ sender: Any) {
 		// This should probably be removed, and the button connected to "delete" below
 		if actionsForSelectedRow().contains(.delete) {

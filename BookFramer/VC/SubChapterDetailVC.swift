@@ -93,13 +93,6 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 		}
 		return ""
 	}
-	
-	@IBAction func openInBBEdit(_ sender: AnyObject) {
-		print("openInBBEdit in subchapter detail")
-		if let sub = context?.selectedSubChapter {
-			document?.notificationCenter.post(name: .openExternal, object: sub)
-		}
-	}
 
     private func modifySubChapter() {
 		if var sub = context?.selectedSubChapter {
@@ -117,7 +110,7 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 	@IBAction func delete(_ sender: Any) {
 		if sender is NSButton,
 		   let sub = context?.selectedSubChapter {
-			document?.notificationCenter.post(name: .openExternal, object: sub)
+			document?.notificationCenter.post(name: .deleteSubChapter, object: sub)
 		}
 	}
 

@@ -175,29 +175,37 @@ class DocVC: NSTabViewController, BFContextProvider {
 		}
 	}
 
+	// MARK: Menu Handlers
 	// Default handler for these menu selections pass nil
 	// The detail VCs for Chapters, Chapter and SubChapter will pass a Chapter or SubChapter to indicate context
-	@IBAction func addChapter(_ sender: AnyObject) {
+	@IBAction func newChapterMenuHandler(_ sender: AnyObject) {
 		// Add a new chapter to the end of the book
 		document?.notificationCenter.post(name: .addChapter, object: nil)
 	}
 	
-	@IBAction func addScene(_ sender: AnyObject) {
+	@IBAction func newSceneMenuHandler(_ sender: AnyObject) {
 		// Add a new subchapter to the end of the last chapter
 		document?.notificationCenter.post(name: .addSubChapter, object: nil)
 	}
 
-	@IBAction func addPersona(_ sender: AnyObject) {
+	@IBAction func newPersonaMenuHandler(_ sender: AnyObject) {
 		// Add a new persona
 		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
 	
+	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
+		document?.notificationCenter.post(name: .openExternal, object: nil)
+	}
+
+	// MARK: Search field
 	@objc func searchFieldAction(sender: AnyObject) {
 		guard let searchField = sender as? NSSearchField else { return }
 		
 		document?.notificationCenter.post(name: .search, object: searchField.stringValue)
 	}
 
+	// MARK: Opening the file in BBEdit
+	
 	@objc func openExternal(notification: NSNotification) {
 		guard document != nil && undoManager != nil else {
 			return
@@ -205,11 +213,11 @@ class DocVC: NSTabViewController, BFContextProvider {
 		
 		var lineNumber = 1
 		
-		if let ch = notification.object as? Chapter {
-			lineNumber = book?.lineNumberFor(chapter: ch) ?? 1
-		}
-		else if let sub = notification.object as? SubChapter {
+		if let sub = selectedSubChapter {
 			lineNumber = book?.lineNumberFor(subchapter: sub) ?? 1
+		}
+		else if let ch = selectedChapter {
+			lineNumber = book?.lineNumberFor(chapter: ch) ?? 1
 		}
 
 		// If there are unsaved changes, save them

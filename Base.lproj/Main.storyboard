@@ -347,26 +347,26 @@ CA
                                     <items>
                                         <menuItem title="Open in BBEdit" keyEquivalent="E" id="jY2-cG-vBM">
                                             <connections>
-                                                <action selector="openInBBEdit:" target="Ady-hI-5gd" id="m2S-sW-UXV"/>
+                                                <action selector="openInBBEditMenuHandler:" target="Ady-hI-5gd" id="Dpk-rO-gvB"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="QTQ-xo-WG7"/>
                                         <menuItem title="New Chapter" id="Gra-fB-lv3">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="addChapter:" target="Ady-hI-5gd" id="5Wt-HN-Cbu"/>
+                                                <action selector="newChapterMenuHandler:" target="Ady-hI-5gd" id="LfC-Lc-zWA"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="New Scene" id="E19-VS-CFg">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="addScene:" target="Ady-hI-5gd" id="3rE-d0-1Jz"/>
+                                                <action selector="newSceneMenuHandler:" target="Ady-hI-5gd" id="Thw-aT-Wj1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="New Persona" id="XDu-Fm-beU">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="addPersona:" target="Ady-hI-5gd" id="YcL-jX-Saf"/>
+                                                <action selector="newPersonaMenuHandler:" target="Ady-hI-5gd" id="L3t-i4-aE8"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1853,7 +1853,7 @@ Roimata Szőke
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="newPersona:" target="OUu-0p-LjX" id="0e3-He-Rwz"/>
+                                    <action selector="newPersona:" target="OUu-0p-LjX" id="hAk-Ag-W6O"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zC0-Ml-W0Z">

@@ -7,12 +7,17 @@
 
 import Cocoa
 
-class Document: NSDocument {
+class BookDocument: NSDocument {
 	weak var contentViewController: DocVC?
 	let notificationCenter = NotificationCenter()
 	
 	var book: Book {
 		didSet {
+
+			if let contentVC = contentViewController {
+				contentVC.representedObject = book
+			}
+			
 			// TODO: set window title. This is wrong.
 			Swift.print("Set document book to \(book)")
 		}
@@ -94,10 +99,6 @@ class Document: NSDocument {
 			book = try Book(fromFile: fileURL!)
 		}
 		catch {return}
-
-		if let contentVC = contentViewController {
-			contentVC.representedObject = book
-		}
 	}
 
 	private var fileContentsDidChange: Bool {

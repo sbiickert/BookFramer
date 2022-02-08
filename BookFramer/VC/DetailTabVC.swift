@@ -14,8 +14,8 @@ class DetailTabVC: NSTabViewController {
         case subchapter = 2
     }
 	
-	public var document: Document? {
-		return self.view.window?.windowController?.document as? Document
+	public var document: BookDocument? {
+		return self.view.window?.windowController?.document as? BookDocument
 	}
 
     override func viewDidLoad() {

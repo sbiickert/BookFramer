@@ -23,8 +23,8 @@ class BFViewController: NSViewController {
 		}
 	}
 	
-	public var document: Document? {
-		return self.view.window?.windowController?.document as? Document
+	public var document: BookDocument? {
+		return self.view.window?.windowController?.document as? BookDocument
 	}
 	
 	public var context: BFContextProvider? {

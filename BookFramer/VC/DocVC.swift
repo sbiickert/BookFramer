@@ -67,8 +67,8 @@ class DocVC: NSTabViewController, BFContextProvider {
 		return nil
 	}
 	
-	public var document: Document? {
-		return self.view.window?.windowController?.document as? Document
+	public var document: BookDocument? {
+		return self.view.window?.windowController?.document as? BookDocument
 	}
 
     override func viewDidLoad() {

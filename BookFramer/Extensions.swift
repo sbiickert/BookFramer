@@ -34,6 +34,7 @@ extension NSNotification.Name {
     static let contextDidChange = Notification.Name("CONTEXT CHANGED")
 	static let openExternal = Notification.Name("IT DOESN'T SUCK")
 	static let search = Notification.Name("SEARCH")
+	static let importMarkdown = Notification.Name("IMPORT MARKDOWN")
 
 	// Sent when any book content has been edited
 	// Raised by DocEditor

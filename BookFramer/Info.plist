@@ -20,7 +20,7 @@
 				<string>ca.biickert.bookframer.book-md</string>
 			</array>
 			<key>NSDocumentClass</key>
-			<string>$(PRODUCT_MODULE_NAME).Document</string>
+			<string>$(PRODUCT_MODULE_NAME).BookDocument</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>

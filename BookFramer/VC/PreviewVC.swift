@@ -121,6 +121,8 @@ class PreviewVC: BFViewController {
 				else {
 					do {
 						var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))
+						// To not eliminate italics:
+						// https://stackoverflow.com/questions/43723345/nsattributedstring-change-the-font-overall-but-keep-all-other-attributes
 						aString.setAttributes(paragraphAttributes)
 						
 						// Grammar highlighting

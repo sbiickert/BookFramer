@@ -57,21 +57,37 @@ class Book: Equatable, ObservableObject {
 		catch {
 			throw SBSError.fileNotFound
 		}
-		try self.init(fromMarkdown: content)
+		if fileURL.pathExtension == "bfd" {
+			try self.init(fromBFD: content)
+		}
+		else {
+			try self.init(fromMarkdown: content)
+		}
 		sourceFile = fileURL
 	}
 	
 	/**
-	Creates a book from a markdown string
+	Creates a book from a markdown string that includes the BFD metadata
+	
+	- Throws: SBSError.invalidBookHeader
+		bubbled up from parseHeader
+	*/
+	convenience init(fromBFD md:String) throws {
+		let blocks = BookBlock.parse(fromMarkdown: md, isBFD: true)
+		try self.init(fromBlocks: blocks)
+	}
+	
+	/**
+	Creates a book from a markdown string that has no metadata
 	
 	- Throws: SBSError.invalidBookHeader
 		bubbled up from parseHeader
 	*/
 	convenience init(fromMarkdown md:String) throws {
-		let blocks = BookBlock.parse(fromMarkdown: md)
+		let blocks = BookBlock.parse(fromMarkdown: md, isBFD: false)
 		try self.init(fromBlocks: blocks)
 	}
-	
+
 	/**
 	Creates a book from an array of BookBlocks
 	
@@ -118,8 +134,13 @@ class Book: Equatable, ObservableObject {
 					currentScene = try SubChapter(withBlock: block)
 				}
 			case .paragraph:
-				assert(currentScene != nil)
-				currentScene?.paragraphs.append(block.content)
+				//assert(currentScene != nil)
+				if currentScene == nil {
+					print("Discarding text: \(block.content)")
+				}
+				else {
+					currentScene!.paragraphs.append(block.content)
+				}
 			default:
 				// Unknown
 				print("Unknown block found: \(block.content)")

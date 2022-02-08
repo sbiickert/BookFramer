@@ -49,7 +49,7 @@ class Document: NSDocument {
 			  let string = String(data: data, encoding: .utf8) else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
-		book = try Book(fromMarkdown: string)
+		book = try Book(fromBFD: string)
 	}
 	
 	override func fileWrapper(ofType typeName: String) throws -> FileWrapper {

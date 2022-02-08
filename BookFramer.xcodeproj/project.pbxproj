@@ -33,6 +33,7 @@
 		3767836A26D3E3EF00674C4A /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836926D3E3EF00674C4A /* Enums.swift */; };
 		3767837026D3F77A00674C4A /* DetailTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767836E26D3F77A00674C4A /* DetailTabVC.swift */; };
 		3767837326D41A0700674C4A /* DocumentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3767837226D41A0700674C4A /* DocumentWindowController.swift */; };
+		3776508127B2D76E000197BF /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 3776508027B2D76E000197BF /* Markdown */; };
 		378E659527AB4FA10039D50B /* DocEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E659427AB4FA10039D50B /* DocEditor.swift */; };
 		37C5A34D27A98D3A004C52E1 /* BFContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C5A34C27A98D3A004C52E1 /* BFContextProvider.swift */; };
 		37DA61EB26F1538800298D20 /* AutomateBBEdit.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 37DA61EA26F1538800298D20 /* AutomateBBEdit.scpt */; };
@@ -114,6 +115,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3706D48727A201FA00F871DF /* NaturalLanguage.framework in Frameworks */,
+				3776508127B2D76E000197BF /* Markdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +265,9 @@
 			dependencies = (
 			);
 			name = BookFramer;
+			packageProductDependencies = (
+				3776508027B2D76E000197BF /* Markdown */,
+			);
 			productName = BookFramer;
 			productReference = 3767832726D3E33500674C4A /* BookFramer.app */;
 			productType = "com.apple.product-type.application";
@@ -335,6 +340,7 @@
 			);
 			mainGroup = 3767831E26D3E33500674C4A;
 			packageReferences = (
+				3776507F27B2D76E000197BF /* XCRemoteSwiftPackageReference "swift-markdown" */,
 			);
 			productRefGroup = 3767832826D3E33500674C4A /* Products */;
 			projectDirPath = "";
@@ -734,6 +740,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3776507F27B2D76E000197BF /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-markdown";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3776508027B2D76E000197BF /* Markdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3776507F27B2D76E000197BF /* XCRemoteSwiftPackageReference "swift-markdown" */;
+			productName = Markdown;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3767831F26D3E33500674C4A /* Project object */;
 }

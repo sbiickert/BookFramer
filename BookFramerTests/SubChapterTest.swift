@@ -19,7 +19,7 @@ class SubChapterTest: XCTestCase {
     }
 
 	func testSearch() throws {
-		let simpleBook = try Book.init(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let simpleBook = try Book.init(fromBFD: BookTest.SIMPLE_BOOK)
 		
 		XCTAssert(simpleBook.chapters[0].subchapters[0].search(for: "feelings"))
 		XCTAssert(simpleBook.chapters[0].subchapters[0].search(for: "Feelings"))
@@ -37,7 +37,7 @@ class SubChapterTest: XCTestCase {
 	}
 	
 	func testFuzzyEquality() throws {
-		let simpleBook = try Book.init(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let simpleBook = try Book.init(fromBFD: BookTest.SIMPLE_BOOK)
 
 		let sub0 = simpleBook.chapters[0].subchapters[0]
 		var sub1 = sub0

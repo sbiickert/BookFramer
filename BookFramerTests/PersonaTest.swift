@@ -19,7 +19,7 @@ class PersonaTest: XCTestCase {
     }
 
     func testFind() throws {
-		let book = try Book(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let book = try Book(fromBFD: BookTest.SIMPLE_BOOK)
 		var p = book.findPersona(named: "Bob")
 		XCTAssert(p != nil, "Did not find 'Bob'")
 		XCTAssert(p?.name == "Mr. Bennet")

@@ -11,6 +11,7 @@ import XCTest
 class BookTest: XCTestCase {
     
 	public static let PRIDE_AND_PREJUDICE = "/Users/sjb/Developer/BookFramer/Pride_And_Prejudice/book.bfd"
+	public static let MARKDOWN_SAMPLE = "/Users/sjb/Developer/BookFramer/Markdown/nano2021.md"
 	//"/Users/sjb/Projects/Mac/BookFramer/Pride_And_Prejudice/book.bfd"
 	public static let SIMPLE_BOOK = """
 		# Pride and Prejudice:
@@ -66,7 +67,7 @@ class BookTest: XCTestCase {
 	}
 
     func testParseBlocks() throws {
-		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK, isBFD: true)
 		XCTAssert(blocks.count == 6)
 		if (blocks.count == 6) {
 			XCTAssert(blocks[0].type == .title)
@@ -79,7 +80,7 @@ class BookTest: XCTestCase {
     }
 	
 	func testOutput() throws {
-		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK, isBFD: true)
 		XCTAssert(blocks.count == 6)
 		let book = try Book(fromBlocks: blocks)
 		let outputBlocks = try book.toBlocks()
@@ -87,15 +88,26 @@ class BookTest: XCTestCase {
 		
 		let markdown = try book.toMarkdown()
 		
-		let secondBlocks = BookBlock.parse(fromMarkdown: markdown)
+		let secondBlocks = BookBlock.parse(fromMarkdown: markdown, isBFD: true)
 		XCTAssert(secondBlocks.count == 6)
+		let secondBook = try Book(fromBlocks: secondBlocks)
+
+		XCTAssert(book == secondBook, "They weren't equal.")
+	}
+	
+	func testOutputFullBook() throws {
+		let fileURL = URL(fileURLWithPath: BookTest.PRIDE_AND_PREJUDICE)
+		let book = try Book(fromFile: fileURL)
+		let markdown = try book.toMarkdown()
+		
+		let secondBlocks = BookBlock.parse(fromMarkdown: markdown, isBFD: true)
 		let secondBook = try Book(fromBlocks: secondBlocks)
 
 		XCTAssert(book == secondBook, "They weren't equal.")
 	}
 
 	func testInitSimpleBook() throws {
-		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let blocks = BookBlock.parse(fromMarkdown: BookTest.SIMPLE_BOOK, isBFD: true)
 		let book = try Book(fromBlocks: blocks)
 		
 		XCTAssert(book.title == "Pride and Prejudice", "Expected title to be 'Pride and Prejudice', was '\(book.title)'")
@@ -135,7 +147,7 @@ class BookTest: XCTestCase {
 	}
 	
 	func testAddChapter() throws {
-		let book = try Book(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let book = try Book(fromBFD: BookTest.SIMPLE_BOOK)
 		XCTAssert(book.chapters.count == 1)
 		var c = Chapter()
 		c.title = "Test"
@@ -152,7 +164,7 @@ class BookTest: XCTestCase {
 	}
 	
 	func testRemoveChapter() throws {
-		let book = try Book(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let book = try Book(fromBFD: BookTest.SIMPLE_BOOK)
 		XCTAssert(book.chapters.count == 1)
 		book.removeChapter(at: 0)
 		XCTAssert(book.chapters.count == 0)
@@ -197,7 +209,7 @@ class BookTest: XCTestCase {
 	}
 	
 	func testCompile() throws {
-		let simpleBook = try Book(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let simpleBook = try Book(fromBFD: BookTest.SIMPLE_BOOK)
 		
 		let fileURL = URL(fileURLWithPath: BookTest.PRIDE_AND_PREJUDICE)
 		let fullBook = try Book(fromFile: fileURL)
@@ -210,7 +222,7 @@ class BookTest: XCTestCase {
 	}
 	
 	func testWordCount() throws {
-		let simpleBook = try Book(fromMarkdown: BookTest.SIMPLE_BOOK)
+		let simpleBook = try Book(fromBFD: BookTest.SIMPLE_BOOK)
 		
 		let fileURL = URL(fileURLWithPath: BookTest.PRIDE_AND_PREJUDICE)
 		let fullBook = try Book(fromFile: fileURL)
@@ -219,7 +231,7 @@ class BookTest: XCTestCase {
 		wc = simpleBook.wordCount
 		XCTAssert(wc == 70)
 		wc = fullBook.wordCount
-		XCTAssert(wc == 122074)
+		XCTAssert(wc > 122060)
 	}
 	
 	func testPersonasIn() throws {
@@ -266,5 +278,17 @@ class BookTest: XCTestCase {
 		// Chapter Six, second sub: 317
 		lineNum = fullBook.lineNumberFor(subchapter: fullBook.chapters[5].subchapters[1])
 		XCTAssert(lineNum == 317, "Expected second sub of Chapter Six to start at line 317, got \(lineNum)")
+	}
+	
+	func testMarkdownImport() throws {
+		let mdFileURL = URL(fileURLWithPath: BookTest.MARKDOWN_SAMPLE)
+		let mdContent = try String(contentsOf: mdFileURL, encoding: .utf8)
+		let mdBlocks = BookBlock.parse(fromMarkdown: mdContent, isBFD: false)
+
+		let mdBook = try Book(fromFile: mdFileURL)
+		
+		XCTAssert(mdBook.title == "Striking Back")
+		XCTAssert(mdBook.subtitle == "")
+		XCTAssert(mdBook.chapters.count == 17)
 	}
 }

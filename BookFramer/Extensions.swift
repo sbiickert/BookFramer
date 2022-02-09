@@ -35,6 +35,7 @@ extension NSNotification.Name {
 	static let openExternal = Notification.Name("IT DOESN'T SUCK")
 	static let search = Notification.Name("SEARCH")
 	static let importMarkdown = Notification.Name("IMPORT MARKDOWN")
+	static let exportPDF = Notification.Name("EXPORT PDF")
 
 	// Sent when any book content has been edited
 	// Raised by DocEditor

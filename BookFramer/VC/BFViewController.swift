@@ -59,4 +59,8 @@ class BFViewController: NSViewController {
 	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
 		document?.notificationCenter.post(name: .openExternal, object: nil)
 	}
+	
+	@IBAction func exportToPDFMenuHandler(_ sender: Any) {
+		document?.notificationCenter.post(name: .exportPDF, object: nil)
+	}
 }

@@ -117,6 +117,7 @@ class DocVC: NSTabViewController, BFContextProvider {
 				document?.notificationCenter.addObserver(self, selector: #selector(changeContext(notification:)), name: .changeContext, object: nil)
 				document?.notificationCenter.addObserver(self, selector: #selector(bookEdited(notification:)), name: .bookEdited, object: nil)
 				document?.notificationCenter.addObserver(self, selector: #selector(openExternal(notification:)), name: .openExternal, object: nil)
+				document?.notificationCenter.addObserver(self, selector: #selector(exportToPDF(notification:)), name: .exportPDF, object: nil)
 			}
 			document?.notificationCenter.post(name: .bookEdited, object: nil)
         }
@@ -273,7 +274,7 @@ class DocVC: NSTabViewController, BFContextProvider {
 			do {
 				task = try NSUserUnixTask(url: bbEditURL)
 			} catch {
-				print("Could not create URL for \(bbEdit)")
+				print("Could not create task from URL for \(bbEdit)")
 				return
 			}
 			
@@ -293,9 +294,62 @@ class DocVC: NSTabViewController, BFContextProvider {
 		}
 	}
 	
-	private func exportToPDF() {
+	@objc func exportToPDF(notification: Notification) {
 		// pandoc {source} --pdf-engine=xelatex -o {target}
 		// or pipe in like cat {source} | pandoc --pdf-engine=xelatex -o {target}
+		guard document != nil else { return }
+		guard book != nil else { return }
+
+		let pandoc = "/opt/homebrew/bin/pandoc"
+		assert(FileManager.default.fileExists(atPath: pandoc))
+		let pandocURL = URL(fileURLWithPath: pandoc)
+		
+		// Compile the file to markdown in a temp dir
+		let compiledMD = book!.compile()
+		var tempFile: URL?
+		do {
+			let tempFolder = URL(fileURLWithPath: NSTemporaryDirectory(),
+								 isDirectory: true)
+			tempFile = tempFolder.appendingPathComponent("temp.md")
+			try compiledMD.write(to: tempFile!, atomically: true, encoding: .utf8)
+		}
+		catch {
+			tempFile = nil
+			print(error)
+		}
+		
+		if let fileURL = tempFile {
+			var task: NSUserUnixTask
+			do {
+				task = try NSUserUnixTask(url: pandocURL)
+			} catch {
+				print("Could not create task from URL for \(pandoc)")
+				return
+			}
+			
+			let panel = NSSavePanel()
+			panel.allowedFileTypes = ["pdf"]
+			
+			let clicked = panel.runModal()
+			if clicked != NSApplication.ModalResponse.OK { return }
+			
+			if let outputURL = panel.url {
+				let outputFile = outputURL.path
+				var args = [String]()
+				args.append("-o\(outputFile)")
+				args.append("--pdf-engine=/Library/TeX/texbin/pdflatex")
+				args.append(fileURL.path)
+				let stdout = FileHandle.standardOutput
+				task.standardOutput = stdout
+				print(args)
+				
+				task.execute(withArguments: args) {error in
+					if let error = error {
+						print("Pandoc export to PDF failed: ", error)
+					}
+				}
+			}
+		}
 	}
 
 }

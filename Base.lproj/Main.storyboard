@@ -111,6 +111,12 @@
                                                 <action selector="importMarkdown:" target="Ady-hI-5gd" id="oCU-us-nFp"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Export to PDF..." id="NhQ-tm-0p3">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="exportToPDFMenuHandler:" target="Ady-hI-5gd" id="SzM-kM-AxV"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="qdH-eI-4Bm"/>
                                         <menuItem title="Page Setup…" keyEquivalent="P" id="qIS-W8-SiK">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>

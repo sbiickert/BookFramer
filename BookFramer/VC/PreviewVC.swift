@@ -121,15 +121,18 @@ class PreviewVC: BFViewController {
 				else {
 					do {
 						var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))
-						// To not eliminate italics:
-						// https://stackoverflow.com/questions/43723345/nsattributedstring-change-the-font-overall-but-keep-all-other-attributes
-						aString.setAttributes(paragraphAttributes)
+						// To not eliminate italics, can't just setAttributes:
+						aString.mergeAttributes(paragraphAttributes)
+
+						// Need to remove _ and * from part, b/c the AttributedString lost them
+						var plain = part.replacingOccurrences(of: "*", with: "")
+						plain = plain.replacingOccurrences(of: "_", with: "")
 						
 						// Grammar highlighting
-						let adverbs = BookAnalytics.tagAdverbs(in: part)
-						let sentences = BookAnalytics.tokens(in: part, unit: .sentence)
+						let adverbs = BookAnalytics.tagAdverbs(in: plain)
+						let sentences = BookAnalytics.tokens(in: plain, unit: .sentence)
 						for sentence in sentences {
-							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: part)
+							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: plain)
 							let difficulty = BookAnalytics.classifyFRES(score: fres)
 							let passiveVoiceRange = BookAnalytics.tagPassiveVoice(in: sentence)
 							
@@ -148,9 +151,13 @@ class PreviewVC: BFViewController {
 									aString[range].backgroundColor = HighlightType.passive.color
 								}
 								for adverb in adverbs {
-									// adverb is a range in part. Need to translate to aString.
-									let lower = aString.index(aString.startIndex, offsetByCharacters: adverb.lowerBound.utf16Offset(in: part))
-									let upper = aString.index(aString.startIndex, offsetByCharacters: adverb.upperBound.utf16Offset(in: part))
+									// adverb is a range in plain. Need to translate to aString.
+									//print("\(plain[adverb])")
+									var offset = adverb.lowerBound.utf16Offset(in: plain)
+									let lower = aString.index(aString.startIndex, offsetByCharacters: offset)
+									offset = adverb.upperBound.utf16Offset(in: plain)
+									//offset = min(offset, aString.characters.count)
+									let upper = aString.index(aString.startIndex, offsetByCharacters: offset)
 									let range = lower..<upper
 									aString[range].backgroundColor = HighlightType.adverb.color
 								}

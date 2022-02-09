@@ -158,7 +158,7 @@ struct BookAnalytics {
 	static func tagPartsOfSpeech(in text: String) -> Dictionary<String, [Range<String.Index>]> {
 		let tagger = NLTagger(tagSchemes: [.lexicalClass])
 		tagger.string = text
-		let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace]
+		let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation]
 		
 		var result = Dictionary<String, [Range<String.Index>]>()
 		tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lexicalClass, options: options) { tag, tokenRange in

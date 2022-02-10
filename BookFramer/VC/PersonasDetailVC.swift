@@ -23,26 +23,26 @@ class PersonasDetailVC: BFViewController {
 	@IBOutlet weak var descriptionField: NSTextField!
 	@IBOutlet weak var importanceCheckbox: NSButton!
 	
-	private var _observersAdded = false
 	override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
 		tableView.delegate = self
 		tableView.dataSource = self
-		
-		if _observersAdded == false {
-			document?.notificationCenter.addObserver(self, selector: #selector(addPersona(notification:)), name: .addPersona, object: nil)
-			document?.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
-			_observersAdded = true
-		}
 
 		// Create sort descriptors
 		let descriptorName = NSSortDescriptor(key: "name", ascending: true)
 		colName.sortDescriptorPrototype = descriptorName
     }
 	
+	private var _observersAdded = false
 	override func viewDidAppear() {
 		super.viewDidAppear()
+		
+		if _observersAdded == false && document != nil {
+			document!.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
+			_observersAdded = true
+		}
+
 		updateUI()
 	}
 	

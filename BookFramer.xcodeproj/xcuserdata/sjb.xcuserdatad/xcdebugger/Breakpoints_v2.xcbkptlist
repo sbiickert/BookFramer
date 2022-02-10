@@ -30,8 +30,8 @@
             filePath = "BookFramer/VC/ChaptersDetailVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "tableView(_:acceptDrop:row:dropOperation:)"
             landmarkType = "7">
          </BreakpointContent>

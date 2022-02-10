@@ -247,9 +247,10 @@ class DocEditor {
 	
 	// MARK: Persona Editing
 	
+	static let newPersonaName = "New Character"
 	@objc func addPersona(notification: Notification) {
 		guard docVC.book != nil else { return }
-		let p = Persona(name: "New Character", description: "", aliases: [])
+		let p = Persona(name: DocEditor.newPersonaName, description: "", aliases: [])
 		var major = docVC.book!.majorPersonas
 		let minor = docVC.book!.minorPersonas
 		major.append(p)

@@ -57,7 +57,17 @@ class PersonasDetailVC: BFViewController {
 			let indexSet = IndexSet(integer: idx)
 			tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
 		}
-		retainSelectedID = nil
+		else if let personas = personas {
+			// Look for a newly-created persona
+			for (idx, p) in personas.enumerated() {
+				if p.name == DocEditor.newPersonaName {
+					let indexSet = IndexSet(integer: idx)
+					tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
+					nameField.becomeFirstResponder()
+					break
+				}
+			}
+		}
 		
 		updatePersonaForm()
 	}
@@ -115,7 +125,8 @@ class PersonasDetailVC: BFViewController {
 	}
 	
 	@IBAction func newPersona(_ sender: NSButton) {
-		addPersona(notification: Notification(name: .addPersona, object: nil, userInfo: nil))
+		retainSelectedID = nil // Want to select new character
+		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
 	
 	@IBAction func deletePersona(_ sender: Any) {
@@ -136,14 +147,6 @@ class PersonasDetailVC: BFViewController {
 	}
 	@IBAction func descriptionChanged(_ sender: NSTextField) {
 		updatePersona(at: tableView.selectedRow)
-	}
-	
-	@objc func addPersona(notification: Notification) {
-		if personas != nil && tableView.selectedRow != -1 {
-			let p = personas![tableView.selectedRow]
-			retainSelectedID = p.id
-		}
-		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
 	
 	private func updatePersona(at row: Int) {
@@ -184,6 +187,10 @@ extension PersonasDetailVC: NSTableViewDelegate {
 	}
 	
 	func tableViewSelectionDidChange(_ notification: Notification) {
+		if personas != nil && tableView.selectedRow != -1 {
+			let p = personas![tableView.selectedRow]
+			retainSelectedID = p.id
+		}
 		updatePersonaForm()
 	}
 	

@@ -24,10 +24,6 @@ class ChaptersDetailVC: BFViewController {
 		tableView.doubleAction = #selector(tableViewWasDoubleClicked)
 		tableView.registerForDraggedTypes([.tableViewIndex])
 	}
-	
-	@objc func contextChanged(notification: NSNotification) {
-		updateUI()
-	}
 
 	private var _observersAdded = false
 	override func viewDidAppear() {
@@ -35,7 +31,6 @@ class ChaptersDetailVC: BFViewController {
 		
 		if document != nil && _observersAdded == false {
 			document!.notificationCenter.addObserver(self, selector: #selector(search(notification:)), name: .search, object: nil)
-			document!.notificationCenter.addObserver(self, selector: #selector(contextChanged(notification:)), name: .contextDidChange, object: nil)
 			_observersAdded = true
 		}
 		

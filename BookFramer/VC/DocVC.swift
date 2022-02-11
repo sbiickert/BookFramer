@@ -279,7 +279,13 @@ class DocVC: NSTabViewController, BFContextProvider {
 		}
 		// Using NSTask for now, would like to change to directly automating BBEdit
 		let bbEdit = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.bbedit) ?? ""
-		assert(FileManager.default.fileExists(atPath: bbEdit))
+		if FileManager.default.fileExists(atPath: bbEdit) == false {
+			let alert = NSAlert()
+			alert.messageText = "Path to BBEdit not set"
+			alert.informativeText = "Open the Preferences dialog and input the path to the BBEdit command line tool."
+			alert.runModal()
+			return
+		}
 		let bbEditURL = URL(fileURLWithPath: bbEdit)
 		
 		if let fileURL = document!.fileURL {
@@ -314,7 +320,23 @@ class DocVC: NSTabViewController, BFContextProvider {
 		guard book != nil else { return }
 
 		let pandoc = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.pandoc) ?? ""
-		assert(FileManager.default.fileExists(atPath: pandoc))
+		if FileManager.default.fileExists(atPath: pandoc) == false {
+			let alert = NSAlert()
+			alert.messageText = "Path to pandoc not set"
+			alert.informativeText = "Open the Preferences dialog and input the path to the pandoc command line tool."
+			alert.runModal()
+			return
+		}
+
+		let pdflatex = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.pdflatex) ?? ""
+		if FileManager.default.fileExists(atPath: pdflatex) == false {
+			let alert = NSAlert()
+			alert.messageText = "Path to pdflatex not set"
+			alert.informativeText = "Open the Preferences dialog and input the path to the pdflatex command line tool."
+			alert.runModal()
+			return
+		}
+		
 		let pandocURL = URL(fileURLWithPath: pandoc)
 		
 		// Compile the file to markdown in a temp dir
@@ -347,7 +369,6 @@ class DocVC: NSTabViewController, BFContextProvider {
 			if clicked != NSApplication.ModalResponse.OK { return }
 			
 			if let outputURL = panel.url {
-				let pdflatex = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.pdflatex) ?? ""
 				let outputFile = outputURL.path
 				var args = [String]()
 				args.append("-o\(outputFile)")

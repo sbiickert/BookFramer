@@ -45,9 +45,11 @@ class ChapterDetailVC: BFViewController {
 	
 	private func modifyChapter() {
 		if var ch = context?.selectedChapter {
-			ch.title = titleField.stringValue
-			ch.subtitle = subtitleField.stringValue
-			document?.notificationCenter.post(name: .modifyChapter, object: ch)
+			if ch.title != titleField.stringValue || ch.subtitle != subtitleField.stringValue {
+				ch.title = titleField.stringValue
+				ch.subtitle = subtitleField.stringValue
+				document?.notificationCenter.post(name: .modifyChapter, object: ch)
+			}
 		}
 	}
 

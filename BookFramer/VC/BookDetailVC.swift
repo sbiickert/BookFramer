@@ -70,10 +70,17 @@ class BookDetailVC: BFViewController {
 								keywords: [])
 		header.joinedKeywords = keywordField.stringValue
 		
+		let currentInfo = DocEditor.BookInfo(title: context?.book?.title ?? "",
+											subtitle: context?.book?.subtitle ?? "",
+											 header: context?.book?.headerInfo ?? BookHeader())
+		
 		let info = DocEditor.BookInfo(title: titleField.stringValue,
 									  subtitle: subtitleField.stringValue,
 									  header: header)
-		document?.notificationCenter.post(name: .modifyBookInfo, object: info)
+		
+		if currentInfo != info {
+			document?.notificationCenter.post(name: .modifyBookInfo, object: info)
+		}
 	}
 	
 	/**

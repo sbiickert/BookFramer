@@ -64,7 +64,7 @@ class DocEditor {
 
 	// MARK: Book Editing
 	
-	public struct BookInfo {
+	public struct BookInfo: Equatable {
 		let title: String
 		let subtitle: String
 		let header: BookHeader

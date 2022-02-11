@@ -9,6 +9,11 @@ import Cocoa
 
 class DocVC: NSTabViewController, BFContextProvider {
 	var editor: DocEditor
+	
+	enum TabIndex: Int {
+		case manage = 0
+		case preview = 1
+	}
 
 	
 	required init?(coder: NSCoder) {
@@ -196,6 +201,14 @@ class DocVC: NSTabViewController, BFContextProvider {
 	
 	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
 		document?.notificationCenter.post(name: .openExternal, object: nil)
+	}
+	
+	@IBAction func showManageViewMenuHandler(_ sender: Any) {
+		tabView.selectTabViewItem(at: DocVC.TabIndex.manage.rawValue)
+	}
+	
+	@IBAction func showPreviewMenuHandler(_ sender: Any) {
+		tabView.selectTabViewItem(at: DocVC.TabIndex.preview.rawValue)
 	}
 
 	// MARK: Search field

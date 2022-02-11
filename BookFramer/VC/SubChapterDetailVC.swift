@@ -96,14 +96,19 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 
     private func modifySubChapter() {
 		if var sub = context?.selectedSubChapter {
-			sub.headerInfo.description = descriptionField.stringValue
-			sub.headerInfo.location = locationField.stringValue
-			if let menuItem = statusPopupMenu.selectedItem {
-				sub.headerInfo.status = EditStatus.init(rawValue: menuItem.title)!
+			let newStatus = EditStatus.init(rawValue: statusPopupMenu.selectedItem?.title ?? "") ?? EditStatus.multiple
+			let newPOV = povPopupMenu.selectedItem?.title ?? ""
+			if sub.headerInfo.description != descriptionField.stringValue ||
+				sub.headerInfo.location != locationField.stringValue ||
+				sub.headerInfo.status != newStatus ||
+				sub.headerInfo.pov != newPOV
+			{
+				sub.headerInfo.description = descriptionField.stringValue
+				sub.headerInfo.location = locationField.stringValue
+				sub.headerInfo.status = newStatus
+				sub.headerInfo.pov = newPOV				
+				document?.notificationCenter.post(name: .modifySubChapter, object: sub)
 			}
-			sub.headerInfo.pov = povPopupMenu.selectedItem?.title ?? ""
-			
-			document?.notificationCenter.post(name: .modifySubChapter, object: sub)
 		}
     }
 	

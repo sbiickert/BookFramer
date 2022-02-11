@@ -651,13 +651,23 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
                                     <items>
-                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="snW-S8-Cw5">
+                                        <menuItem title="Book Management" keyEquivalent="1" id="B2l-vE-z5W">
+                                            <connections>
+                                                <action selector="showManageViewMenuHandler:" target="Ady-hI-5gd" id="VlB-Ea-KYu"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Preview" keyEquivalent="2" id="Rxp-6B-XEv">
+                                            <connections>
+                                                <action selector="showPreviewMenuHandler:" target="Ady-hI-5gd" id="Iga-7D-PmB"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show Toolbar" hidden="YES" enabled="NO" keyEquivalent="t" id="snW-S8-Cw5">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="BXY-wc-z0C"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
+                                        <menuItem title="Customize Toolbar…" hidden="YES" enabled="NO" id="1UK-8n-QPP">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="runToolbarCustomizationPalette:" target="Ady-hI-5gd" id="pQI-g3-MTW"/>

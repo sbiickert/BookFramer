@@ -10,7 +10,7 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+	var preferencesController: NSWindowController?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
@@ -23,6 +23,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
+	
+	@IBAction func showPreferences(_ sender: Any) {
+		if preferencesController == nil {
+			let storyboard = NSStoryboard(name: NSStoryboard.Name("Preferences"), bundle: nil)
+			preferencesController = storyboard.instantiateInitialController() as? NSWindowController
+		}
+		if preferencesController != nil {
+			preferencesController!.showWindow(sender)
+		}
+	}
 	
 	@IBAction func importMarkdown(_ sender: Any) {
 		NotificationCenter.default.post(name: .importMarkdown, object: nil)

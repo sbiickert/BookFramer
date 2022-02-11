@@ -278,7 +278,7 @@ class DocVC: NSTabViewController, BFContextProvider {
 			return
 		}
 		// Using NSTask for now, would like to change to directly automating BBEdit
-		let bbEdit = "/usr/local/bin/bbedit"
+		let bbEdit = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.bbedit) ?? ""
 		assert(FileManager.default.fileExists(atPath: bbEdit))
 		let bbEditURL = URL(fileURLWithPath: bbEdit)
 		
@@ -313,7 +313,7 @@ class DocVC: NSTabViewController, BFContextProvider {
 		guard document != nil else { return }
 		guard book != nil else { return }
 
-		let pandoc = "/opt/homebrew/bin/pandoc"
+		let pandoc = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.pandoc) ?? ""
 		assert(FileManager.default.fileExists(atPath: pandoc))
 		let pandocURL = URL(fileURLWithPath: pandoc)
 		
@@ -347,10 +347,11 @@ class DocVC: NSTabViewController, BFContextProvider {
 			if clicked != NSApplication.ModalResponse.OK { return }
 			
 			if let outputURL = panel.url {
+				let pdflatex = UserDefaults.standard.string(forKey: PrefsVC.DefaultNames.pdflatex) ?? ""
 				let outputFile = outputURL.path
 				var args = [String]()
 				args.append("-o\(outputFile)")
-				args.append("--pdf-engine=/Library/TeX/texbin/pdflatex")
+				args.append("--pdf-engine=\(pdflatex)")
 				args.append(fileURL.path)
 				let stdout = FileHandle.standardOutput
 				task.standardOutput = stdout

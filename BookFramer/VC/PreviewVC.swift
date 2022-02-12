@@ -132,7 +132,7 @@ class PreviewVC: BFViewController {
 						let adverbs = BookAnalytics.tagAdverbs(in: plain)
 						let sentences = BookAnalytics.tokens(in: plain, unit: .sentence)
 						for sentence in sentences {
-							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: plain)
+							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: sentence)
 							let difficulty = BookAnalytics.classifyFRES(score: fres)
 							let passiveVoiceRange = BookAnalytics.tagPassiveVoice(in: sentence)
 							

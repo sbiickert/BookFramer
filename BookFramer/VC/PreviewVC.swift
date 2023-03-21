@@ -20,7 +20,7 @@ class PreviewVC: BFViewController {
         // Do view setup here.
 		//textView.usesInspectorBar = false
 		
-		textView.font = NSFont(name: "Times New Roman", size: 16)
+		textView.font = NSFont(name: "Times New Roman", size: 18)
 		
 		let titlePS = NSMutableParagraphStyle()
 		titlePS.paragraphSpacing = 16.0

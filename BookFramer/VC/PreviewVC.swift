@@ -12,8 +12,9 @@ class PreviewVC: BFViewController {
 
 	var titleAttributes: AttributeContainer!
 	var subtitleAttributes: AttributeContainer!
-	var paragraphAttributes: AttributeContainer!
-	
+    var paragraphAttributes: AttributeContainer!
+    var codeAttributes: AttributeContainer!
+
 	private var _observersAdded = false
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,14 +36,22 @@ class PreviewVC: BFViewController {
 		subtitleAttributes.font = textView.font?.bolded()?.resized(to: 18)
 		subtitleAttributes.foregroundColor = NSColor.controlTextColor
 		subtitleAttributes.paragraphStyle = subtitlePS
-		
-		let ps = NSMutableParagraphStyle()
-		ps.firstLineHeadIndent = 32.0
-		ps.paragraphSpacing = 16.0
-		paragraphAttributes = AttributeContainer()
-		paragraphAttributes.font = textView.font
-		paragraphAttributes.foregroundColor = NSColor.controlTextColor
-		paragraphAttributes.paragraphStyle = ps
+        
+        let ps = NSMutableParagraphStyle()
+        ps.firstLineHeadIndent = 32.0
+        ps.paragraphSpacing = 16.0
+        paragraphAttributes = AttributeContainer()
+        paragraphAttributes.font = textView.font
+        paragraphAttributes.foregroundColor = NSColor.controlTextColor
+        paragraphAttributes.paragraphStyle = ps
+        
+        let codeFont = NSFont(name: "Monaco", size: 13)
+        let codePS = NSMutableParagraphStyle()
+        codePS.paragraphSpacing = 12.0
+        codeAttributes = AttributeContainer()
+        codeAttributes.font = codeFont
+        codeAttributes.foregroundColor = NSColor.controlTextColor
+        codeAttributes.paragraphStyle = codePS
 	}
 	
 	override func viewDidAppear() {
@@ -55,6 +64,7 @@ class PreviewVC: BFViewController {
 			_observersAdded = true
 		}
 
+        needsCompile = true
 		updateUI()
 	}
 	
@@ -77,7 +87,7 @@ class PreviewVC: BFViewController {
 		if #available(macOS 10.14, *) {
 			textView.appearance = NSAppearance.currentDrawing()
 		}
-		if view.window != nil && needsCompile {
+        if needsCompile { //}&& view.window != nil  {
 			compilePreview()
 			needsCompile = false
 		}
@@ -109,65 +119,72 @@ class PreviewVC: BFViewController {
 				if part.starts(with: "## ") {
 					let aString = AttributedString(part.dropFirst(3), attributes: titleAttributes)
 					aStrings.append(NSAttributedString(aString))
+                    continue
 				}
-				else if part.starts(with: "### ") {
+				if part.starts(with: "### ") {
 					let aString = AttributedString(part.dropFirst(4), attributes: subtitleAttributes)
 					aStrings.append(NSAttributedString(aString))
+                    continue
 				}
-				else if part.starts(with: "***") {
+				if part.starts(with: "***") {
 					let aString = AttributedString(part, attributes: paragraphAttributes)
 					aStrings.append(NSAttributedString(aString))
+                    continue
 				}
-				else {
-					do {
-						var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))
-						// To not eliminate italics, can't just setAttributes:
-						aString.mergeAttributes(paragraphAttributes)
+                if part.starts(with: "`") {
+                    var plain = part.replacingOccurrences(of: "`", with: "")
+                    let aString = AttributedString(plain, attributes: codeAttributes)
+                    aStrings.append(NSAttributedString(aString))
+                    continue
+                }
+                do {
+                    var aString = try AttributedString(markdown: part, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnly))
+                    // To not eliminate italics, can't just setAttributes:
+                    aString.mergeAttributes(paragraphAttributes)
 
-						// Need to remove _ and * from part, b/c the AttributedString lost them
-						var plain = part.replacingOccurrences(of: "*", with: "")
-						plain = plain.replacingOccurrences(of: "_", with: "")
-						
-						// Grammar highlighting
-						let adverbs = BookAnalytics.tagAdverbs(in: plain)
-						let sentences = BookAnalytics.tokens(in: plain, unit: .sentence)
-						for sentence in sentences {
-							let fres = BookAnalytics.calculateFleschReadingEaseScore(text: sentence)
-							let difficulty = BookAnalytics.classifyFRES(score: fres)
-							let passiveVoiceRange = BookAnalytics.tagPassiveVoice(in: sentence)
-							
-							if let sRange = aString.range(of: sentence) {
-								if difficulty == .veryHard {
-									aString[sRange].backgroundColor = HighlightType.veryHard.color
-								}
-								else if difficulty == .hard {
-									aString[sRange].backgroundColor = HighlightType.hard.color
-								}
-								if let passiveVoiceRange = passiveVoiceRange {
-									// passiveVoiceRange is a range in sentence. Need to translate to aString.
-									let lower = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.lowerBound.utf16Offset(in: sentence))
-									let upper = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.upperBound.utf16Offset(in: sentence))
-									let range = lower..<upper
-									aString[range].backgroundColor = HighlightType.passive.color
-								}
-								for adverb in adverbs {
-									// adverb is a range in plain. Need to translate to aString.
-									//print("\(plain[adverb])")
-									var offset = adverb.lowerBound.utf16Offset(in: plain)
-									let lower = aString.index(aString.startIndex, offsetByCharacters: offset)
-									offset = adverb.upperBound.utf16Offset(in: plain)
-									//offset = min(offset, aString.characters.count)
-									let upper = aString.index(aString.startIndex, offsetByCharacters: offset)
-									let range = lower..<upper
-									aString[range].backgroundColor = HighlightType.adverb.color
-								}
-							}
-						}
-						aStrings.append(NSAttributedString(aString))
-					} catch {
-						aStrings.append(NSAttributedString(string: "Error compiling: \(error)"))
-					}
-				}
+                    // Need to remove _ and * from part, b/c the AttributedString lost them
+                    var plain = part.replacingOccurrences(of: "*", with: "")
+                    plain = plain.replacingOccurrences(of: "_", with: "")
+                    
+                    // Grammar highlighting
+                    let adverbs = BookAnalytics.tagAdverbs(in: plain)
+                    let sentences = BookAnalytics.tokens(in: plain, unit: .sentence)
+                    for sentence in sentences {
+                        let fres = BookAnalytics.calculateFleschReadingEaseScore(text: sentence)
+                        let difficulty = BookAnalytics.classifyFRES(score: fres)
+                        let passiveVoiceRange = BookAnalytics.tagPassiveVoice(in: sentence)
+                        
+                        if let sRange = aString.range(of: sentence) {
+                            if difficulty == .veryHard {
+                                aString[sRange].backgroundColor = HighlightType.veryHard.color
+                            }
+                            else if difficulty == .hard {
+                                aString[sRange].backgroundColor = HighlightType.hard.color
+                            }
+                            if let passiveVoiceRange = passiveVoiceRange {
+                                // passiveVoiceRange is a range in sentence. Need to translate to aString.
+                                let lower = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.lowerBound.utf16Offset(in: sentence))
+                                let upper = aString.index(sRange.lowerBound, offsetByCharacters: passiveVoiceRange.upperBound.utf16Offset(in: sentence))
+                                let range = lower..<upper
+                                aString[range].backgroundColor = HighlightType.passive.color
+                            }
+                            for adverb in adverbs {
+                                // adverb is a range in plain. Need to translate to aString.
+                                //print("\(plain[adverb])")
+                                var offset = adverb.lowerBound.utf16Offset(in: plain)
+                                let lower = aString.index(aString.startIndex, offsetByCharacters: offset)
+                                offset = adverb.upperBound.utf16Offset(in: plain)
+                                //offset = min(offset, aString.characters.count)
+                                let upper = aString.index(aString.startIndex, offsetByCharacters: offset)
+                                let range = lower..<upper
+                                aString[range].backgroundColor = HighlightType.adverb.color
+                            }
+                        }
+                    }
+                    aStrings.append(NSAttributedString(aString))
+                } catch {
+                    aStrings.append(NSAttributedString(string: "Error compiling: \(error)"))
+                }
 			}
 			
 			let compiled = NSMutableAttributedString("\n")

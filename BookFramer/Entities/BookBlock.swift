@@ -84,6 +84,10 @@ struct BookBlock {
 				else if let strong = child as? Strong {
 					content.append("**\(strong.plainText)**")
 				}
+                else if let code = child as? InlineCode {
+                    //content.append("`\(code.plainText)`")
+                    content.append(code.plainText)
+                }
 			}
 			if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
 				parsed.append(BookBlock(type: .paragraph, content: content))
@@ -101,6 +105,13 @@ struct BookBlock {
 			block.trimMarkers()
 			parsed.append(block)
 		}
+//
+//        mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> () {
+//            // Text to be rendered verbatim, in monospaced font
+//            var block = BookBlock(type: .code, content: codeBlock.code)
+//            block.trimMarkers()
+//            parsed.append(block)
+//        }
 	}
 	
 	var type: BookBlockType = .unknown

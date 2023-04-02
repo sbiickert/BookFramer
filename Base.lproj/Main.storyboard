@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
         <capability name="Search Toolbar Item" minToolsVersion="12.0" minSystemVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -369,14 +368,13 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="QTQ-xo-WG7"/>
-                                        <menuItem title="New Chapter" id="Gra-fB-lv3">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="New Chapter" keyEquivalent="N" id="Gra-fB-lv3">
                                             <connections>
                                                 <action selector="newChapterMenuHandler:" target="Ady-hI-5gd" id="LfC-Lc-zWA"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="New Scene" id="E19-VS-CFg">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="New Scene" keyEquivalent="n" id="E19-VS-CFg">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="newSceneMenuHandler:" target="Ady-hI-5gd" id="Thw-aT-Wj1"/>
                                             </connections>
@@ -828,7 +826,7 @@ CA
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="768" height="367"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <toolbar key="toolbar" implicitIdentifier="BFFD1C2C-1F2F-49C0-B389-48EEDB521D50" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="small" id="xiM-aU-9Qo">
+                        <toolbar key="toolbar" implicitIdentifier="BFFD1C2C-1F2F-49C0-B389-48EEDB521D50" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="xiM-aU-9Qo">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="RxM-zi-jtu"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="PGn-OE-Cn4"/>
@@ -1392,7 +1390,7 @@ CA
                                 </connections>
                             </popUpButton>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UPF-8U-XfJ">
-                                <rect key="frame" x="287" y="32" width="20" height="26"/>
+                                <rect key="frame" x="287" y="30" width="20" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="9fF-c1-tuB"/>
                                     <constraint firstAttribute="width" constant="20" id="dhl-Yz-Q19"/>
@@ -1981,7 +1979,7 @@ Roimata Szőke
         </scene>
     </scenes>
     <resources>
-        <image name="NSActionTemplate" width="15" height="15"/>
+        <image name="NSActionTemplate" width="20" height="20"/>
         <image name="book" catalog="system" width="18" height="14"/>
         <image name="minus" catalog="system" width="14" height="4"/>
         <image name="plus" catalog="system" width="14" height="13"/>

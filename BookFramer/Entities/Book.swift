@@ -265,7 +265,7 @@ class Book: Equatable, ObservableObject {
 	var majorPersonas: [Persona] {
 		get {
 			if let personas = headerInfo.personas[Persona.MAJOR] {
-				return personas
+                return personas.sorted { $0.name < $1.name }
 			}
 			return [Persona]()
 		}
@@ -284,7 +284,7 @@ class Book: Equatable, ObservableObject {
     var minorPersonas: [Persona] {
 		get {
 			if let personas = headerInfo.personas[Persona.MINOR] {
-				return personas
+                return personas.sorted { $0.name < $1.name }
 			}
 			return [Persona]()
 		}
@@ -303,12 +303,8 @@ class Book: Equatable, ObservableObject {
     var allPersonas: [Persona] {
 		get {
 			var result = [Persona]()
-			if let personas = headerInfo.personas[Persona.MAJOR] {
-				result.append(contentsOf: personas)
-			}
-			if let personas = headerInfo.personas[Persona.MINOR] {
-				result.append(contentsOf: personas)
-			}
+            result.append(contentsOf: majorPersonas)
+            result.append(contentsOf: minorPersonas)
 			return result
 		}
 	}

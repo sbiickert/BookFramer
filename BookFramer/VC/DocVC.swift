@@ -198,7 +198,27 @@ class DocVC: NSTabViewController, BFContextProvider {
 		// Add a new persona
 		document?.notificationCenter.post(name: .addPersona, object: nil)
 	}
-	
+    
+    @IBAction func sceneStatus1MenuHandler(_ sender: AnyObject) {
+        // Change the status of the selected scene
+        updateSubChapterStatus(EditStatus.rough)
+    }
+    
+    @IBAction func sceneStatus2MenuHandler(_ sender: AnyObject) {
+        // Change the status of the selected scene
+        updateSubChapterStatus(EditStatus.inProgress)
+    }
+    
+    @IBAction func sceneStatus3MenuHandler(_ sender: AnyObject) {
+        // Change the status of the selected scene
+        updateSubChapterStatus(EditStatus.good)
+    }
+    
+    @IBAction func sceneStatus4MenuHandler(_ sender: AnyObject) {
+        // Change the status of the selected scene
+        updateSubChapterStatus(EditStatus.finished)
+    }
+
 	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
 		document?.notificationCenter.post(name: .openExternal, object: nil)
 	}
@@ -210,6 +230,14 @@ class DocVC: NSTabViewController, BFContextProvider {
 	@IBAction func showPreviewMenuHandler(_ sender: Any) {
 		tabView.selectTabViewItem(at: DocVC.TabIndex.preview.rawValue)
 	}
+    
+    // MARK: Update scene status
+    private func updateSubChapterStatus(_ status: EditStatus) {
+        if var currentSelectedSubChapter = selectedSubChapter {
+            currentSelectedSubChapter.headerInfo.status = status
+            document?.notificationCenter.post(name: .modifySubChapter, object: currentSelectedSubChapter)
+        }
+    }
 
 	// MARK: Search field
 	@objc func searchFieldAction(sender: AnyObject) {

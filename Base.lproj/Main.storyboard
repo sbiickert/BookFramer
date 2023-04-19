@@ -385,6 +385,34 @@ CA
                                                 <action selector="newPersonaMenuHandler:" target="Ady-hI-5gd" id="L3t-i4-aE8"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="ML4-x4-lKR"/>
+                                        <menuItem title="Scene Status" id="Bwm-zw-xRw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Scene Status" id="42J-cS-eUd">
+                                                <items>
+                                                    <menuItem title="Rough" keyEquivalent="1" id="6hD-pH-TDU">
+                                                        <connections>
+                                                            <action selector="sceneStatus1MenuHandler:" target="Ady-hI-5gd" id="PBg-8X-WeH"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="In Progress" keyEquivalent="2" id="6vY-PK-vbO">
+                                                        <connections>
+                                                            <action selector="sceneStatus2MenuHandler:" target="Ady-hI-5gd" id="Sv9-by-ylC"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Good" keyEquivalent="3" id="aa2-bK-mWy">
+                                                        <connections>
+                                                            <action selector="sceneStatus3MenuHandler:" target="Ady-hI-5gd" id="xKI-MZ-MPa"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Finished" keyEquivalent="4" id="Rs1-2V-Af8">
+                                                        <connections>
+                                                            <action selector="sceneStatus4MenuHandler:" target="Ady-hI-5gd" id="ZEs-K5-NUJ"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

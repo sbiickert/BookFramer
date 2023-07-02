@@ -5,7 +5,7 @@
 //  Created by Simon Biickert on 2022-02-02.
 //
 
-import Foundation
+import AppKit
 
 class DocEditor {
 	private var docVC: DocVC!
@@ -297,6 +297,14 @@ class DocEditor {
 	@objc func deletePersona(notification: Notification) {
 		guard docVC.book != nil else { return }
 		if let p = notification.object as? Persona {
+			let alert = NSAlert()
+			alert.addButton(withTitle: "OK")
+			alert.addButton(withTitle: "Cancel")
+			alert.alertStyle = .warning
+			alert.messageText = "Delete character '\(p.name)'?"
+			let result = alert.runModal()
+			if result != .OK { return }
+			
 			// Using filter to remove the persona. Simple!
 			let major = docVC.book!.majorPersonas.filter({$0.id != p.id})
 			let minor = docVC.book!.minorPersonas.filter({$0.id != p.id})

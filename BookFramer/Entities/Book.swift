@@ -118,8 +118,10 @@ class Book: Equatable, ObservableObject {
 				}
 				currentChapter = Chapter()
 				let titleSubtitle = block.content.split(separator: ":")
-				currentChapter?.title = String(titleSubtitle[0])
-				currentChapter?.subtitle = titleSubtitle.count > 1 ? String(titleSubtitle[1]) : ""
+				if !titleSubtitle.isEmpty {
+					currentChapter?.title = String(titleSubtitle[0])
+					currentChapter?.subtitle = titleSubtitle.count > 1 ? String(titleSubtitle[1]) : ""
+				}
 			case .header:
 				if prevBlockType == .title {
 					// This is a book header

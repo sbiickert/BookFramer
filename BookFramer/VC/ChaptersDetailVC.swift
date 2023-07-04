@@ -88,6 +88,21 @@ class ChaptersDetailVC: BFViewController {
 		}
 	}
 	
+	override func bookEdited(notification: Notification) {
+		super.bookEdited(notification: notification)
+		// Select the correct chapter/subchapter here
+		if let obj = notification.object as? IDable {
+			selectTableViewRow(obj)
+		}
+	}
+	
+	private func selectTableViewRow(_ id: IDable) {
+		if let row = indexOf(obj: id) {
+			let indexSet = IndexSet(integer: row)
+			tableView.selectRowIndexes(indexSet, byExtendingSelection: false)
+			tableView.scrollRowToVisible(row)
+		}
+	}
 }
 
 extension ChaptersDetailVC: NSTableViewDelegate {
@@ -250,6 +265,11 @@ extension ChaptersDetailVC: NSTableViewDelegate {
 			}
 			// Send the edit to DocEditor
 			document?.notificationCenter.post(name: .modifyChapters, object: book.chapters)
+			
+			// Re-select the row in the tableview
+			if let draggedIDable = draggedObject as? IDable {
+				selectTableViewRow(draggedIDable)
+			}
 		}
 		return true
 	}
@@ -365,6 +385,26 @@ extension ChaptersDetailVC: NSTableViewDataSource {
 		}
 		
 		return cellView
+	}
+	
+	private func indexOf(obj: IDable) -> Int? {
+		if searchedObjects != nil {
+			for (idx, searched) in searchedObjects!.enumerated() {
+				if let searchedIDable = searched as? IDable,
+				   obj.id == searchedIDable.id {
+					return idx + 1 // Book is index 0
+				}
+			}
+		}
+		else if let b = context?.book {
+			for idx in 0..<b.count {
+				if let chSub = b[idx] as? IDable,
+				   obj.id == chSub.id {
+					return idx + 1 // Book is index 0
+				}
+			}
+		}
+		return nil
 	}
 	
 	private var allObjects: [Any] {

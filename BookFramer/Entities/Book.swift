@@ -461,6 +461,8 @@ class Book: Equatable, ObservableObject {
 			"\(self.subtitle)",
 			"©\(self.headerInfo.year), \(self.headerInfo.author)"]
 		for chapter in self.chapters {
+			markdownContent.append("\\newpage")
+			markdownContent.append("## \(chapter.number)")
 			markdownContent.append(contentsOf: chapter.compile())
 		}
 

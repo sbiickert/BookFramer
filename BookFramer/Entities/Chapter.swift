@@ -154,7 +154,6 @@ struct Chapter: Equatable, Hashable, IDable {
 	*/
 	func compile() -> [String] {
 		var markdownStrings = [String]()
-		markdownStrings.append("\\newpage")
 		markdownStrings.append("## \(title)")
 		if subtitle.trimmingCharacters(in: .whitespaces).count > 0 {
 			markdownStrings.append("### \(subtitle)")

@@ -8,7 +8,7 @@
 import Cocoa
 
 class BookDocument: NSDocument {
-	weak var contentViewController: DocVC?
+	weak var contentViewController: ManageVC?
 	let notificationCenter = NotificationCenter()
 	
 	var book: Book {
@@ -39,7 +39,7 @@ class BookDocument: NSDocument {
 		self.addWindowController(windowController)
 		
 		// Set the view controller's represented object as your document.
-		if let contentVC = windowController.contentViewController as? DocVC {
+		if let contentVC = windowController.contentViewController as? ManageVC {
 			contentVC.representedObject = book
 			contentViewController = contentVC
 		}

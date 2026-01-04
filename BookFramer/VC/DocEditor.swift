@@ -8,13 +8,13 @@
 import AppKit
 
 class DocEditor {
-	private var docVC: DocVC!
+	private var docVC: ManageVC!
 	private var _observersAdded = false
 	
 	init() {
 	}
 	
-	func registerDocumentVC(vc: DocVC) {
+	func registerDocumentVC(vc: ManageVC) {
 		self.docVC = vc
 		addObservers()
 	}

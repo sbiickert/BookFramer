@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import UniformTypeIdentifiers
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -44,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		panel.canChooseFiles = true
 		panel.canChooseDirectories = false
 		panel.allowsMultipleSelection = false
-		panel.allowedFileTypes = ["md"]
+		panel.allowedContentTypes = [.markdown]
 		
 		let clicked = panel.runModal()
 		if clicked != NSApplication.ModalResponse.OK { return }
@@ -75,3 +76,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 }
 
+extension UTType {
+	static var markdown: UTType {
+		return UTType(importedAs: "public.markdown")
+	}
+}

@@ -406,9 +406,9 @@ class ManageVC: NSViewController, BFContextProvider {
 				args.append("-o\(outputFile)")
 				args.append("--pdf-engine=\(pdflatex)")
 				args.append(fileURL.path)
-				let stdout = FileHandle.standardOutput
-				task.standardOutput = stdout
-				print(args)
+//				let stdout = FileHandle.standardOutput
+//				task.standardOutput = stdout
+//				print(args)
 				
 				task.execute(withArguments: args) {error in
 					if let error = error {

@@ -28,7 +28,7 @@ class BookDocument: NSDocument {
 		super.init()
 	}
 	
-	override class var autosavesInPlace: Bool {
+	nonisolated override class var autosavesInPlace: Bool {
 		return false
 	}
 	
@@ -45,16 +45,21 @@ class BookDocument: NSDocument {
 		}
 	}
 	
-	override var isEntireFileLoaded: Bool {
+	nonisolated override var isEntireFileLoaded: Bool {
 		return true
 	}
 	
-	override func read(from fileWrapper: FileWrapper, ofType typeName: String) throws {
+	nonisolated override func read(from fileWrapper: FileWrapper, ofType typeName: String) throws {
 		guard let data = fileWrapper.regularFileContents,
 			  let string = String(data: data, encoding: .utf8) else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
-		book = try Book(fromBFD: string)
+		let parsed = try Book(fromBFD: string)
+		// NSDocument reads on the main thread unless canConcurrentlyReadDocuments(ofType:)
+		// returns true, which this class doesn't override. Swift traps here if that ever changes.
+		MainActor.assumeIsolated {
+			book = parsed
+		}
 	}
 	
 	override func fileWrapper(ofType typeName: String) throws -> FileWrapper {
@@ -65,32 +70,34 @@ class BookDocument: NSDocument {
 	
 	// MARK: Monitoring for external changes
 	
-	override func presentedItemDidChange() {
+	/// Called on NSDocument's file presenter queue, not the main thread, so it only hands off to the main actor
+	nonisolated override func presentedItemDidChange() {
+		Task { @MainActor in
+			self.handleExternalChange()
+		}
+	}
+
+	private func handleExternalChange() {
 		guard fileContentsDidChange else {
 			return
 		}
 		if isDocumentEdited {
-			// Let the user know it happened. Would like to
-			DispatchQueue.main.async {
-				let alert = NSAlert()
-				alert.messageText = "File Changed"
-				alert.informativeText = "Book \(self.book.title) was edited outside BookFramer."
-				alert.addButton(withTitle: "Reload")
-				alert.addButton(withTitle: "Ignore")
-				alert.beginSheetModal(for: self.windowForSheet!) { response in
-					if response == .alertFirstButtonReturn {
-						self.reloadFromFile()
-					}
+			// Let the user know it happened
+			let alert = NSAlert()
+			alert.messageText = "File Changed"
+			alert.informativeText = "Book \(book.title) was edited outside BookFramer."
+			alert.addButton(withTitle: "Reload")
+			alert.addButton(withTitle: "Ignore")
+			guard let window = windowForSheet else { return }
+			alert.beginSheetModal(for: window) { response in
+				if response == .alertFirstButtonReturn {
+					self.reloadFromFile()
 				}
 			}
 		}
 		else {
-			DispatchQueue.main.async {
-				self.reloadFromFile()
-			}
-			return
+			reloadFromFile()
 		}
-
 	}
 
 	private func reloadFromFile() {

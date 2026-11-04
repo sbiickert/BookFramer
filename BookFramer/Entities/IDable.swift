@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol IDable {
+nonisolated protocol IDable {
     var id: String { get }
 }

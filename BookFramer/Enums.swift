@@ -7,14 +7,14 @@
 
 import AppKit
 
-public enum SBSError: Error {
+nonisolated public enum SBSError: Error {
 	case invalidBookHeader
 	case invalidSubChapterHeader
 	case fileNotFound
 	case cannotEncodeHeader
 }
 
-public enum Genre: String, Codable, CaseIterable {
+nonisolated public enum Genre: String, Codable, CaseIterable {
     case biography = "Biography"
     case detective = "Detective"
     case dystopia = "Dystopia"
@@ -32,7 +32,7 @@ public enum Genre: String, Codable, CaseIterable {
 }
 
 
-enum EditStatus: String, Codable {
+nonisolated enum EditStatus: String, Codable {
 	case rough = "Rough"
 	case inProgress = "In Progress"
 	case good = "Good"

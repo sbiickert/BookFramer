@@ -8,7 +8,7 @@
 import XCTest
 @testable import BookFramer
 
-class BookFramerTests: XCTestCase {
+nonisolated class BookFramerTests: XCTestCase {
 	let sampleText = ["NLP articles are fun. But they are awfully difficult to write. NLP is not difficult, but the articles, wow would awfully make you think of writing NLP Books!",
 					  "The red dog jumped over the red fox."]
 

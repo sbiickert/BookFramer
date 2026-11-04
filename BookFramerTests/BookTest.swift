@@ -8,7 +8,7 @@
 import XCTest
 @testable import BookFramer
 
-class BookTest: XCTestCase {
+nonisolated class BookTest: XCTestCase {
     
 	/// Root of the repository, resolved relative to this source file so fixtures work from any checkout location
 	private static let REPO_ROOT = URL(fileURLWithPath: #filePath)

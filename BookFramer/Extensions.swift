@@ -60,7 +60,7 @@ extension NSNotification.Name {
 }
 
 
-extension CaseIterable where Self: Equatable {
+nonisolated extension CaseIterable where Self: Equatable {
     var index: Self.AllCases.Index? {
         return Self.allCases.firstIndex { self == $0 }
     }

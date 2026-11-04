@@ -8,7 +8,7 @@
 import Foundation
 import NaturalLanguage
 
-struct BookAnalytics {
+nonisolated struct BookAnalytics {
 	enum Difficulty {
 		case ok
 		case hard

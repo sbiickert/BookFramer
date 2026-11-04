@@ -7,7 +7,7 @@
 
 import AppKit
 
-struct SubChapter: Equatable, Hashable, IDable {
+nonisolated struct SubChapter: Equatable, Hashable, IDable {
 	static func == (lhs: SubChapter, rhs: SubChapter) -> Bool {
 		return lhs.headerInfo == rhs.headerInfo &&
 			lhs.paragraphs == rhs.paragraphs
@@ -124,7 +124,7 @@ struct SubChapter: Equatable, Hashable, IDable {
 	}
 }
 
-struct SubChapterHeader: Codable, Equatable, Hashable {
+nonisolated struct SubChapterHeader: Codable, Equatable, Hashable {
 	var description = ""
 	var location = ""
 	var pov = ""

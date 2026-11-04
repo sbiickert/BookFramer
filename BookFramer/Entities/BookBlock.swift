@@ -8,7 +8,7 @@
 import Foundation
 import Markdown
 
-struct BookBlock {
+nonisolated struct BookBlock {
 	/**
 	 Using Apple's swift-markdown framework instead of hand-rolled.
 	 - Parameter md: the markdown novel
@@ -156,7 +156,7 @@ struct BookBlock {
 	}
 }
 
-enum BookBlockType {
+nonisolated enum BookBlockType {
 	case title
 	case chapterTitle
 	case header

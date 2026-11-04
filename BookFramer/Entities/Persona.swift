@@ -7,7 +7,7 @@
 
 import AppKit
 
-struct Persona: Codable, Equatable, Hashable, IDable {
+nonisolated struct Persona: Codable, Equatable, Hashable, IDable {
 	static func == (lhs: Persona, rhs: Persona) -> Bool {
 		return lhs.name == rhs.name &&
 			lhs.description == rhs.description &&

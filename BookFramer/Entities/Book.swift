@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Book: Equatable, ObservableObject {
+nonisolated class Book: Equatable, ObservableObject {
 	/**
 	Test for equality. Evaluates equality of title, subtitle, headerInfo and chapters.
 	*/
@@ -697,7 +697,7 @@ class Book: Equatable, ObservableObject {
 	}
 }
 
-struct BookHeader: Codable, Equatable {
+nonisolated struct BookHeader: Codable, Equatable {
 	static func == (lhs: BookHeader, rhs: BookHeader) -> Bool {
 		return lhs.author == rhs.author &&
 			lhs.year == rhs.year &&

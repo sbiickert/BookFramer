@@ -227,15 +227,7 @@ class ManageVC: NSViewController, BFContextProvider {
 	@IBAction func openInBBEditMenuHandler(_ sender: Any) {
 		document?.notificationCenter.post(name: .openExternal, object: nil)
 	}
-//	
-//	@IBAction func showManageViewMenuHandler(_ sender: Any) {
-//		tabView.selectTabViewItem(at: DocVC.TabIndex.manage.rawValue)
-//	}
-//	
-//	@IBAction func showPreviewMenuHandler(_ sender: Any) {
-//		tabView.selectTabViewItem(at: DocVC.TabIndex.preview.rawValue)
-//	}
-	
+
 	// MARK: Update scene status
 	private func updateSubChapterStatus(_ status: EditStatus) {
 		if var currentSelectedSubChapter = selectedSubChapter {

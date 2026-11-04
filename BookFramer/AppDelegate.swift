@@ -75,9 +75,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 }
-
-extension UTType {
-	static var markdown: UTType {
-		return UTType(importedAs: "public.markdown")
-	}
-}

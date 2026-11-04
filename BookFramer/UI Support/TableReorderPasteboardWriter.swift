@@ -1,5 +1,5 @@
 //
-//  class SubChapterPasteboardWriter.swift
+//  TableReorderPasteboardWriter.swift
 //  BookFramer
 //
 //  Created by Simon Biickert on 2021-09-03.

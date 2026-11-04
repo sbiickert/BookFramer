@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		37022CBB309BA23900D9FA03 /* RegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37022CBA309BA23900D9FA03 /* RegressionTests.swift */; };
 		3706D48427A1F90900F871DF /* BookAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3706D48327A1F90900F871DF /* BookAnalytics.swift */; };
 		3706D48727A201FA00F871DF /* NaturalLanguage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3706D48627A201FA00F871DF /* NaturalLanguage.framework */; platformFilter = maccatalyst; };
 		37075F8427A0B85900BD1F86 /* ManageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37075F8327A0B85900BD1F86 /* ManageVC.swift */; };
@@ -65,6 +66,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		37022CBA309BA23900D9FA03 /* RegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegressionTests.swift; sourceTree = "<group>"; };
 		3706D48327A1F90900F871DF /* BookAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAnalytics.swift; sourceTree = "<group>"; };
 		3706D48627A201FA00F871DF /* NaturalLanguage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NaturalLanguage.framework; path = System/Library/Frameworks/NaturalLanguage.framework; sourceTree = SDKROOT; };
 		37075F8327A0B85900BD1F86 /* ManageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageVC.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				37508E9927A6DB4A00ACD63A /* SubChapterTest.swift */,
 				3767835926D3E3AE00674C4A /* PersonaTest.swift */,
 				3767834126D3E33600674C4A /* Info.plist */,
+				37022CBA309BA23900D9FA03 /* RegressionTests.swift */,
 			);
 			path = BookFramerTests;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 			files = (
 				3767835D26D3E3AE00674C4A /* BookTest.swift in Sources */,
 				3767835C26D3E3AE00674C4A /* PersonaTest.swift in Sources */,
+				37022CBB309BA23900D9FA03 /* RegressionTests.swift in Sources */,
 				37508E9A27A6DB4A00ACD63A /* SubChapterTest.swift in Sources */,
 				3767834026D3E33600674C4A /* BookFramerTests.swift in Sources */,
 				3767835B26D3E3AE00674C4A /* ChapterTest.swift in Sources */,
@@ -602,6 +606,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BookFramer/BookFramer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -626,6 +631,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = BookFramer/BookFramer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -657,7 +663,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -679,7 +685,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -699,7 +705,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -719,7 +725,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.biickert.BookFramerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

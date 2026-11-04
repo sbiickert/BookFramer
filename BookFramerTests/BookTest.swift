@@ -10,9 +10,12 @@ import XCTest
 
 class BookTest: XCTestCase {
     
-	public static let PRIDE_AND_PREJUDICE = "/Users/sjb/Developer/BookFramer/Pride_And_Prejudice/book.bfd"
-	public static let MARKDOWN_SAMPLE = "/Users/sjb/Developer/BookFramer/Markdown/nano2021.md"
-	//"/Users/sjb/Projects/Mac/BookFramer/Pride_And_Prejudice/book.bfd"
+	/// Root of the repository, resolved relative to this source file so fixtures work from any checkout location
+	private static let REPO_ROOT = URL(fileURLWithPath: #filePath)
+		.deletingLastPathComponent()
+		.deletingLastPathComponent()
+	public static let PRIDE_AND_PREJUDICE = REPO_ROOT.appendingPathComponent("Pride_And_Prejudice/book.bfd").path
+	public static let MARKDOWN_SAMPLE = REPO_ROOT.appendingPathComponent("Markdown/nano2021.md").path
 	public static let SIMPLE_BOOK = """
 		# Pride and Prejudice:
 
@@ -128,7 +131,9 @@ class BookTest: XCTestCase {
 		XCTAssert(book.subtitle == "", "Expected subtitle to be '', was '\(book.subtitle)'")
 		XCTAssert(book.headerInfo.author == "Jane Austen", "Expected author to be 'Jane Austen', was '\(book.headerInfo.author)'")
 		XCTAssert(book.minorPersonas.count == 29, "Expected minor character count to be 29, was \(book.minorPersonas.count)")
-		XCTAssert(book.majorPersonas[3].aliases.count == 3, "Expected major character [3] alias count to be 3, was \(book.majorPersonas[3].aliases.count)")
+		// majorPersonas is sorted by name, so look up by name rather than index
+		let elizabeth = book.majorPersonas.first(where: { $0.name == "Miss Elizabeth Bennet" })
+		XCTAssert(elizabeth?.aliases.count == 3, "Expected Miss Elizabeth Bennet alias count to be 3, was \(elizabeth?.aliases.count ?? -1)")
 		XCTAssert(book.chapters.count == 61, "Expected chapter count to be 61, was \(book.chapters.count)")
 		XCTAssert(book.chapters[5].title == "Chapter Six", "Expected chapter[5] title to be 'Chapter Six', was \(book.chapters[5].title)")
 		XCTAssert(book.chapters[0].subchapters[0].headerInfo.status == .finished, "Expected chapter 1, scene[0] to be finished. Was \(book.chapters[0].subchapters[0].headerInfo.status)")

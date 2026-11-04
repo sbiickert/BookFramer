@@ -8,7 +8,7 @@
 import Cocoa
 import UniformTypeIdentifiers
 
-class ManageVC: NSViewController, BFContextProvider {
+class ManageVC: NSViewController, DocEditorHost {
 	var editor: DocEditor
 
 	@IBOutlet weak var chaptersContainerView: NSView!
@@ -53,6 +53,10 @@ class ManageVC: NSViewController, BFContextProvider {
 	
 	public var document: BookDocument? {
 		return self.view.window?.windowController?.document as? BookDocument
+	}
+
+	var notificationCenter: NotificationCenter? {
+		return document?.notificationCenter
 	}
 
 	var chapters: ChaptersDetailVC? {
@@ -111,7 +115,7 @@ class ManageVC: NSViewController, BFContextProvider {
 			}
 		}
 		didSet {
-			editor.registerDocumentVC(vc: self)
+			editor.register(host: self)
 			if selectedChapter == nil && selectedSubChapter == nil {
 				self.changeContext(notification: Notification(name: .changeContext, object: book, userInfo: nil))
 			}
@@ -259,12 +263,10 @@ class ManageVC: NSViewController, BFContextProvider {
 			lineNumber = book?.lineNumberFor(chapter: ch) ?? 1
 		}
 
-		// If there are unsaved changes, save them
+		// BBEdit must open the saved file, so save first if needed and open only once the save finishes
 		if document!.fileURL == nil {
-			// This document has not been saved
-			document!.save(self)
-			if document!.fileURL == nil { return }
-			openInBBEdit(to: lineNumber)
+			// This document has not been saved: save(withDelegate:) presents the save panel
+			saveThenOpenInBBEdit(to: lineNumber)
 		}
 		else if document!.isDocumentEdited {
 			// Prompt for user to confirm save
@@ -275,14 +277,30 @@ class ManageVC: NSViewController, BFContextProvider {
 			alert.addButton(withTitle: "Cancel")
 			alert.beginSheetModal(for: self.view.window!) { response in
 				if response == .alertFirstButtonReturn {
-					DispatchQueue.main.async {
-						self.document!.save(self)
-						self.openInBBEdit(to: lineNumber)
-					}
+					self.saveThenOpenInBBEdit(to: lineNumber)
 				}
 			}
 		}
 		else {
+			openInBBEdit(to: lineNumber)
+		}
+	}
+
+	/// Line to open in BBEdit once the save started by saveThenOpenInBBEdit completes
+	private var pendingBBEditLineNumber: Int?
+
+	private func saveThenOpenInBBEdit(to lineNumber: Int) {
+		pendingBBEditLineNumber = lineNumber
+		document?.save(withDelegate: self,
+					   didSave: #selector(document(_:didSave:contextInfo:)),
+					   contextInfo: nil)
+	}
+
+	/// Called by NSDocument when the save finishes, fails or is cancelled
+	@objc private func document(_ document: NSDocument, didSave: Bool, contextInfo: UnsafeMutableRawPointer?) {
+		let lineNumber = pendingBBEditLineNumber
+		pendingBBEditLineNumber = nil
+		if didSave, let lineNumber = lineNumber {
 			openInBBEdit(to: lineNumber)
 		}
 	}
@@ -363,51 +381,75 @@ class ManageVC: NSViewController, BFContextProvider {
 		
 		let pandocURL = URL(fileURLWithPath: pandoc)
 		
-		// Compile the file to markdown in a temp dir
+		// Compile the file to markdown in a uniquely named temp file, so concurrent exports don't collide
 		let compiledMD = book!.compile()
-		var tempFile: URL?
+		let tempFolder = FileManager.default.temporaryDirectory
+		let exportID = UUID().uuidString
+		let sourceFile = tempFolder.appendingPathComponent("BookFramer-\(exportID).md")
+		let errorLog = tempFolder.appendingPathComponent("BookFramer-\(exportID).log")
 		do {
-			let tempFolder = URL(fileURLWithPath: NSTemporaryDirectory(),
-								 isDirectory: true)
-			tempFile = tempFolder.appendingPathComponent("temp.md")
-			try compiledMD.write(to: tempFile!, atomically: true, encoding: .utf8)
+			try compiledMD.write(to: sourceFile, atomically: true, encoding: .utf8)
 		}
 		catch {
-			tempFile = nil
-			print(error)
+			showExportFailure("Could not write the compiled book to a temporary file.", details: error.localizedDescription)
+			return
 		}
-		
-		if let fileURL = tempFile {
-			var task: NSUserUnixTask
-			do {
-				task = try NSUserUnixTask(url: pandocURL)
-			} catch {
-				print("Could not create task from URL for \(pandoc)")
-				return
-			}
-			
-			let panel = NSSavePanel()
-			panel.allowedContentTypes = [.pdf]
-			
-			let clicked = panel.runModal()
-			if clicked != NSApplication.ModalResponse.OK { return }
-			
-			if let outputURL = panel.url {
-				let outputFile = outputURL.path
-				var args = [String]()
-				args.append("-o\(outputFile)")
-				args.append("--pdf-engine=\(pdflatex)")
-				args.append(fileURL.path)
-//				let stdout = FileHandle.standardOutput
-//				task.standardOutput = stdout
-//				print(args)
-				
-				task.execute(withArguments: args) {error in
-					if let error = error {
-						print("Pandoc export to PDF failed: ", error)
+
+		let task: NSUserUnixTask
+		do {
+			task = try NSUserUnixTask(url: pandocURL)
+		} catch {
+			try? FileManager.default.removeItem(at: sourceFile)
+			showExportFailure("Could not run pandoc at \(pandoc).", details: error.localizedDescription)
+			return
+		}
+
+		let panel = NSSavePanel()
+		panel.allowedContentTypes = [.pdf]
+
+		guard panel.runModal() == .OK, let outputURL = panel.url else {
+			try? FileManager.default.removeItem(at: sourceFile)
+			return
+		}
+		// The user already confirmed replacing an existing file. Removing it now means that if no
+		// file exists after pandoc runs, the export failed.
+		try? FileManager.default.removeItem(at: outputURL)
+
+		// Capture pandoc's error output so it can be shown if the export fails
+		FileManager.default.createFile(atPath: errorLog.path, contents: nil)
+		let errorHandle = try? FileHandle(forWritingTo: errorLog)
+		task.standardError = errorHandle
+
+		let args = ["-o\(outputURL.path)", "--pdf-engine=\(pdflatex)", sourceFile.path]
+		task.execute(withArguments: args) { error in
+			try? errorHandle?.close()
+			let errorOutput = (try? String(contentsOf: errorLog, encoding: .utf8)) ?? ""
+			try? FileManager.default.removeItem(at: sourceFile)
+			try? FileManager.default.removeItem(at: errorLog)
+			let succeeded = error == nil && FileManager.default.fileExists(atPath: outputURL.path)
+
+			if !succeeded {
+				DispatchQueue.main.async {
+					var details = errorOutput.trimmingCharacters(in: .whitespacesAndNewlines)
+					if details.isEmpty {
+						details = error?.localizedDescription ?? "pandoc did not create the PDF."
 					}
+					self.showExportFailure("Export to PDF failed.", details: details)
 				}
 			}
+		}
+	}
+
+	private func showExportFailure(_ message: String, details: String) {
+		let alert = NSAlert()
+		alert.alertStyle = .warning
+		alert.messageText = message
+		alert.informativeText = details
+		if let window = view.window {
+			alert.beginSheetModal(for: window)
+		}
+		else {
+			alert.runModal()
 		}
 	}
 

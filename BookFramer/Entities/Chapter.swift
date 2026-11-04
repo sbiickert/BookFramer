@@ -38,7 +38,8 @@ struct Chapter: Equatable, Hashable, IDable {
 		for sub in other.subchapters {
 			if subs.contains(sub) { eqCount += 1 }
 		}
-		return eqCount >= (subchapters.count / 2)
+		// eqCount > 0: with one subchapter, count / 2 is 0, which would make any two chapters match
+		return eqCount > 0 && eqCount >= (subchapters.count / 2)
 	}
 
 	let id = UUID().uuidString
@@ -169,7 +170,10 @@ struct Chapter: Equatable, Hashable, IDable {
 			markdownStrings.append("***")
 		}
 		// Remove the last scene break, b/c we've added one too many
-		markdownStrings.removeLast()
+		// (if there are no subchapters there is no scene break, and the title must stay)
+		if !subchapters.isEmpty {
+			markdownStrings.removeLast()
+		}
 		return markdownStrings
 	}
 }

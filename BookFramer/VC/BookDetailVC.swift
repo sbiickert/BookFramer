@@ -53,26 +53,25 @@ class BookDetailVC: BFViewController {
 		tableView.reloadData()
 	}
 
-	private func modifyBook() {
-		var newGenres = [Genre]()
-		for index in 0..<Genre.allCases.count {
-			if let cbv = tableView.view(atColumn: 0, row: index, makeIfNecessary: false) as? CheckboxTableCellView {
-				if cbv.checkbox?.state == NSControl.StateValue.on {
-					newGenres.append(Genre.allCases[index])
-				}
-			}
+	/**
+	Posts the book info from the form fields as an edit, if anything changed.
+	- Parameter genres: the new genres. If nil, the book's current genres are kept. Genres are not read
+	  from the table's checkboxes, because rows scrolled out of view have no checkbox to read.
+	*/
+	private func modifyBook(genres: [Genre]? = nil) {
+		guard let book = context?.book else { return }
+
+		var header = book.headerInfo
+		header.author = authorField.stringValue
+		header.year = yearField.stringValue
+		header.joinedKeywords = keywordField.stringValue
+		if let genres = genres {
+			header.genres = genres
 		}
 
-		var header = BookHeader(author: authorField.stringValue,
-								year: yearField.stringValue,
-								personas: context!.book!.headerInfo.personas,
-								genres: newGenres,
-								keywords: [])
-		header.joinedKeywords = keywordField.stringValue
-		
-		let currentInfo = DocEditor.BookInfo(title: context?.book?.title ?? "",
-											subtitle: context?.book?.subtitle ?? "",
-											 header: context?.book?.headerInfo ?? BookHeader())
+		let currentInfo = DocEditor.BookInfo(title: book.title,
+											 subtitle: book.subtitle,
+											 header: book.headerInfo)
 		
 		let info = DocEditor.BookInfo(title: titleField.stringValue,
 									  subtitle: subtitleField.stringValue,
@@ -128,7 +127,18 @@ class BookDetailVC: BFViewController {
 	- Parameter sender: Checkbox that changed state
 	*/
 	@IBAction func genreChanged(_ sender: NSButton) {
-		modifyBook()
+		let row = tableView.row(for: sender)
+		guard let book = context?.book,
+			  Genre.allCases.indices.contains(row) else { return }
+		var selected = Set(book.headerInfo.genres)
+		if sender.state == .on {
+			selected.insert(Genre.allCases[row])
+		}
+		else {
+			selected.remove(Genre.allCases[row])
+		}
+		// Keep genres in the same order as the table
+		modifyBook(genres: Genre.allCases.filter { selected.contains($0) })
 	}
 }
 

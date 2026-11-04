@@ -562,6 +562,67 @@ class Book: Equatable, ObservableObject {
 		renumberChapters()
 	}
 	
+	/// Where a dragged chapter or subchapter is dropped, relative to the existing rows
+	enum DropPosition: Equatable {
+		/// Above the chapter with this id. A subchapter goes to the end of the preceding chapter.
+		case beforeChapter(id: String)
+		/// Above the subchapter with this id, in whichever chapter contains it
+		case beforeSubChapter(id: String)
+		/// After everything. A subchapter goes to the end of the last chapter.
+		case end
+	}
+
+	/**
+	Computes the chapters that result from moving a chapter or subchapter. The book is not modified,
+	so the caller can apply the result through an undoable edit.
+
+	- Parameter id: the id of the chapter or subchapter being moved
+	- Parameter position: where it is dropped
+	- Returns: the rearranged and renumbered chapters, or nil if the move is not possible
+	*/
+	func chapters(moving id: String, to position: DropPosition) -> [Chapter]? {
+		var result = chapters
+
+		if let fromIndex = result.firstIndex(where: { $0.id == id }) {
+			let moved = result.remove(at: fromIndex)
+			// Insertion index is found after removal, so no index adjustment is needed
+			switch position {
+			case .beforeChapter(let targetID):
+				guard let toIndex = result.firstIndex(where: { $0.id == targetID }) else { return nil }
+				result.insert(moved, at: toIndex)
+			case .end:
+				result.append(moved)
+			case .beforeSubChapter:
+				return nil // Chapters can only be dropped between chapters
+			}
+		}
+		else if let sourceChIndex = result.firstIndex(where: { ch in ch.subchapters.contains(where: { $0.id == id }) }),
+				let subIndex = result[sourceChIndex].subchapters.firstIndex(where: { $0.id == id }) {
+			let moved = result[sourceChIndex].subchapters.remove(at: subIndex)
+			switch position {
+			case .beforeChapter(let targetID):
+				guard let targetChIndex = result.firstIndex(where: { $0.id == targetID }),
+					  targetChIndex > 0 else { return nil }
+				result[targetChIndex - 1].subchapters.append(moved)
+			case .beforeSubChapter(let targetID):
+				guard let targetChIndex = result.firstIndex(where: { ch in ch.subchapters.contains(where: { $0.id == targetID }) }),
+					  let targetSubIndex = result[targetChIndex].subchapters.firstIndex(where: { $0.id == targetID }) else { return nil }
+				result[targetChIndex].subchapters.insert(moved, at: targetSubIndex)
+			case .end:
+				guard !result.isEmpty else { return nil }
+				result[result.count - 1].subchapters.append(moved)
+			}
+		}
+		else {
+			return nil
+		}
+
+		for i in result.indices {
+			result[i].number = i + 1
+		}
+		return result
+	}
+
 	/**
 	Replaces the chapter from the book identified by the same id
 	Renumbers the chapters after the action.

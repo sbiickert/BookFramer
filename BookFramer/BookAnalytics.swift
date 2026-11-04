@@ -37,6 +37,7 @@ struct BookAnalytics {
 			return true
 		}
 		
+		if countTokens == 0 { return 0.0 } // avoid NaN for text with no words
 		let calculatedTTR = (Double(uniqueTokens.count) / countTokens) * 100.0
 		return calculatedTTR
 	}
@@ -227,6 +228,9 @@ struct BookAnalytics {
 							else {
 								break // lex tag wasn't an adverb or verb
 							}
+						}
+						else {
+							break // untagged word: stop, rather than looping forever on the same offset
 						}
 					}
 				}

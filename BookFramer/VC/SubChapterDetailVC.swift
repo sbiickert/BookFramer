@@ -51,12 +51,6 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 		
 		updateStatusMenu()
 		
-		povPopupMenu.removeAllItems()
-		if let b = context?.book {
-			for p in b.allPersonas {
-				povPopupMenu.addItem(withTitle: p.name)
-			}
-		}
 		updatePovMenu()
 	}
 	
@@ -71,13 +65,34 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
 		}
 	}
 	
+	/**
+	Rebuilds the POV menu: "None", then each persona. Each item's representedObject is the value stored
+	in the header. If the scene's POV is not exactly a persona name (e.g. an alias), it is added as its
+	own item so the menu shows the stored value, and editing other fields does not overwrite it.
+	*/
 	private func updatePovMenu() {
-		if let book = context?.book,
-		   let subchapter = context?.selectedSubChapter,
-		   let p = book.findPersona(named: subchapter.headerInfo.pov),
-		   let menuItem = povPopupMenu.item(withTitle: p.name) {
-			povPopupMenu.select(menuItem)
+		povPopupMenu.removeAllItems()
+		// Items are added to the menu directly: NSPopUpButton.addItem(withTitle:) removes items with duplicate titles
+		func addPovItem(title: String, value: String) -> NSMenuItem {
+			let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+			item.representedObject = value
+			povPopupMenu.menu?.addItem(item)
+			return item
 		}
+
+		let noneItem = addPovItem(title: "None", value: "")
+		var selectedItem = noneItem
+		let pov = context?.selectedSubChapter?.headerInfo.pov ?? ""
+		for p in context?.book?.allPersonas ?? [] {
+			let item = addPovItem(title: p.name, value: p.name)
+			if p.name == pov {
+				selectedItem = item
+			}
+		}
+		if !pov.isEmpty && selectedItem === noneItem {
+			selectedItem = addPovItem(title: pov, value: pov)
+		}
+		povPopupMenu.select(selectedItem)
 	}
 	
 	private var personas: String {
@@ -97,7 +112,7 @@ class SubChapterDetailVC: BFViewController, NSTextFieldDelegate {
     private func modifySubChapter() {
 		if var sub = context?.selectedSubChapter {
 			let newStatus = EditStatus.init(rawValue: statusPopupMenu.selectedItem?.title ?? "") ?? EditStatus.multiple
-			let newPOV = povPopupMenu.selectedItem?.title ?? ""
+			let newPOV = povPopupMenu.selectedItem?.representedObject as? String ?? ""
 			if sub.headerInfo.description != descriptionField.stringValue ||
 				sub.headerInfo.location != locationField.stringValue ||
 				sub.headerInfo.status != newStatus ||

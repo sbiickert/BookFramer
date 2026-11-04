@@ -12,6 +12,11 @@ struct SubChapter: Equatable, Hashable, IDable {
 		return lhs.headerInfo == rhs.headerInfo &&
 			lhs.paragraphs == rhs.paragraphs
 	}
+	/// Hashes the same properties compared in ==. The id is excluded, so equal values always hash equally.
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(headerInfo)
+		hasher.combine(paragraphs)
+	}
 //	static func == (lhs: SubChapter, rhs: SubChapter) -> Bool {
 //		return lhs.id == rhs.id
 //	}

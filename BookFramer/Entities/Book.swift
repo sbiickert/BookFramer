@@ -104,9 +104,7 @@ class Book: Equatable, ObservableObject {
 		for block in blocks {
 			switch block.type {
 			case .title:
-				let titleSubtitle = block.content.split(separator: ":")
-				self.title = String(titleSubtitle[0])
-				self.subtitle = titleSubtitle.count > 1 ? String(titleSubtitle[1]) : ""
+				(self.title, self.subtitle) = Book.splitTitle(block.content)
 			case .chapterTitle:
 				// Starting a new chapter
 				if var chapter = currentChapter {
@@ -117,11 +115,9 @@ class Book: Equatable, ObservableObject {
 					chapters.append(chapter)
 				}
 				currentChapter = Chapter()
-				let titleSubtitle = block.content.split(separator: ":")
-				if !titleSubtitle.isEmpty {
-					currentChapter?.title = String(titleSubtitle[0])
-					currentChapter?.subtitle = titleSubtitle.count > 1 ? String(titleSubtitle[1]) : ""
-				}
+				let (chTitle, chSubtitle) = Book.splitTitle(block.content)
+				currentChapter?.title = chTitle
+				currentChapter?.subtitle = chSubtitle
 			case .header:
 				if prevBlockType == .title {
 					// This is a book header
@@ -162,6 +158,20 @@ class Book: Equatable, ObservableObject {
 		
 	}
 	
+	/**
+	Splits a heading written as "title:subtitle" at the first colon only, so a subtitle
+	may contain colons. Empty parts are kept, so ":subtitle" yields an empty title.
+
+	- Parameter heading: the heading text, e.g. "Chapter One:The Beginning"
+	- Returns: the title and subtitle. The subtitle is empty if there is no colon.
+	*/
+	static func splitTitle(_ heading: String) -> (title: String, subtitle: String) {
+		let parts = heading.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+		let title = parts.first.map(String.init) ?? ""
+		let subtitle = parts.count > 1 ? String(parts[1]) : ""
+		return (title, subtitle)
+	}
+
 	/**
 	Sums the word counts in all chapters
 	

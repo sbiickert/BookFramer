@@ -88,6 +88,14 @@ struct BookBlock {
                     //content.append("`\(code.plainText)`")
                     content.append(code.plainText)
                 }
+				else if child is SoftBreak || child is LineBreak {
+					// Keep each paragraph on one line: line numbers for BBEdit assume it
+					content.append(" ")
+				}
+				else {
+					// Links, images, strikethrough, inline HTML, etc. are kept as markdown source
+					content.append(child.format())
+				}
 			}
 			if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
 				parsed.append(BookBlock(type: .paragraph, content: content))

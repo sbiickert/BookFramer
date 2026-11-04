@@ -13,6 +13,12 @@ struct Chapter: Equatable, Hashable, IDable {
 			lhs.subtitle == rhs.subtitle &&
 			lhs.subchapters == rhs.subchapters
 	}
+	/// Hashes the same properties compared in ==. The id is excluded, so equal values always hash equally.
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(title)
+		hasher.combine(subtitle)
+		hasher.combine(subchapters)
+	}
 //	static func == (lhs: Chapter, rhs: Chapter) -> Bool {
 //		return lhs.id == rhs.id
 //	}

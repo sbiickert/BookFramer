@@ -13,6 +13,12 @@ struct Persona: Codable, Equatable, Hashable, IDable {
 			lhs.description == rhs.description &&
 			lhs.aliases == rhs.aliases
 	}
+	/// Hashes the same properties compared in ==. The id is excluded, so equal values always hash equally.
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(name)
+		hasher.combine(description)
+		hasher.combine(aliases)
+	}
 	static let MAJOR = "major"
 	static let MINOR = "minor"
 	

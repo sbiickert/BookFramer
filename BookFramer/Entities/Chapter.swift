@@ -54,10 +54,14 @@ nonisolated struct Chapter: Equatable, Hashable, IDable {
 	- Returns: "title" or "title: subtitle"
 	*/
 	var titleSubtitle: String {
+		var result = "\(self.number). "
 		if subtitle.trimmingCharacters(in: .whitespaces) == "" {
-			return title
+			result += title
 		}
-		return "\(title): \(subtitle)"
+		else {
+			result += "\(title): \(subtitle)"
+		}
+		return result
 	}
 	
 	/**
